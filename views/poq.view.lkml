@@ -1,30 +1,22 @@
-view: product {
-  sql_table_name: products ;;
+view: poq {
+  sql_table_name: product_office_qty ;;
 
-  dimension: id {
+  dimension: qty {
+    # label: "Office Ceres"
     type: number
-    sql: ${TABLE}.prod_id ;;
+    sql: ${TABLE}.poq_qty ;;
   }
 
-  dimension: name {
-    type: string
-    sql: ${TABLE}.prod_name ;;
-  }
-
-  dimension: category_id {
-    type:  number
-    sql: ${TABLE}.prod_category_id ;;
-  }
-
-  dimension: cost {
+  dimension: product_id {
     type: number
-    sql: ROUND(${TABLE}.prod_price, 2) ;;
+    sql: ${TABLE}.poq_prod_id ;;
   }
 
-  dimension: price {
+  dimension: office_id {
     type: number
-    sql: ROUND(IF(${TABLE}.prod_price_type = 'piece', ${TABLE}.prod_price_piece, ${TABLE}.prod_price_weight_per_gram), 2) ;;
+    sql: ${TABLE}.poq_office_id ;;
   }
+
   # # You can specify the table name if it's different from the view name:
   # sql_table_name: my_schema_name.tester ;;
   #
@@ -55,7 +47,7 @@ view: product {
   # }
 }
 
-# view: product {
+# view: pop {
 #   # Or, you could make this view a derived table, like this:
 #   derived_table: {
 #     sql: SELECT

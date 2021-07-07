@@ -1,22 +1,9 @@
-connection: "pcf"
+connection: "flavors"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
-explore: product {
-  join: category {
-    relationship: many_to_one
-    sql_on: ${product.category_id} = ${category.id} ;;
-  }
-  join: poq {
-    view_label: "POQ 1"
-    relationship: one_to_one
-    sql_on: ${product.id} = ${poq.product_id} and 3781 = ${poq.office_id} ;;
-  }
-}
-
-explore: category {}
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
 #
