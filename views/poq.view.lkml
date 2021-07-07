@@ -1,8 +1,9 @@
 view: poq {
   sql_table_name: product_office_qty ;;
 
+  label: "Quantity"
   dimension: qty {
-    # label: "Office Ceres"
+    label: "Quantity"
     type: number
     sql: ${TABLE}.poq_qty ;;
   }

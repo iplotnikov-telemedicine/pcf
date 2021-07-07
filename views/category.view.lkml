@@ -1,12 +1,15 @@
 view: category {
   sql_table_name: product_categories ;;
 
+  label: "Product Category"
+
   dimension: id {
     type: number
     sql: ${TABLE}.id ;;
   }
 
   dimension: name {
+    label: "Category Name"
     type: string
     sql: ${TABLE}.name ;;
   }
