@@ -1,4 +1,4 @@
-view: orederitem {
+view: orderItem {
   sql_table_name: warehouse_order_items ;;
 
   dimension: order_item_id {
