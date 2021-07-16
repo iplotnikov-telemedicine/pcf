@@ -1,6 +1,8 @@
 view: orderItem {
   sql_table_name: warehouse_order_items ;;
 
+  label: "Order Items"
+
   dimension: order_item_id {
     description: "Unique ID for each order item"
     type: number
