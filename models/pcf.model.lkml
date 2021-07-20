@@ -17,7 +17,17 @@ explore: product {
 }
 
 explore: category {}
-explore: orderItem {}
+explore: orderItem {
+  join: product {
+    relationship: many_to_one
+    sql_on: ${product.id} = ${orderItem.product_id} ;;
+  }
+  join: warehouse_orders {
+    relationship: many_to_one
+    sql_on: ${warehouse_orders.id} = ${orderItem.order_id} ;;
+  }
+}
+explore: product_office_qty {}
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
 #
