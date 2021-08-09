@@ -516,6 +516,12 @@ view: warehouse_orders {
     drill_fields: [detail*]
   }
 
+  measure: sum_total_amount {
+    type: sum
+    sql: ${total_amount} ;;
+    value_format_name: usd
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [

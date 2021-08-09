@@ -27,6 +27,10 @@ explore: orderItem {
     sql_on: ${warehouse_orders.id} = ${orderItem.order_id} ;;
   }
 }
+
+explore: warehouse_orders {
+}
+
 explore: product_office_qty {}
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
