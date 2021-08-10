@@ -285,6 +285,17 @@ view: orderItem {
     type: string
     sql: ${TABLE}.exchanged_at ;;
   }
+
+  dimension: order_item_count {
+    label: "Total order item Count"
+    type: number
+    sql: (${quantity} + ${quantity_free}) * ${count};;
+  }
+
+  measure: sum_order_item{
+    type: sum
+    sql: ${order_item_count} ;;
+  }
   # # You can specify the table name if it's different from the view name:
   # sql_table_name: my_schema_name.tester ;;
   #

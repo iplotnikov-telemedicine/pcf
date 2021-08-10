@@ -42,6 +42,7 @@ view: warehouse_orders {
   dimension: change_amount {
     type: number
     sql: ${TABLE}.change_amount ;;
+    value_format_name: usd
   }
 
   dimension: charge_by {
@@ -85,6 +86,20 @@ view: warehouse_orders {
       year
     ]
     sql: ${TABLE}.confirmed_at ;;
+  }
+
+  dimension: confirmed_week_start {
+    type: date
+    sql: date_add(${confirmed_date}, interval - WEEKDAY(${confirmed_date}) - 1 day) ;;
+    datatype: date
+    html: {{ rendered_value | date: "%m/%d"}} ;;
+  }
+
+  dimension: confirmed_week_end {
+    type: date
+    sql: date_add(date_add(confirmed_at, interval - WEEKDAY(confirmed_at) - 1 day), interval 6 day) ;;
+    datatype: date
+    html: {{ rendered_value | date: "%m/%d"}} ;;
   }
 
   dimension: courier_id {
@@ -240,42 +255,49 @@ view: warehouse_orders {
     label: "Payment via Cash"
     type: number
     sql: ${TABLE}.method1_amount ;;
+    value_format_name: usd
   }
 
   dimension: method2_amount {
     label: "Payment via Credit Card"
     type: number
     sql: ${TABLE}.method2_amount ;;
+    value_format_name: usd
   }
 
   dimension: method3_amount {
     label: "Payment via Check"
     type: number
     sql: ${TABLE}.method3_amount ;;
+    value_format_name: usd
   }
 
   dimension: method4_amount {
     label: "Payment via CC Terminal"
     type: number
     sql: ${TABLE}.method4_amount ;;
+    value_format_name: usd
   }
 
   dimension: method5_amount {
     label: "Payment via Bonus"
     type: number
     sql: ${TABLE}.method5_amount ;;
+    value_format_name: usd
   }
 
   dimension: method6_amount {
     label: "Payment via Potify Bonus"
     type: number
     sql: ${TABLE}.method6_amount ;;
+    value_format_name: usd
   }
 
   dimension: method7_amount {
     label: "Payment via DC Terminal"
     type: number
     sql: ${TABLE}.method7_amount ;;
+    value_format_name: usd
   }
 
   dimension: metrc_delivery_status {
@@ -410,6 +432,7 @@ view: warehouse_orders {
   dimension: shipping_amount {
     type: number
     sql: ${TABLE}.shipping_amount ;;
+    value_format_name: usd
   }
 
   dimension: shipping_method_id {
@@ -440,6 +463,7 @@ view: warehouse_orders {
   dimension: sum_discount {
     type: number
     sql: ${TABLE}.sum_discount ;;
+    value_format_name: usd
   }
 
   dimension: sum_free_discount {
@@ -450,11 +474,13 @@ view: warehouse_orders {
   dimension: sum_income {
     type: number
     sql: ${TABLE}.sum_income ;;
+    value_format_name: usd
   }
 
   dimension: sum_tax {
     type: number
     sql: ${TABLE}.sum_tax ;;
+    value_format_name: usd
   }
 
   dimension_group: created {
@@ -494,11 +520,13 @@ view: warehouse_orders {
   dimension: tip_amount {
     type: number
     sql: ${TABLE}.tip_amount ;;
+    value_format_name: usd
   }
 
   dimension: total_amount {
     type: number
     sql: ${TABLE}.total_amount ;;
+    value_format_name: usd
   }
 
   dimension: type {
@@ -519,6 +547,18 @@ view: warehouse_orders {
   measure: sum_total_amount {
     type: sum
     sql: ${total_amount} ;;
+    value_format_name: usd
+  }
+
+  measure: sum_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
+  }
+
+  measure: sum_total_discounts {
+    type: sum
+    sql:  ${sum_discount} ;;
     value_format_name: usd
   }
 

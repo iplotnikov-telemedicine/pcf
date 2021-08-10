@@ -29,6 +29,10 @@ explore: orderItem {
 }
 
 explore: warehouse_orders {
+  join: orderItem {
+    relationship: many_to_one
+    sql_on: ${orderItem.order_id} = ${warehouse_orders.id} ;;
+  }
 }
 
 explore: product_office_qty {}
