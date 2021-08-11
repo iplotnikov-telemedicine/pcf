@@ -17,6 +17,8 @@ explore: product {
 }
 
 explore: category {}
+
+
 explore: orderItem {
   join: product {
     relationship: many_to_one
@@ -25,13 +27,6 @@ explore: orderItem {
   join: warehouse_orders {
     relationship: many_to_one
     sql_on: ${warehouse_orders.id} = ${orderItem.order_id} ;;
-  }
-}
-
-explore: warehouse_orders {
-  join: orderItem {
-    relationship: many_to_one
-    sql_on: ${orderItem.order_id} = ${warehouse_orders.id} ;;
   }
 }
 

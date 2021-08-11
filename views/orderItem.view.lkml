@@ -292,10 +292,35 @@ view: orderItem {
     sql: (${quantity} + ${quantity_free}) * ${count};;
   }
 
+  dimension: sum_order_items {
+    label: "Sum order items"
+    type: number
+    sql: SUM(${order_item_count}) ;;
+  }
+
+  dimension: gross_sale {
+    label: "Gross sale"
+    type: number
+    sql: ${paid_amount} - ${tax} ;;
+  }
+
+  dimension: sum_gross_sales {
+    label: "SUM Gross sale"
+    type: number
+    sql: SUM(${paid_amount} - ${tax}) ;;
+  }
+
   measure: sum_order_item{
     type: sum
-    sql: ${order_item_count} ;;
+    sql: SUM(${order_item_count}) ;;
   }
+
+  measure: sum_gross_sale {
+    type: sum
+    sql: ${gross_sale} ;;
+    value_format_name: usd
+  }
+
   # # You can specify the table name if it's different from the view name:
   # sql_table_name: my_schema_name.tester ;;
   #
