@@ -88,19 +88,19 @@ view: warehouse_orders {
     sql: ${TABLE}.confirmed_at ;;
   }
 
-  dimension: confirmed_week_start {
-    type: date
-    sql: date_add(${confirmed_date}, interval - WEEKDAY(${confirmed_date}) - 1 day) ;;
-    datatype: date
-    html: {{ rendered_value | date: "%m/%d"}} ;;
+  dimension: week_confirmed {
+    group_label: "confirmed" label: "Week"
+    sql: ${confirmed_week} ;;
+    html: {{ rendered_value | date: "Week %U (%b %d)" }};;
   }
 
-  dimension: confirmed_week_end {
-    type: date
-    sql: date_add(date_add(confirmed_at, interval - WEEKDAY(confirmed_at) - 1 day), interval 6 day) ;;
-    datatype: date
-    html: {{ rendered_value | date: "%m/%d"}} ;;
+  dimension_group: by_week_confirmed{
+    type: duration
+    intervals: [week]
+    sql_start: ${TABLE}.confirmed_at ;;
+    sql_end: ${TABLE}.confirmed_at ;;
   }
+
 
   dimension: courier_id {
     type: number
