@@ -304,12 +304,6 @@ view: orderItem {
     sql: ${paid_amount} - ${tax} ;;
   }
 
-  dimension: sum_gross_sales {
-    label: "SUM Gross sale"
-    type: number
-    sql: SUM(${paid_amount} - ${tax}) ;;
-  }
-
   measure: sum_order_item{
     type: sum
     sql: SUM(${order_item_count}) ;;
