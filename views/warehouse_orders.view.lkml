@@ -98,7 +98,7 @@ view: warehouse_orders {
     type: duration
     intervals: [week]
     sql_start: ${TABLE}.confirmed_at ;;
-    sql_end: ${TABLE}.confirmed_at ;;
+    sql_end: DATE_ADD( day, 7, ${created_date});;
   }
 
 
@@ -539,7 +539,7 @@ view: warehouse_orders {
     sql: ${TABLE}.vehicle ;;
   }
 
-  measure: count {
+  measure: count_of_orders {
     type: count
     drill_fields: [detail*]
   }
@@ -548,6 +548,12 @@ view: warehouse_orders {
     type: sum
     sql: ${total_amount} ;;
     value_format_name: usd
+  }
+
+  measure: atv {
+    type: number
+    value_format_name: usd
+    sql: ${sum_total_amount} / NULLIF(${count_of_orders}, 0) ;;
   }
 
   measure: sum_amount {

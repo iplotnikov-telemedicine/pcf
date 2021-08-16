@@ -30,6 +30,12 @@ explore: orderItem {
   }
 }
 
+explore: patients {
+  join: warehouse_orders {
+    relationship: many_to_one
+    sql_on: ${patients.id} = ${warehouse_orders.patient_id} ;;
+  }
+}
 explore: product_office_qty {}
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.

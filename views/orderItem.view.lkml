@@ -306,7 +306,7 @@ view: orderItem {
 
   measure: sum_order_item{
     type: sum
-    sql: SUM(${order_item_count}) ;;
+    sql: ${order_item_count} ;;
   }
 
   measure: sum_gross_sale {

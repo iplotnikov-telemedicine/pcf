@@ -241,6 +241,18 @@ view: patients {
     sql: ${TABLE}.pat_dob ;;
   }
 
+  dimension: age {
+    type: number
+    sql: DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), ${dob_raw})), '%Y')+0;;
+  }
+
+  dimension: age_tier {
+    type: tier
+    tiers: [21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 95]
+    style: integer
+    sql: ${age} ;;
+  }
+
   dimension: email {
     type: string
     sql: ${TABLE}.pat_email ;;
