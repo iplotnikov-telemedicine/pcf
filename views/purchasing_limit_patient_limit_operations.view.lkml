@@ -102,7 +102,7 @@ view: purchasing_limit_patient_limit_operations {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_purchasing_limit_patient_limit_operations {
     type: count
     drill_fields: [detail*]
   }

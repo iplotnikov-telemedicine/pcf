@@ -88,10 +88,25 @@ view: warehouse_orders {
     sql: ${TABLE}.confirmed_at ;;
   }
 
+  # dimension: week_confirmed {
+  #   group_label: "confirmed" label: "Week"
+  #   sql: ${confirmed_week} ;;
+  #   html: {{ rendered_value | date: "Week %U (%b %d)" }};;
+  # }
+
   dimension: week_confirmed {
-    group_label: "confirmed" label: "Week"
+    type: date_week
     sql: ${confirmed_week} ;;
-    html: {{ rendered_value | date: "Week %U (%b %d)" }};;
+    # html: {{ rendered_value | date: "Week %U (%b %d)" }};;
+    html: {{ rendered_value | date: "%m/%d" }};;
+  }
+
+  dimension: week_confirmed_end {
+    type: date
+    sql: ${confirmed_week};;
+    # sql: date_add(${confirmed_week}, INTERVAL 3 day) ;;
+    # sql: date_add(date_add(${confirmed_raw}, interval - WEEKDAY(${confirmed_raw}) - 1 day), interval 6 day);;
+    html: {{ rendered_value | date: "%m/%d" }};;
   }
 
   dimension_group: by_week_confirmed{
@@ -541,6 +556,7 @@ view: warehouse_orders {
 
   measure: count_of_orders {
     type: count
+    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 

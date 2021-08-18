@@ -244,7 +244,7 @@ view: recommendations {
     sql: ${TABLE}.without_controls ;;
   }
 
-  measure: count {
+  measure: number_of_recommendations {
     type: count
     drill_fields: [rec_revoke_user_name, rec_doctor_name]
   }

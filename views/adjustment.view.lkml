@@ -72,7 +72,7 @@ view: adjustment {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_adjustment {
     type: count
     drill_fields: [id, product_transactions.id, product_transactions.product_name, product_transactions.product_to_name]
   }

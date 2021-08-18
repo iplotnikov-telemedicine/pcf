@@ -90,7 +90,7 @@ view: product_prices {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_product_prices {
     type: count
     drill_fields: [id, products.prod_name, products.wm_product_id, products.brand_product_strain_name, special_items.count]
   }

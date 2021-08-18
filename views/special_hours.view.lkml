@@ -69,7 +69,7 @@ view: special_hours {
     sql: ${TABLE}.sync_updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_special_hours {
     type: count
     drill_fields: [id]
   }

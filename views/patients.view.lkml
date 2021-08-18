@@ -675,7 +675,7 @@ view: patients {
     sql: ${TABLE}.unsubscribe_hash ;;
   }
 
-  measure: count {
+  measure: number_of_patients {
     type: count
     drill_fields: [detail*]
   }

@@ -28,7 +28,7 @@ view: recommendation_data {
       quarter,
       year
     ]
-    convert_tz: no
+    convert_tz: yes
     datatype: date
     sql: ${TABLE}.creation_date ;;
   }
@@ -158,7 +158,7 @@ view: recommendation_data {
     sql: ${TABLE}.revoke_date ;;
   }
 
-  measure: count {
+  measure: number_of_recommendation_data {
     type: count
     drill_fields: [detail*]
   }

@@ -89,7 +89,7 @@ view: package_quantity {
   }
 
 
-  measure: count {
+  measure: number_of_package_quantity {
     type: count
     drill_fields: [id, products.prod_name, products.wm_product_id, products.brand_product_strain_name]
   }

@@ -139,7 +139,7 @@ view: product_transactions {
     sql: ${TABLE}.user_id ;;
   }
 
-  measure: count {
+  measure: number_of_product_transaction {
     type: count
     drill_fields: [detail*]
   }

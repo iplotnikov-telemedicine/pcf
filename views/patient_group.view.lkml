@@ -41,7 +41,7 @@ view: patient_group {
     sql: ${TABLE}.sync_updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_patient_groups {
     type: count
     drill_fields: [id, name]
   }

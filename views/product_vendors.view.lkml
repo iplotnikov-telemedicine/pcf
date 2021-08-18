@@ -148,7 +148,7 @@ view: product_vendors {
     sql: ${TABLE}.vendor_type ;;
   }
 
-  measure: count {
+  measure: number_of_product_vendors {
     type: count
     drill_fields: [id, name, metrc_name]
   }

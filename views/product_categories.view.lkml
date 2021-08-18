@@ -96,7 +96,7 @@ view: product_categories {
     sql: ${TABLE}.system_id ;;
   }
 
-  measure: count {
+  measure: number_of_product_categories {
     type: count
     drill_fields: [id, name, icon_name]
   }

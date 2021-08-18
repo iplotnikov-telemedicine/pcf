@@ -1,7 +1,5 @@
-view: product_office_qty {
+view: product_office_quantity {
   sql_table_name: product_office_qty ;;
-
-  label: "Product Office Quantity"
 
   dimension: id {
     type: number
@@ -18,7 +16,7 @@ view: product_office_qty {
     sql: ${TABLE}.poq_office_id ;;
   }
 
-  dimension: prod_id {
+  dimension: product_id {
     type: number
     sql: ${TABLE}.poq_prod_id ;;
   }
@@ -61,7 +59,7 @@ view: product_office_qty {
     sql: ${TABLE}.sync_updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_product_office_quantity {
     type: count
     drill_fields: []
   }

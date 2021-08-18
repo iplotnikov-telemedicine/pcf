@@ -46,7 +46,7 @@ view: patient_group_ref {
     sql: ${TABLE}.sync_updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_patient_group_refs {
     type: count
     drill_fields: [id]
   }

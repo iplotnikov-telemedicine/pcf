@@ -331,7 +331,7 @@ view: register {
     sql: ${TABLE}.vehicle_id ;;
   }
 
-  measure: count {
+  measure: number_of_registers {
     type: count
     drill_fields: [detail*]
   }

@@ -218,7 +218,7 @@ view: service_history {
     sql: ${TABLE}.user_id ;;
   }
 
-  measure: count {
+  measure: number_of_service_histories {
     type: count
     drill_fields: [id, register.id, register.name, register.application_name, register_log.count]
   }

@@ -20,7 +20,7 @@ view: purchasing_limits_product_types_ref {
     sql: ${TABLE}.purchasing_limit_id ;;
   }
 
-  measure: count {
+  measure: number_of_purchasing_limits_product_types_ref {
     type: count
     drill_fields: [id, purchasing_limits.id, purchasing_limits.limit_name, product_types.id, product_types.name]
   }

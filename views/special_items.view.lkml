@@ -106,7 +106,7 @@ view: special_items {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_special_items {
     type: count
     drill_fields: [detail*]
   }

@@ -113,7 +113,7 @@ view: patient_docs {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_patient_docs {
     type: count
     drill_fields: [pd_name, pd_makedasdeleted_username]
   }

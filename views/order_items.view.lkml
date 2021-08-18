@@ -23,7 +23,7 @@ view: warehouse_order_items {
     sql: ${TABLE}.charge_by ;;
   }
 
-  dimension: count_warehouse_order_items {
+  dimension: count {
     type: number
     sql: ${TABLE}.count ;;
   }
@@ -47,7 +47,7 @@ view: warehouse_order_items {
     sql: ${TABLE}.delivery_tax ;;
   }
 
-  dimension: descr {
+  dimension: description {
     type: string
     sql: ${TABLE}.descr ;;
   }
@@ -208,12 +208,12 @@ view: warehouse_order_items {
     sql: ${TABLE}.product_is_tax_exempt ;;
   }
 
-  dimension: qty {
+  dimension: quantity {
     type: number
     sql: ${TABLE}.qty ;;
   }
 
-  dimension: qty_free {
+  dimension: quantity_free {
     type: number
     sql: ${TABLE}.qty_free ;;
   }
@@ -305,9 +305,33 @@ view: warehouse_order_items {
     sql: ${TABLE}.wcii_cart_item ;;
   }
 
-  measure: count {
+  measure: number_of_order_items {
     type: count
     drill_fields: [detail*]
+  }
+
+
+  dimension: order_item_quantity {
+    label: "Total order item Count"
+    type: number
+    sql: (${quantity} + ${quantity_free}) * ${count};;
+  }
+
+  dimension: gross_sale {
+    label: "Gross sale"
+    type: number
+    sql: ${paid_amount} - ${tax} ;;
+  }
+
+  measure: total_order_item_quantity {
+    type: sum
+    sql: ${order_item_quantity} ;;
+  }
+
+  measure: sum_gross_sale {
+    type: sum
+    sql: ${gross_sale} ;;
+    value_format_name: usd
   }
 
   # ----- Sets of fields for drilling ------

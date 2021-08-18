@@ -247,7 +247,7 @@ view: product_checkins {
     sql: ${TABLE}.vendor_type ;;
   }
 
-  measure: count {
+  measure: number_of_product_checkins {
     type: count
     drill_fields: [detail*]
   }

@@ -95,7 +95,7 @@ view: warehouse_order_logs {
     sql: ${TABLE}.type ;;
   }
 
-  measure: count {
+  measure: number_of_order_logs {
     type: count
     drill_fields: [detail*]
   }

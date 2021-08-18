@@ -1,11 +1,11 @@
 view: products {
   sql_table_name: products ;;
-  drill_fields: [wm_product_id]
+  drill_fields: [id]
 
-  dimension: wm_product_id {
+  dimension: id {
     primary_key: yes
     type: number
-    sql: ${TABLE}.wm_product_id ;;
+    sql: ${TABLE}.prod_id ;;
   }
 
   dimension: brand_id {
@@ -118,7 +118,7 @@ view: products {
     sql: ${TABLE}.preroll_weight ;;
   }
 
-  dimension: prod_backend_product_id {
+  dimension: backend_product_id {
     type: number
     sql: ${TABLE}.prod_backend_product_id ;;
   }
@@ -128,167 +128,163 @@ view: products {
     sql: ${TABLE}.prod_balance ;;
   }
 
-  dimension: prod_category_id {
+  dimension: category_id {
     type: number
     sql: ${TABLE}.prod_category_id ;;
   }
 
-  dimension: prod_descr {
+  dimension: description {
     type: string
     sql: ${TABLE}.prod_descr ;;
   }
 
-  dimension: prod_eighth_prepack_qty_o {
+  dimension: eighth_prepack_qty_o {
     type: number
     sql: ${TABLE}.prod_eighth_prepack_qty_o ;;
   }
 
-  dimension: prod_eighth_prepack_qty_w {
+  dimension: eighth_prepack_qty_w {
     type: number
     sql: ${TABLE}.prod_eighth_prepack_qty_w ;;
   }
 
-  dimension: prod_gram_prepack_qty_o {
+  dimension: gram_prepack_qty_o {
     type: number
     sql: ${TABLE}.prod_gram_prepack_qty_o ;;
   }
 
-  dimension: prod_gram_prepack_qty_w {
+  dimension: gram_prepack_qty_w {
     type: number
     sql: ${TABLE}.prod_gram_prepack_qty_w ;;
   }
 
-  dimension: prod_half_prepack_qty_o {
+  dimension: half_prepack_qty_o {
     type: number
     sql: ${TABLE}.prod_half_prepack_qty_o ;;
   }
 
-  dimension: prod_half_prepack_qty_w {
+  dimension: half_prepack_qty_w {
     type: number
     sql: ${TABLE}.prod_half_prepack_qty_w ;;
   }
 
-  dimension: prod_id {
-    type: number
-    sql: ${TABLE}.prod_id ;;
-  }
 
-  dimension: prod_is_custom_price {
+  dimension: is_custom_price {
     type: yesno
     sql: ${TABLE}.prod_is_custom_price ;;
   }
 
-  dimension: prod_is_excise {
+  dimension: is_excise {
     type: yesno
     sql: ${TABLE}.prod_is_excise ;;
   }
 
-  dimension: prod_is_free_shipping {
+  dimension: is_free_shipping {
     type: yesno
     sql: ${TABLE}.prod_is_free_shipping ;;
   }
 
-  dimension: prod_is_hidden {
+  dimension: is_hidden {
     type: yesno
     sql: ${TABLE}.prod_is_hidden ;;
   }
 
-  dimension: prod_is_on_shop {
+  dimension: is_on_shop {
     type: yesno
     sql: ${TABLE}.prod_is_on_shop ;;
   }
 
-  dimension: prod_is_on_weedmaps {
+  dimension: is_on_weedmaps {
     type: yesno
     sql: ${TABLE}.prod_is_on_weedmaps ;;
   }
 
-  dimension: prod_is_print_label {
+  dimension: is_print_label {
     type: yesno
     sql: ${TABLE}.prod_is_print_label ;;
   }
 
-  dimension: prod_is_tax_included {
+  dimension: is_tax_included {
     type: yesno
     sql: ${TABLE}.prod_is_tax_included ;;
   }
 
-  dimension: prod_is_taxable {
+  dimension: is_taxable {
     type: yesno
     sql: ${TABLE}.prod_is_taxable ;;
   }
 
-  dimension: prod_joint_cost {
+  dimension: joint_cost {
     type: number
     sql: ${TABLE}.prod_joint_cost ;;
   }
 
-  dimension: prod_joints_qty_o {
+  dimension: joints_qty_o {
     type: number
     sql: ${TABLE}.prod_joints_qty_o ;;
   }
 
-  dimension: prod_joints_qty_w {
+  dimension: joints_qty_w {
     type: number
     sql: ${TABLE}.prod_joints_qty_w ;;
   }
 
-  dimension: prod_lab_type {
+  dimension: lab_type {
     type: string
     sql: ${TABLE}.prod_lab_type ;;
   }
 
-  dimension: prod_name {
+  dimension: name {
     type: string
     sql: ${TABLE}.prod_name ;;
   }
 
-  dimension: prod_ounce_prepack_qty_o {
+  dimension: ounce_prepack_qty_o {
     type: number
     sql: ${TABLE}.prod_ounce_prepack_qty_o ;;
   }
 
-  dimension: prod_ounce_prepack_qty_w {
+  dimension: ounce_prepack_qty_w {
     type: number
     sql: ${TABLE}.prod_ounce_prepack_qty_w ;;
   }
 
-  dimension: prod_photo {
+  dimension: photo {
     type: string
     sql: ${TABLE}.prod_photo ;;
   }
 
-  dimension: prod_price {
+  dimension: price {
     type: number
     sql: ${TABLE}.prod_price ;;
   }
 
-  dimension: prod_price_joint {
+  dimension: price_joint {
     type: number
     sql: ${TABLE}.prod_price_joint ;;
   }
 
-  dimension: prod_price_piece {
+  dimension: price_piece {
     type: number
     sql: ${TABLE}.prod_price_piece ;;
   }
 
-  dimension: prod_price_preset_id {
+  dimension: price_preset_id {
     type: number
     sql: ${TABLE}.prod_price_preset_id ;;
   }
 
-  dimension: prod_price_type {
+  dimension: price_type {
     type: string
     sql: ${TABLE}.prod_price_type ;;
   }
 
-  dimension: prod_price_weight_per_eighth {
+  dimension: price_weight_per_eighth {
     type: number
     sql: ${TABLE}.prod_price_weight_per_eighth ;;
   }
 
-  dimension: prod_price_weight_per_gram {
+  dimension: price_weight_per_gram {
     type: number
     sql: ${TABLE}.prod_price_weight_per_gram ;;
   }
@@ -298,78 +294,78 @@ view: products {
     sql: ${TABLE}.prod_price_weight_per_half ;;
   }
 
-  dimension: prod_price_weight_per_ounce {
+  dimension: price_weight_per_ounce {
     type: number
     sql: ${TABLE}.prod_price_weight_per_ounce ;;
   }
 
-  dimension: prod_price_weight_per_quarter {
+  dimension: price_weight_per_quarter {
     type: number
     sql: ${TABLE}.prod_price_weight_per_quarter ;;
   }
 
-  dimension: prod_qty_o {
+  dimension: qty_o {
     type: number
     sql: ${TABLE}.prod_qty_o ;;
   }
 
-  dimension: prod_qty_w {
+  dimension: qty_w {
     type: number
     sql: ${TABLE}.prod_qty_w ;;
   }
 
-  dimension: prod_quarter_prepack_qty_o {
+  dimension: quarter_prepack_qty_o {
     type: number
     sql: ${TABLE}.prod_quarter_prepack_qty_o ;;
   }
 
-  dimension: prod_quarter_prepack_qty_w {
+  dimension: quarter_prepack_qty_w {
     type: number
     sql: ${TABLE}.prod_quarter_prepack_qty_w ;;
   }
 
-  dimension: prod_sales {
+  dimension: sales {
     type: number
     sql: ${TABLE}.prod_sales ;;
   }
 
-  dimension: prod_sku {
+  dimension: sku {
     type: string
     sql: ${TABLE}.prod_sku ;;
   }
 
-  dimension: prod_symbol {
+  dimension: symbol {
     type: string
     sql: ${TABLE}.prod_symbol ;;
   }
 
-  dimension: prod_tax_id_bak {
+  dimension: tax_id_bak {
     type: number
     value_format_name: id
     sql: ${TABLE}.prod_tax_id_bak ;;
   }
 
-  dimension: prod_tax_profile_id {
+  dimension: tax_profile_id {
     type: number
     sql: ${TABLE}.prod_tax_profile_id ;;
   }
 
-  dimension: prod_tax_tier_version_id {
+  dimension: tax_tier_version_id {
     type: number
     sql: ${TABLE}.prod_tax_tier_version_id ;;
   }
 
-  dimension: prod_tv_photo {
+  dimension: tv_photo {
     type: string
     sql: ${TABLE}.prod_tv_photo ;;
   }
 
-  dimension: prod_upc {
+  dimension: upc {
     type: string
     sql: ${TABLE}.prod_upc ;;
   }
 
-  dimension: prod_vendor_id {
+  dimension: vendor_id {
     type: number
     sql: ${TABLE}.prod_vendor_id ;;
   }
@@ -428,7 +424,12 @@ view: products {
     sql: ${TABLE}.twcc ;;
   }
 
-  measure: count {
+  dimension: wm_product_id {
+    type: number
+    sql: ${TABLE}.wm_product_id ;;
+  }
+
+  measure: number_of_products {
     type: count
     drill_fields: [detail*]
   }
@@ -437,7 +438,7 @@ view: products {
   set: detail {
     fields: [
       wm_product_id,
-      prod_name,
+      name,
       brand_product_strain_name,
       product_types.id,
       product_types.name,

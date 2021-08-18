@@ -56,7 +56,7 @@ view: brands {
     sql: ${TABLE}.wm_id ;;
   }
 
-  measure: count {
+  measure: number_of_brands {
     type: count
     drill_fields: [brand_id, brand_name, products.count]
   }

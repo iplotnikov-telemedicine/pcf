@@ -23,7 +23,7 @@ view: patient_type {
     sql: ${TABLE}.name ;;
   }
 
-  measure: count {
+  measure: number_of_patient_types {
     type: count
     drill_fields: [id, name]
   }

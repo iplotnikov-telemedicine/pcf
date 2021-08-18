@@ -1,4 +1,4 @@
-view: product_docs {
+view: product_documents {
   sql_table_name: product_docs ;;
   drill_fields: [id]
 
@@ -77,7 +77,7 @@ view: product_docs {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_product_documents {
     type: count
     drill_fields: [detail*]
   }

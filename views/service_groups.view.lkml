@@ -13,7 +13,7 @@ view: service_groups {
     sql: ${TABLE}.name ;;
   }
 
-  measure: count {
+  measure: number_of_service_groups {
     type: count
     drill_fields: [id, name]
   }

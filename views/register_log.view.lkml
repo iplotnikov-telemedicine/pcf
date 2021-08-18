@@ -184,7 +184,7 @@ view: register_log {
     sql: ${TABLE}.vehicle_id ;;
   }
 
-  measure: count {
+  measure: number_of_register_logs {
     type: count
     drill_fields: [detail*]
   }

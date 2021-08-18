@@ -121,7 +121,7 @@ view: refunded_quantity {
     sql: ${TABLE}.weight ;;
   }
 
-  measure: count {
+  measure: number_of_refunded_quantity {
     type: count
     drill_fields: [detail*]
   }

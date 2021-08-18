@@ -42,7 +42,7 @@ view: product_types {
     sql: ${TABLE}.system_type ;;
   }
 
-  measure: count {
+  measure: number_of_product_types {
     type: count
     drill_fields: [detail*]
   }

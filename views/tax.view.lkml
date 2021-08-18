@@ -118,7 +118,7 @@ view: tax {
     sql: ${TABLE}.tax_tier_version_id ;;
   }
 
-  measure: count {
+  measure: number_of_taxes {
     type: count
     drill_fields: [detail*]
   }

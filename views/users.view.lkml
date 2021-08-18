@@ -312,7 +312,7 @@ view: sf_guard_user {
     sql: ${TABLE}.whmcs_password ;;
   }
 
-  measure: count {
+  measure: number_of_users {
     type: count
     drill_fields: [detail*]
   }

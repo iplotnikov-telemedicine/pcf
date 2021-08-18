@@ -19,7 +19,7 @@ view: account_office_ref {
     sql: ${TABLE}.office_id ;;
   }
 
-  measure: count {
+  measure: number_of_office_ref {
     type: count
     drill_fields: [id, account.id, account.name]
   }

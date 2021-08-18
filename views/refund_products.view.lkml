@@ -169,7 +169,7 @@ view: refund_products {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_refund_products {
     type: count
     drill_fields: [detail*]
   }

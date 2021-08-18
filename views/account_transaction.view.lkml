@@ -114,7 +114,7 @@ view: account_transaction {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_account_transactions {
     type: count
     drill_fields: [detail*]
   }

@@ -43,7 +43,7 @@ view: package_splits {
     sql: ${TABLE}.parent_package_id ;;
   }
 
-  measure: count {
+  measure: number_of_package_splits {
     type: count
     drill_fields: [id, account.id, account.name]
   }

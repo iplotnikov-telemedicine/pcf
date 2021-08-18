@@ -56,7 +56,7 @@ view: patient_point {
     sql: ${TABLE}.value ;;
   }
 
-  measure: count {
+  measure: number_of_patient_points {
     type: count
     drill_fields: [id]
   }

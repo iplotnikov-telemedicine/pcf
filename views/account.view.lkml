@@ -75,7 +75,7 @@ view: account {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_accounts {
     type: count
     drill_fields: [id, name, account_office_ref.count, account_transaction.count, package_splits.count]
   }

@@ -71,7 +71,7 @@ view: purchasing_limits {
     sql: ${TABLE}.updated_at ;;
   }
 
-  measure: count {
+  measure: number_of_purchasing_limits {
     type: count
     drill_fields: [id, limit_name, purchasing_limits_product_types_ref.count]
   }
