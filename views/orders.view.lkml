@@ -1,4 +1,4 @@
-view: warehouse_orders {
+view: orders {
   sql_table_name: warehouse_orders ;;
   label: "Orders"
   drill_fields: [id]

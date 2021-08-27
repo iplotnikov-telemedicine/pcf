@@ -429,6 +429,16 @@ view: products {
     sql: ${TABLE}.wm_product_id ;;
   }
 
+  dimension: internal_product {
+    type: yesno
+    sql: IF(${brand_id}, 1, 0) AND ${brand_id} IN (1) ;;
+  }
+
+  dimension: is_internal_product {
+    type: yesno
+    sql: ${brands.is_internal} ;;
+  }
+
   measure: number_of_products {
     type: count
     drill_fields: [detail*]

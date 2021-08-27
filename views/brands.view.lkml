@@ -56,6 +56,11 @@ view: brands {
     sql: ${TABLE}.wm_id ;;
   }
 
+  dimension: is_internal {
+    type: yesno
+    sql: ${TABLE}.is_internal ;;
+  }
+
   measure: number_of_brands {
     type: count
     drill_fields: [brand_id, brand_name, products.count]

@@ -1,4 +1,4 @@
-view: warehouse_order_items {
+view: order_items {
   sql_table_name: warehouse_order_items ;;
   drill_fields: [id]
 
@@ -312,20 +312,26 @@ view: warehouse_order_items {
 
 
   dimension: order_item_quantity {
-    label: "Total order item Count"
     type: number
     sql: (${quantity} + ${quantity_free}) * ${count};;
   }
 
   dimension: gross_sale {
-    label: "Gross sale"
     type: number
     sql: ${paid_amount} - ${tax} ;;
   }
 
-  measure: total_order_item_quantity {
+  # dimension: discount_from_order {
+  #   type: number
+  #   sql: IF(${orders.discount_id} IS NULL
+  #   , 0
+  #   , ${orders.sum_discount} - IF(${orders.is_bonus_point_as_discount}, ${orders.method5_amount}, 0) - ${sum_discount_amount}) ;;
+  # }
+
+  measure: sum_order_item_quantity {
     type: sum
     sql: ${order_item_quantity} ;;
+    value_format_name: decimal_2
   }
 
   measure: sum_gross_sale {
@@ -333,6 +339,23 @@ view: warehouse_order_items {
     sql: ${gross_sale} ;;
     value_format_name: usd
   }
+
+  measure: sum_discount_amount {
+    type: sum
+    sql: ${discount_amount} ;;
+  }
+
+  # measure: total_discount_amount {
+  #   type: sum
+  #   sql: ${sum_discount_from_order};;
+  # }
+
+  # measure: sum_discount_from_order {
+  #   type: number
+  #   sql: IF(${orders.discount_id} IS NULL
+  #   , 0
+  #   , ${orders.sum_discount} - IF(${orders.is_bonus_point_as_discount}, ${orders.method5_amount}, 0) - ${sum_discount_amount}) ;;
+  # }
 
   # ----- Sets of fields for drilling ------
   set: detail {

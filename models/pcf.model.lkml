@@ -5,6 +5,7 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 explore: products {
+  view_name: products
   join: product_categories {
     relationship: many_to_one
     sql_on: ${products.category_id} = ${product_categories.id} ;;
@@ -14,20 +15,35 @@ explore: products {
     relationship: one_to_one
     sql_on: ${products.id} = ${product_office_quantity.product_id} and 3781 = ${product_office_quantity.office_id} ;;
   }
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
 }
 
 explore: product_categories {}
 
 
-explore: warehouse_order_items {
+explore: order_items {
+
   join: products {
     relationship: many_to_one
-    sql_on: ${products.id} = ${warehouse_order_items.product_id};;
+    sql_on: ${products.id} = ${order_items.product_id};;
   }
 
-  join: warehouse_orders {
+  join: brands {
     relationship: many_to_one
-    sql_on: ${warehouse_orders.id} = ${warehouse_order_items.order_id} ;;
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: orders {
+    relationship: many_to_one
+    sql_on: ${orders.id} = ${order_items.order_id} ;;
+  }
+
+  join: patients {
+    relationship: many_to_one
+    sql_on: ${orders.patient_id} = ${patients.id} ;;
   }
 
   # join: self_brand_product {
@@ -37,13 +53,31 @@ explore: warehouse_order_items {
   # }
 }
 
-explore: patients {
-  join: warehouse_orders {
+explore: self_products {
+  extends: [products]
+  sql_always_where: ${products.brand_id} IN() ;;
+}
+
+explore: products_from_other_brand {
+  extends: [products]
+  sql_always_where: ${products.brand_id} NOT IN() ;;
+}
+
+explore: patients { view_name: patients
+  join: orders {
     relationship: many_to_one
-    sql_on: ${patients.id} = ${warehouse_orders.patient_id} ;;
+    sql_on: ${patients.id} = ${orders.patient_id} ;;
   }
 }
-explore: product_office_quantity {}
+
+
+# explore: new_patients {
+#   extends: [patients]
+#   sql_always_where:  ;;
+# }
+
+# explore: product_office_quantity {}
+
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
 #

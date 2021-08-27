@@ -675,6 +675,11 @@ view: patients {
     sql: ${TABLE}.unsubscribe_hash ;;
   }
 
+  measure: is_repeated {
+    type: yesno
+    sql: CASE WHEN ${orders.count_of_orders} > 1 THEN TRUE ELSE FALSE END ;;
+  }
+
   measure: number_of_patients {
     type: count
     drill_fields: [detail*]
