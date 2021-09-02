@@ -434,6 +434,11 @@ view: products {
     sql: IF(${brand_id}, 1, 0) AND ${brand_id} IN (1) ;;
   }
 
+  dimension: external_product {
+    type: yesno
+    sql: ${brand_id} NOT IN(1) ;;
+  }
+
   dimension: is_internal_product {
     type: yesno
     sql: ${brands.is_internal} ;;

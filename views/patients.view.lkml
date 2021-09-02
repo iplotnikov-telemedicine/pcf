@@ -685,6 +685,16 @@ view: patients {
     drill_fields: [detail*]
   }
 
+  # measure: number_of_returning_patients {
+  #   type: sum
+  #   sql: IF(${is_repeated}, 1, 0) ;;
+  # }
+
+  # measure: number_of_new_patients {
+  #   type: sum
+  #   sql: IF(${is_repeated}, 0, 1) ;;
+  # }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [

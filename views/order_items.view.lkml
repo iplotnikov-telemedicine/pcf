@@ -321,6 +321,31 @@ view: order_items {
     sql: ${paid_amount} - ${tax} ;;
   }
 
+  dimension: refund_wo_tax {
+    type: number
+    sql: IF(${paid_amount}, ${returned_amount} - (${returned_amount} * ${tax} / ${paid_amount}), 0 ) ;;
+  }
+
+  dimension: net_sale {
+    type: number
+    sql: ${gross_sale} -  ${refund_wo_tax};;
+  }
+
+  dimension: product_is_internal {
+    type: number
+    sql: IF(${products.internal_product} = 1, 1, 0) * ${order_item_quantity} ;;
+  }
+
+  dimension: product_is_external {
+    type: number
+    sql: IF(${products.internal_product} = 0, 1, 0) * ${order_item_quantity} ;;
+  }
+
+  dimension: internal_product_value {
+    type: number
+    sql:  IF(${products.internal_product} = 1, ${gross_sale}, 0);;
+  }
+
   # dimension: discount_from_order {
   #   type: number
   #   sql: IF(${orders.discount_id} IS NULL
@@ -343,6 +368,41 @@ view: order_items {
   measure: sum_discount_amount {
     type: sum
     sql: ${discount_amount} ;;
+    value_format_name: usd
+  }
+
+  measure: sum_refund_wo_tax {
+    type: sum
+    sql: ${refund_wo_tax} ;;
+    value_format_name: usd
+  }
+
+  measure:  sum_net_sales {
+    type: sum
+    sql:  ${net_sale};;
+    value_format_name: usd
+  }
+
+  measure: sum_internal_products {
+    type: sum
+    sql: ${product_is_internal} ;;
+  }
+
+  measure: sum_external_products {
+    type: sum
+    sql: ${product_is_external} ;;
+  }
+
+  measure: sum_internal_value {
+    type: sum
+    sql: ${internal_product_value} ;;
+    value_format_name: usd
+  }
+
+  measure: sum_discounts {
+    type: sum
+    sql: ${discount_amount} ;;
+    value_format_name: usd
   }
 
   # measure: total_discount_amount {

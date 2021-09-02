@@ -584,6 +584,33 @@ view: orders {
     value_format_name: usd
   }
 
+  filter: date_filter {
+    type: date_time
+  }
+
+  dimension_group: filter_start_date {
+    type: time
+    timeframes: [raw]
+    sql: CASE WHEN {% date_start date_filter %} IS NULL THEN '1970-01-01' ELSE  TIMESTAMP(NULLIF({% date_start date_filter %}, 0)) END;;
+  }
+
+
+  dimension_group: filter_end_date {
+    type: time
+    timeframes: [raw]
+    sql: CASE WHEN {% date_end date_filter %} IS NULL THEN NOW() ELSE TIMESTAMP(NULLIF({% date_end date_filter %}, 0)) END;;
+  }
+
+  dimension: interval {
+    type: number
+    sql: TIMESTAMPDIFF(second, ${filter_end_date_raw}, ${filter_start_date_raw});;
+  }
+
+  dimension: interval_in_days {
+    type: number
+    sql: ABS(DATEDIFF(${filter_start_date_raw}, ${filter_end_date_raw}));;
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [

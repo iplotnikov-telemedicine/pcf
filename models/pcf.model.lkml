@@ -46,12 +46,30 @@ explore: order_items {
     sql_on: ${orders.patient_id} = ${patients.id} ;;
   }
 
+  join: returning_patients {
+    relationship: one_to_one
+    type: inner
+    sql_on: ${patients.id} = ${returning_patients.id} ;;
+  }
+
+  join: tax_payment {
+    relationship: one_to_one
+    sql_on: ${tax_payment.order_item_id} = ${order_items.id} ;;
+  }
+
+  join: order_item_refunds {
+    from: order_items
+    relationship: one_to_one
+    sql_on: ${order_item_refunds.id} = ${order_items.id} ;;
+  }
+
   # join: self_brand_product {
   #   from: product
   #   relationship: many_to_one
   #   sql_on: ${self_brand_product.id} = ${orderItem.product_id} ;;
   # }
 }
+
 
 explore: self_products {
   extends: [products]
