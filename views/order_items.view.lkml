@@ -18,11 +18,6 @@ view: order_items {
     sql: ${TABLE}.base_amount ;;
   }
 
-  dimension: charge_by {
-    type: string
-    sql: ${TABLE}.charge_by ;;
-  }
-
   dimension: count {
     type: number
     sql: ${TABLE}.count ;;
@@ -328,7 +323,7 @@ view: order_items {
 
   dimension: net_sale {
     type: number
-    sql: ${gross_sale} -  ${refund_wo_tax};;
+    sql: ${gross_sale} -  ${refund_wo_tax} - ${discount_amount};;
   }
 
   dimension: product_is_internal {
@@ -345,13 +340,6 @@ view: order_items {
     type: number
     sql:  IF(${products.internal_product} = 1, ${gross_sale}, 0);;
   }
-
-  # dimension: discount_from_order {
-  #   type: number
-  #   sql: IF(${orders.discount_id} IS NULL
-  #   , 0
-  #   , ${orders.sum_discount} - IF(${orders.is_bonus_point_as_discount}, ${orders.method5_amount}, 0) - ${sum_discount_amount}) ;;
-  # }
 
   measure: sum_order_item_quantity {
     type: sum
@@ -399,24 +387,6 @@ view: order_items {
     value_format_name: usd
   }
 
-  measure: sum_discounts {
-    type: sum
-    sql: ${discount_amount} ;;
-    value_format_name: usd
-  }
-
-  # measure: total_discount_amount {
-  #   type: sum
-  #   sql: ${sum_discount_from_order};;
-  # }
-
-  # measure: sum_discount_from_order {
-  #   type: number
-  #   sql: IF(${orders.discount_id} IS NULL
-  #   , 0
-  #   , ${orders.sum_discount} - IF(${orders.is_bonus_point_as_discount}, ${orders.method5_amount}, 0) - ${sum_discount_amount}) ;;
-  # }
-
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
@@ -430,4 +400,28 @@ view: order_items {
       product_checkins.vendor_name
     ]
   }
+
+  # dimension: charge_by {
+  #   type: string
+  #   sql: ${TABLE}.charge_by ;;
+  # }
+
+  # dimension: discount_from_order {
+  #   type: number
+  #   sql: IF(${orders.discount_id} IS NULL
+  #   , 0
+  #   , ${orders.sum_discount} - IF(${orders.is_bonus_point_as_discount}, ${orders.method5_amount}, 0) - ${sum_discount_amount}) ;;
+  # }
+
+  # measure: total_discount_amount {
+  #   type: sum
+  #   sql: ${sum_discount_from_order};;
+  # }
+
+  # measure: sum_discount_from_order {
+  #   type: number
+  #   sql: IF(${orders.discount_id} IS NULL
+  #   , 0
+  #   , ${orders.sum_discount} - IF(${orders.is_bonus_point_as_discount}, ${orders.method5_amount}, 0) - ${sum_discount_amount}) ;;
+  # }
 }

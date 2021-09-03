@@ -148,6 +148,11 @@ view: tax_payment {
     sql: ${TABLE}.state_tax ;;
   }
 
+  dimension: excise_tax_w_delivery {
+    type: number
+    sql: ${excise_tax} + ${excise_delivery_tax} ;;
+  }
+
   dimension_group: updated {
     type: time
     timeframes: [
@@ -160,6 +165,11 @@ view: tax_payment {
       year
     ]
     sql: ${TABLE}.updated_at ;;
+  }
+
+  measure: sum_excise_w_delivery {
+    type: sum
+    sql: ${excise_tax_w_delivery} ;;
   }
 
   measure: number_of_tax_payments {
