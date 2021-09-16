@@ -63,6 +63,11 @@ explore: order_items {
     sql_on: ${order_item_refunds.id} = ${order_items.id} ;;
   }
 
+  join: users {
+    relationship: many_to_one
+    sql_on: ${users.id} = ${orders.cashier_id} ;;
+  }
+
   # join: self_brand_product {
   #   from: product
   #   relationship: many_to_one
@@ -70,6 +75,9 @@ explore: order_items {
   # }
 }
 
+
+explore: users {
+}
 
 explore: self_products {
   extends: [products]

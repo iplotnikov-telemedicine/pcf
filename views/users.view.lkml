@@ -1,4 +1,4 @@
-view: sf_guard_user {
+view: users {
   sql_table_name: sf_guard_user ;;
   drill_fields: [id]
 
@@ -310,6 +310,11 @@ view: sf_guard_user {
   dimension: whmcs_password {
     type: string
     sql: ${TABLE}.whmcs_password ;;
+  }
+
+  dimension: full_name {
+    type: string
+    sql: CONCAT_WS(' ', ${first_name}, ${last_name}, IF(${TABLE}.deleted_at IS NOT NULL, '(deleted)', '')) ;;
   }
 
   measure: number_of_users {
