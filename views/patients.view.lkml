@@ -675,6 +675,24 @@ view: patients {
     sql: ${TABLE}.unsubscribe_hash ;;
   }
 
+  dimension: ca_type_labels {
+    type: string
+    case: {
+      when: {
+        sql: ${type} = 1 ;;
+        label: "Medical w/Rec 18+"
+      }
+      when: {
+        sql: ${type} = 2 ;;
+        label: "Adult use 21+"
+      }
+      when: {
+        sql: ${type} = 3 ;;
+        label: "Medical w/State Card"
+      }
+    }
+  }
+
   measure: is_repeated {
     type: yesno
     sql: CASE WHEN ${orders.count_of_orders} > 1 THEN TRUE ELSE FALSE END ;;

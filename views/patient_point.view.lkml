@@ -60,4 +60,9 @@ view: patient_point {
     type: count
     drill_fields: [id]
   }
+
+  measure: sum_value {
+    type: sum
+    sql: ${value} ;;
+  }
 }

@@ -94,6 +94,17 @@ explore: patients { view_name: patients
     relationship: many_to_one
     sql_on: ${patients.id} = ${orders.patient_id} ;;
   }
+
+  join: notes {
+    relationship: many_to_one
+    sql_on:  ${patients.id} = ${notes.patient_id};;
+  }
+
+  join: patient_point {
+    relationship: many_to_one
+    sql_on:  ${patients.id} = ${patient_point.patient_id};;
+  }
+
 }
 
 

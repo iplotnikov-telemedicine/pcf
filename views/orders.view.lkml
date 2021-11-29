@@ -554,6 +554,7 @@ view: orders {
     sql: ${TABLE}.vehicle ;;
   }
 
+
   measure: count_of_orders {
     type: count
     value_format_name: decimal_0
@@ -582,6 +583,16 @@ view: orders {
     type: sum
     sql:  ${sum_discount} ;;
     value_format_name: usd
+  }
+
+  measure: count_completed_orders {
+    type: sum
+    sql: IF(${completed_raw} IS NOT NULL, 1, 0);;
+  }
+
+  measure: last_order_date {
+    type: date
+    sql: MAX(${confirmed_raw}) ;;
   }
 
   filter: date_filter {
