@@ -1,6 +1,7 @@
 connection: "sanctuary"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
+include: "/views/sanctuary/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
@@ -20,6 +21,11 @@ explore: order_items {
   join: orders {
     relationship: many_to_one
     sql_on: ${orders.id} = ${order_items.order_id} ;;
+  }
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${orders.office_id} = ${offices.office_id} ;;
   }
 
   join: patients {
