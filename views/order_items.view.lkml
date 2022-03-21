@@ -8,6 +8,7 @@ view: order_items {
     sql: ${TABLE}.id ;;
   }
 
+
   dimension: amount {
     type: number
     sql: ${TABLE}.amount ;;
@@ -159,6 +160,11 @@ view: order_items {
   dimension: name {
     type: string
     sql: ${TABLE}.name ;;
+  }
+
+  dimension: product_id_and_name {
+    type: string
+    sql: ${product_id} '-' ${name} ;;
   }
 
   dimension: order_id {
