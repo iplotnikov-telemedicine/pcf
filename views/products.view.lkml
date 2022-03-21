@@ -391,6 +391,11 @@ view: products {
     sql: ${TABLE}.strain ;;
   }
 
+  dimension: product_id_and_name {
+    type: string
+    sql: CONCAT(${id}, '-', ${name}) ;;
+  }
+
   dimension_group: sync_created {
     type: time
     timeframes: [

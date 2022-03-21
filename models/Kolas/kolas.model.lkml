@@ -61,4 +61,11 @@ explore: order_items {
   #   relationship: many_to_one
   #   sql_on: ${self_brand_product.id} = ${orderItem.product_id} ;;
   # }
+
+  sql_always_where:
+  {% if order_items.namesearch._is_filtered %}
+  ${order_items.filter_by_product} = 'yes'
+  {% else %}
+  1=1
+  {% endif %};;
 }

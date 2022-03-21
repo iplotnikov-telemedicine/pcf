@@ -162,11 +162,6 @@ view: order_items {
     sql: ${TABLE}.name ;;
   }
 
-  dimension: product_id_and_name {
-    type: string
-    sql: ${product_id} '-' ${name} ;;
-  }
-
   dimension: order_id {
     type: number
     sql: ${TABLE}.order_id ;;
@@ -345,6 +340,22 @@ view: order_items {
   dimension: internal_product_value {
     type: number
     sql:  IF(${products.internal_product} = 1, ${gross_sale}, 0);;
+  }
+
+  dimension: filter_by_product {
+    hidden: yes
+    type: yesno
+    sql:
+    {% assign prod_name_array = namesearch._parameter_value | remove: "'" | split: "-"  %}
+    {% assign prod_id = prod_name_array[0] %}
+    ${product_id} = {{prod_id}} ;;
+  }
+
+  parameter: namesearch {
+    type: string
+    suggest_explore: products
+    suggest_dimension: products.product_id_and_name
+    suggest_persist_for: "24 hours"
   }
 
   measure: sum_order_item_quantity {
