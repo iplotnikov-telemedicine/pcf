@@ -24,7 +24,11 @@ view: offices {
       }
       when: {
         sql: ${office_id} = 11914 ;;
-        label: "Kolas - Fruitridge/South Watt"
+        label: "Kolas - Elder Creek (Fruitridge/South Watt)"
+      }
+      when: {
+        sql: ${office_id} = 12347 ;;
+        label: "Kolas - Main"
       }
     }
   }
