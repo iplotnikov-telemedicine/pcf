@@ -78,4 +78,8 @@ explore: orders {
     relationship: many_to_one
     sql_on: ${patients.id} = ${orders.patient_id} ;;
   }
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${orders.office_id} = ${offices.office_id} ;;
+  }
 }
