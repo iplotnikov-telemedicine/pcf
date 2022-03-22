@@ -605,6 +605,11 @@ view: patients {
     sql: ${TABLE}.phone_consent_signature ;;
   }
 
+  dimension: has_phone_consent {
+    type: yesno
+    sql: if(${TABLE}.phone_consent_given_at, 1, 0) ;;
+  }
+
   dimension: phone_is_consented {
     type: yesno
     sql: ${TABLE}.phone_is_consented ;;

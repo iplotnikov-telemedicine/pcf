@@ -69,3 +69,13 @@ explore: order_items {
   1=1
   {% endif %};;
 }
+
+explore: orders {
+  always_filter: {
+    filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
+  }
+  join: patients {
+    relationship: many_to_one
+    sql_on: ${patients.id} = ${orders.patient_id} ;;
+  }
+}
