@@ -70,6 +70,7 @@ explore: order_items {
   {% endif %};;
 }
 
+
 explore: orders {
   always_filter: {
     filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]

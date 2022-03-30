@@ -404,6 +404,12 @@ view: order_items {
     value_format_name: usd
   }
 
+  measure: total_income {
+    type: sum
+    sql: ${income} ;;
+    value_format_name: usd
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
