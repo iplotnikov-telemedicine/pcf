@@ -189,6 +189,26 @@ view: register_log {
     drill_fields: [detail*]
   }
 
+  measure: total_expected {
+    type: sum
+    sql: ${expected_drawer} ;;
+  }
+
+  measure: total_actual_drawer {
+    type: sum
+    sql: ${actual_drawer} ;;
+  }
+
+  measure: total_over {
+    type: sum
+    sql: ${over} ;;
+  }
+
+  measure: total_drops {
+    type: sum
+    sql: ${drops} ;;
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
