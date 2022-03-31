@@ -165,6 +165,32 @@ view: register_log {
     sql: ${TABLE}.type ;;
   }
 
+  dimension: type_label {
+    type: string
+    case: {
+      when: {
+        sql: ${type} = 1 ;;
+        label: "Open Shift"
+      }
+      when: {
+        sql: ${type} = 2 ;;
+        label: "Safe Drop"
+      }
+      when: {
+        sql: ${type} = 3 ;;
+        label: "Sale"
+      }
+      when: {
+        sql: ${type} = 4 ;;
+        label: "Close Shift"
+      }
+      when: {
+        sql: ${type} = 5 ;;
+        label: "Return"
+      }
+    }
+  }
+
   dimension_group: updated {
     type: time
     timeframes: [

@@ -101,3 +101,21 @@ explore: orders {
     sql_on: ${register.id} = ${register_log.register_id} ;;
   }
 }
+
+explore: register_log {
+
+  join: register {
+    relationship: many_to_one
+    sql_on: ${register.id} = ${register_log.register_id} ;;
+  }
+
+  join: service_history {
+    relationship: many_to_one
+    sql_on: ${register_log.service_history_id} = ${service_history.id} ;;
+  }
+
+  join: orders {
+    relationship: many_to_one
+    sql_on: ${orders.id} = ${service_history.order_id} ;;
+  }
+}
