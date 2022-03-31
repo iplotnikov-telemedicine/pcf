@@ -554,11 +554,31 @@ view: orders {
     sql: ${TABLE}.vehicle ;;
   }
 
+  dimension: credit_card_sale {
+    type: number
+    sql: IF(${method2_amount} > 0, 1, 0) ;;
+  }
+
+  dimension: cash_sale {
+    type: number
+    sql: IF(${method1_amount} > 0, 1, 0) ;;
+  }
+
 
   measure: count_of_orders {
     type: count
     value_format_name: decimal_0
     drill_fields: [detail*]
+  }
+
+  measure: number_of_credit_card_transactions {
+    type: sum
+    sql: ${credit_card_sale} ;;
+  }
+
+  measure: number_of_cash_transactions {
+    type: sum
+    sql: ${cash_sale} ;;
   }
 
   measure: sum_total_amount {
@@ -595,6 +615,12 @@ view: orders {
     sql: MAX(${confirmed_raw}) ;;
   }
 
+  measure: total_tax {
+    type: sum
+    sql: ${sum_tax} ;;
+    value_format_name: usd
+  }
+
   filter: date_filter {
     type: date_time
   }
@@ -620,6 +646,46 @@ view: orders {
   dimension: interval_in_days {
     type: number
     sql: ABS(DATEDIFF(${filter_start_date_raw}, ${filter_end_date_raw}));;
+  }
+
+  dimension_group: wait_time_store {
+    type: duration
+    intervals: [hour, minute]
+    # sql_start: IF(${delivery_datetime_raw} = NULL, ${placed_raw}, ${completed_raw}) ;;
+    sql_start: ${placed_raw} ;;
+    sql_end: ${updated_raw};;
+  }
+
+  dimension_group: wait_time_delivery {
+    type: duration
+    intervals: [hour, minute]
+    sql_start: ${placed_raw} ;;
+    sql_end: ${delivery_datetime_raw};;
+  }
+
+
+  measure: avg_wait_time_store {
+    type: average
+    sql: ${minutes_wait_time_store} ;;
+    value_format_name: decimal_1
+  }
+
+  measure: avg_wait_time_delivery {
+    type: average
+    sql: ${minutes_wait_time_delivery} ;;
+    value_format_name: decimal_1
+  }
+
+  measure: total_cash_sales {
+    type: sum
+    sql: ${method1_amount} ;;
+    value_format_name: usd
+  }
+
+  measure: total_credit_card_sales {
+    type: sum
+    sql: ${method2_amount} ;;
+    value_format_name: usd
   }
 
   # ----- Sets of fields for drilling ------
