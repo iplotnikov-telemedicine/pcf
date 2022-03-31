@@ -72,15 +72,32 @@ explore: order_items {
 
 
 explore: orders {
-  always_filter: {
-    filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
-  }
+  # always_filter: {
+  #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
+  # }
+
   join: patients {
     relationship: many_to_one
     sql_on: ${patients.id} = ${orders.patient_id} ;;
   }
+
   join: offices {
     relationship: many_to_one
     sql_on: ${orders.office_id} = ${offices.office_id} ;;
+  }
+
+  join: service_history {
+    relationship: many_to_one
+    sql_on: ${orders.id} = ${service_history.order_id} ;;
+  }
+
+  join: register_log {
+    relationship: many_to_one
+    sql_on: ${service_history.id} = ${register_log.service_history_id} ;;
+  }
+
+  join: register {
+    relationship: many_to_one
+    sql_on: ${register.id} = ${register_log.register_id} ;;
   }
 }
