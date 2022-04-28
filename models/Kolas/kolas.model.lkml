@@ -63,12 +63,14 @@ explore: order_items {
   #   sql_on: ${self_brand_product.id} = ${orderItem.product_id} ;;
   # }
 
-  sql_always_where:
-  {% if order_items.namesearch._is_filtered %}
-  ${order_items.filter_by_product} = 'yes'
-  {% else %}
-  1=1
-  {% endif %};;
+  # sql_always_where:
+  # {% if order_items.namesearch._is_filtered %}
+  # ${order_items.filter_by_product} = 'yes'
+  # {% else %}
+  # 1=1
+  # {% endif %};;
+
+  sql_always_where: ${offices.company_id} = 9928;;
 }
 
 
@@ -76,6 +78,8 @@ explore: orders {
   # always_filter: {
   #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
   # }
+
+  sql_always_where: ${offices.company_id} = 9928;;
 
   join: patients {
     relationship: many_to_one
@@ -105,9 +109,12 @@ explore: orders {
 
 explore: register_log {
 
+  sql_always_where: ${offices.company_id} = 9928;;
+
   join: register {
     relationship: many_to_one
     sql_on: ${register.id} = ${register_log.register_id} ;;
+    sql_where: ${register.office_id} IS NOT NULL ;;
   }
 
   join: service_history {
@@ -118,5 +125,10 @@ explore: register_log {
   join: orders {
     relationship: many_to_one
     sql_on: ${orders.id} = ${service_history.order_id} ;;
+  }
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${register.office_id} = ${offices.office_id} ;;
   }
 }
