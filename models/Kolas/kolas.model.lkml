@@ -27,6 +27,7 @@ explore: order_items {
   join: offices {
     relationship: many_to_one
     sql_on: ${orders.office_id} = ${offices.office_id} ;;
+    # sql_where: ${offices.company_id} = @{kolas_company_id} ;;
   }
 
   join: patients {
