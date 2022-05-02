@@ -17,7 +17,7 @@ view: discounts {
   dimension: value {
     description: "Discount value"
     type: number
-    sql: ${TABLE}.number ;;
+    sql: ${TABLE}.value ;;
   }
 }
 
