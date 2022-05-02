@@ -324,8 +324,13 @@ view: order_items {
 
   dimension: net_sale {
     type: number
-    sql: ${gross_sale} -  ${refund_wo_tax} - ${discount_amount};;
+    sql: ${gross_sale} -  ${refund_wo_tax};;
   }
+
+  # dimension: net_sale {
+  #   type: number
+  #   sql: ${gross_sale} -  ${refund_wo_tax} - ${discount_amount};;
+  # }
 
   dimension: product_is_internal {
     type: number
