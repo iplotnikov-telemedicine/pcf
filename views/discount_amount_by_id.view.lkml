@@ -5,6 +5,7 @@ view: discount_amount_by_id {
       column: sum_total_discounts { field: orders.sum_total_discounts }
       column: sum_discount_amount {}
       column: discount_apply_type { field: discounts.discount_apply_type }
+      column: sum_net_sales {}
     }
   }
 
@@ -24,10 +25,17 @@ view: discount_amount_by_id {
   dimension: discount_apply_type {
     description: "Discount apply type"
   }
-
+  dimension: sum_net_sales {
+    description: "Discount apply type"
+  }
   dimension: discount_amount_in_usd {
     type: number
     sql: IF(${discount_apply_type} = 'cart', ${sum_total_discounts}, ${sum_discount_amount}) ;;
     value_format_name: usd
+  }
+
+  measure: net_sales_by_discount {
+    type:  sum
+    sql: ${sum_net_sales} ;;
   }
 }
