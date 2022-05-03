@@ -14,7 +14,8 @@ view: discounts {
     sql: ${TABLE}.name ;;
   }
 
-  dimension: value {
+  dimension: discount_value {
+    alias: [value]
     description: "Discount value"
     type: number
     sql: ${TABLE}.value ;;
