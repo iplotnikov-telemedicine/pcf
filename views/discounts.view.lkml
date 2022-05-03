@@ -8,7 +8,8 @@ view: discounts {
     sql: ${TABLE}.id ;;
   }
 
-  dimension: name {
+  dimension: discount_name {
+    alias: [name]
     description: "Discount name"
     type: string
     sql: ${TABLE}.name ;;
