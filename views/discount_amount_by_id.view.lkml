@@ -37,5 +37,6 @@ view: discount_amount_by_id {
   measure: net_sales_by_discount {
     type:  sum
     sql: ${sum_net_sales} ;;
+    value_format_name: usd
   }
 }
