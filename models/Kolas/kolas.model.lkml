@@ -39,6 +39,10 @@ explore: order_items {
     sql_where: ${discounts.id} is not null;;
   }
 
+  join: discount_amount_by_id {
+    relationship: one_to_one
+    sql_on: ${discounts.id} = ${discount_amount_by_id.id} ;;
+  }
 
   join: offices {
     relationship: many_to_one
