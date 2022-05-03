@@ -15,13 +15,6 @@ view: discounts {
     sql: ${TABLE}.name ;;
   }
 
-  dimension: discount_value {
-    alias: [value]
-    description: "Discount value"
-    type: number
-    sql: ${TABLE}.value ;;
-  }
-
   dimension: discount_apply_type {
     alias: [apply_type]
     description: "Discount apply type"
