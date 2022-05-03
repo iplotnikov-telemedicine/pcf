@@ -26,9 +26,10 @@ explore: order_items {
 
   join: discounts {
     relationship: many_to_one
-    sql_on: ${orders.discount_id} = ${discounts.id} ;;
+    sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
     sql_where: ${discounts.id} is not null;;
   }
+
 
   join: offices {
     relationship: many_to_one
