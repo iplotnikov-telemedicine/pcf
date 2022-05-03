@@ -21,6 +21,16 @@ view: discounts {
     type: number
     sql: ${TABLE}.value ;;
   }
+
+  dimension: discount_apply_type {
+    alias: [apply_type]
+    description: "Discount apply type"
+    type: string
+    sql: ${TABLE}.apply_type ;;
+  }
+
+
+
 }
 
 # view: discounts {
