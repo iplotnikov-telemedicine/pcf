@@ -130,7 +130,7 @@ explore: order_items {
 
   explore: register_log {
 
-    sql_always_where: ${offices.company_id} = 9928;;
+    sql_always_where: ${offices.company_id} = 3583;;
 
     join: register {
       relationship: many_to_one
