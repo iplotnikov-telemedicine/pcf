@@ -1,5 +1,6 @@
 connection: "dtpg"
 
+label: "DTPG"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 include: "/views/kolas/*.view.lkml"          # include all views in the views/kolas folder in this project
