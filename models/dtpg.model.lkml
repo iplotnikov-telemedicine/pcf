@@ -92,7 +92,7 @@ explore: order_items {
     # 1=1
     # {% endif %};;
 
-    sql_always_where: ${offices.company_id} = 9928;;
+    sql_always_where: ${offices.company_id} = 3583;;
   }
 
 
@@ -101,7 +101,7 @@ explore: order_items {
     #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
     # }
 
-    sql_always_where: ${offices.company_id} = 9928;;
+    sql_always_where: ${offices.company_id} = 3583;;
 
     join: patients {
       relationship: many_to_one
