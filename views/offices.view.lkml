@@ -337,6 +337,7 @@ view: offices {
   }
 
   dimension: office_name {
+    alias: [store_name]
     type: string
     sql: ${TABLE}.office_name ;;
   }
