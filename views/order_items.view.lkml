@@ -322,15 +322,15 @@ view: order_items {
     sql: IF(${paid_amount}, ${returned_amount} - (${returned_amount} * ${tax} / ${paid_amount}), 0 ) ;;
   }
 
-  dimension: net_sale {
+  dimension: net_sale_alternative {
     type: number
     sql: ${gross_sale} -  ${refund_wo_tax};;
   }
 
-  # dimension: net_sale {
-  #   type: number
-  #   sql: ${gross_sale} -  ${refund_wo_tax} - ${discount_amount};;
-  # }
+  dimension: net_sale {
+    type: number
+    sql: ${gross_sale} -  ${refund_wo_tax} - ${discount_amount};;
+  }
 
   dimension: product_is_internal {
     type: number
