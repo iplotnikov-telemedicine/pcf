@@ -182,7 +182,7 @@ view: offices {
     sql: ${TABLE}.office_city_name ;;
   }
 
-  dimension: company_id {
+  dimension: office_comp_id {
     type: number
     sql: ${TABLE}.office_comp_id ;;
   }
@@ -336,8 +336,7 @@ view: offices {
     sql: ${TABLE}.office_lastactivity ;;
   }
 
-  dimension: store_name {
-    alias: [office_name]
+  dimension: office_name {
     type: string
     sql: ${TABLE}.office_name ;;
   }
@@ -654,7 +653,7 @@ view: offices {
   set: detail {
     fields: [
       office_id,
-      store_name,
+      office_name,
       bussiness_name,
       office_state_name,
       office_county_name,

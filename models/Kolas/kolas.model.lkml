@@ -1,7 +1,6 @@
 connection: "kolas"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
-include: "/views/kolas/*.view.lkml"          # include all views in the views/kolas folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
@@ -90,7 +89,7 @@ explore: order_items {
   # 1=1
   # {% endif %};;
 
-  sql_always_where: ${offices.company_id} = 9928;;
+  sql_always_where: ${offices.office_id} = 9928;;
 }
 
 
@@ -99,7 +98,7 @@ explore: orders {
   #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
   # }
 
-  sql_always_where: ${offices.company_id} = 9928;;
+  sql_always_where: ${offices.office_id} = 9928;;
 
   join: patients {
     relationship: many_to_one
@@ -129,7 +128,7 @@ explore: orders {
 
 explore: register_log {
 
-  sql_always_where: ${offices.company_id} = 9928;;
+  sql_always_where: ${offices.office_id} = 9928;;
 
   join: register {
     relationship: many_to_one
