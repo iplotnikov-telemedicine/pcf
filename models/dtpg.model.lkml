@@ -91,7 +91,7 @@ explore: order_items {
     # 1=1
     # {% endif %};;
 
-    sql_always_where: ${offices.office_id} = 3583;;
+    sql_always_where: ${offices.office_id} = @{dtpg_company_id};;
   }
 
 
@@ -100,7 +100,7 @@ explore: order_items {
     #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
     # }
 
-    sql_always_where: ${offices.office_id} = 3583;;
+    sql_always_where: ${offices.office_id} = @{dtpg_company_id};;
 
     join: patients {
       relationship: many_to_one
@@ -130,7 +130,7 @@ explore: order_items {
 
   explore: register_log {
 
-    sql_always_where: ${offices.office_id} = 3583;;
+    sql_always_where: ${offices.office_id} = @{dtpg_company_id};;
 
     join: register {
       relationship: many_to_one
