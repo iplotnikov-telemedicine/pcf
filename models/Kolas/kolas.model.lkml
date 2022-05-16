@@ -8,7 +8,7 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 explore: order_items {
 
-  sql_always_where: ${offices.office_comp_id} = 9928;;
+  sql_always_where: ${offices.office_comp_id} = @{kolas_company_id};;
 
   join: products {
     relationship: many_to_one
@@ -98,7 +98,7 @@ explore: orders {
   #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
   # }
 
-  sql_always_where: ${offices.office_comp_id} = 9928;;
+  sql_always_where: ${offices.office_comp_id} = @{kolas_company_id};;
 
   join: patients {
     relationship: many_to_one
@@ -128,7 +128,7 @@ explore: orders {
 
 explore: register_log {
 
-  sql_always_where: ${offices.office_comp_id} = 9928;;
+  sql_always_where: ${offices.office_comp_id} = @{kolas_company_id};;
 
   join: register {
     relationship: many_to_one
