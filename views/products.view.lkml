@@ -391,6 +391,32 @@ view: products {
     sql: ${TABLE}.strain ;;
   }
 
+  dimension: strain_name {
+    type: string
+    case: {
+      when: {
+        sql: ${strain} = 0 ;;
+        label: "None"
+      }
+      when: {
+        sql: ${strain} = 1 ;;
+        label: "Indica"
+      }
+      when: {
+        sql: ${strain} = 2 ;;
+        label: "Sativa"
+      }
+      when: {
+        sql: ${strain} = 3 ;;
+        label: "Hybrid"
+      }
+      when: {
+        sql: ${strain} = 4 ;;
+        label: "CBD"
+      }
+    }
+  }
+
   dimension: product_id_and_name {
     type: string
     sql: CONCAT(${id}, '-', ${name}) ;;
