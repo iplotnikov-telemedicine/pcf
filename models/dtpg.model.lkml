@@ -10,6 +10,9 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 explore: order_items {
 
+  # 3583
+  sql_always_where: ${offices.office_comp_id} = 3583;;
+
   join: products {
     relationship: many_to_one
     sql_on: ${products.id} = ${order_items.product_id};;
@@ -45,11 +48,11 @@ explore: order_items {
       sql_on: ${discounts.id} = ${discount_amount_by_id.id} ;;
     }
 
-    join: offices {
-      relationship: many_to_one
-      sql_on: ${orders.office_id} = ${offices.office_id} ;;
-      # sql_where: ${offices.company_id} = @{kolas_company_id} ;;
-    }
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${orders.office_id} = ${offices.office_id} ;;
+    # sql_where: ${offices.company_id} = @{kolas_company_id} ;;
+  }
 
     join: patients {
       relationship: many_to_one
@@ -91,7 +94,7 @@ explore: order_items {
     # 1=1
     # {% endif %};;
 
-    sql_always_where: ${offices.office_id} = 3583;;
+    # sql_always_where: ${offices.office_id} = 3583;;
   }
 
 
