@@ -39,6 +39,35 @@ view: inventory_log {
     sql: ${TABLE}.order_item_id ;;
   }
 
+  dimension_group: created_at {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.created_at ;;
+  }
+
+  measure: last_created_at {
+    sql: MAX(${TABLE}.created_at) ;;
+  }
+
+  measure: first_created_at {
+    sql: MIN(${TABLE}.created_at) ;;
+  }
+
+  dimension_group: stocked_duration {
+    type: duration
+    sql_start: first_created_at ;;
+    sql_end: last_created_at ;;
+    intervals: [day]
+  }
+
   dimension: event_type {
     case: {
       when: {

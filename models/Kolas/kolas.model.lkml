@@ -5,6 +5,42 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 
+explore: inventory_log {
+
+
+  join: products {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${inventory_log.product_id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_types {
+    relationship: many_to_one
+    sql_on: ${products.product_type_id} = ${product_types.id};;
+  }
+
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: product_checkins {
+    relationship: one_to_many
+    sql_on: ${products.prod_category_id} = ${product_checkins.product_id};;
+  }
+
+  join: barcode {
+    relationship: one_to_many
+    sql_on: ${product_checkins.id} = ${barcode.product_checkin_id} and ${barcode.company_id} = @{kolas_company_id};;
+  }
+  # LEFT JOIN product_types pt ON p.product_type_id = pt.id
+  # LEFT JOIN product_categories pcat ON p.prod_category_id = pcat.id
+}
+
 
 explore: order_items {
 
@@ -39,6 +75,18 @@ explore: order_items {
     # sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
     sql_where: ${discounts.id} is not null;;
   }
+
+  # join: order_item_discounts {
+  #   from: discounts
+  #   relationship: many_to_one
+  #   sql_on: ${discounts.id} = ${order_items.discount_id} and ${discounts.apply_type} = "item";;
+  # }
+
+  # join: order_discounts {
+  #   from: discounts
+  #   relationship: many_to_one
+  #   sql_on: ${discounts.id} = ${orders.discount_id} and ${discounts.apply_type} = "cart";;
+  # }
 
   join: discount_amount_by_id {
     relationship: one_to_one

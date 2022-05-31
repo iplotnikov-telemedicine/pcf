@@ -381,6 +381,12 @@ view: products {
     sql: ${TABLE}.product_type_id ;;
   }
 
+  dimension: prod_category_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.prod_category_id ;;
+  }
+
   dimension: show_on_leafly {
     type: yesno
     sql: ${TABLE}.show_on_leafly ;;
