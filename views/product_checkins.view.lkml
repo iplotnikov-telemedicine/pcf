@@ -51,6 +51,22 @@ view: product_checkins {
     sql: ${TABLE}.date ;;
   }
 
+
+  measure: last_checkin_at {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: MAX(${date_raw}) ;;
+  }
+
+
   dimension_group: deleted {
     type: time
     timeframes: [
@@ -163,6 +179,16 @@ view: product_checkins {
     sql: ${TABLE}.price ;;
   }
 
+  measure: price_sum {
+    type: sum
+    sql: ${TABLE}.price ;;
+  }
+
+  measure: qty_sum {
+    type: sum
+    sql: ${TABLE}.qty ;;
+  }
+
   dimension: producer_id {
     type: number
     sql: ${TABLE}.producer_id ;;
@@ -170,7 +196,6 @@ view: product_checkins {
 
   dimension: product_id {
     type: number
-    # hidden: yes
     sql: ${TABLE}.product_id ;;
   }
 

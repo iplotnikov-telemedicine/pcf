@@ -30,12 +30,13 @@ view: product_prices {
   dimension: price {
     type: number
     sql: ${TABLE}.price ;;
+    value_format_name: usd
   }
 
-  dimension: product_id {
+  dimension: price_group_id {
     type: number
     # hidden: yes
-    sql: ${TABLE}.product_id ;;
+    sql: ${TABLE}.price_group_id ;;
   }
 
   dimension: range_from {
@@ -46,6 +47,11 @@ view: product_prices {
   dimension: range_to {
     type: number
     sql: ${TABLE}.range_to ;;
+  }
+
+  dimension: weight_type {
+    type: string
+    sql: ${TABLE}.weight_type ;;
   }
 
   dimension_group: sync_created {

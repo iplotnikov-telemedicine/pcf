@@ -59,6 +59,42 @@ view: product_office_quantity {
     sql: ${TABLE}.sync_updated_at ;;
   }
 
+  dimension: weight_of_item {
+    type: number
+    sql:
+    CASE poq_item_type
+      WHEN 'gram' THEN 1
+      WHEN 'pp_eighth' THEN 3.5
+      WHEN 'pp_quarter' THEN 7
+      WHEN 'pp_half' THEN 14
+      WHEN 'pp_ounce' THEN 28
+      WHEN 'joint' THEN 1
+      ELSE 1
+    END ;;
+  }
+
+  dimension: item_quantity {
+    type:  number
+    sql: ${quantity} * ${weight_of_item} ;;
+  }
+
+  measure: total_item_quantity {
+    type: sum
+    sql:  ${item_quantity} ;;
+  }
+
+  # measure: storage_total_item_quantity {
+  #   type: sum
+  #   sql:  ${item_quantity} ;;
+  #   filters: [offices.is_storage: "yes"]
+  # }
+
+  # measure: shelf_total_item_quantity {
+  #   type: sum
+  #   sql:  ${item_quantity} ;;
+  #   filters: [offices.is_storage: "no"]
+  # }
+
   measure: number_of_product_office_quantity {
     type: count
     drill_fields: []

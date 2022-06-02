@@ -126,6 +126,7 @@ view: products {
   dimension: prod_balance {
     type: number
     sql: ${TABLE}.prod_balance ;;
+    value_format_name: usd
   }
 
   dimension: category_id {
@@ -252,6 +253,12 @@ view: products {
   dimension: photo {
     type: string
     sql: ${TABLE}.prod_photo ;;
+  }
+
+  dimension: product_cost {
+    type: number
+    sql: IF(product_office_quantity.poq_item_type = 'joint', ${TABLE}.prod_joint_cost, ${TABLE}.prod_price);;
+    value_format_name: usd
   }
 
   dimension: price {
@@ -381,6 +388,12 @@ view: products {
     sql: ${TABLE}.product_type_id ;;
   }
 
+  dimension: prod_category_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.prod_category_id ;;
+  }
+
   dimension: show_on_leafly {
     type: yesno
     sql: ${TABLE}.show_on_leafly ;;
@@ -415,6 +428,11 @@ view: products {
         label: "CBD"
       }
     }
+  }
+
+  dimension: prod_price_type {
+    type:  string
+    sql: ${TABLE}.prod_price_type ;;
   }
 
   dimension: product_id_and_name {
