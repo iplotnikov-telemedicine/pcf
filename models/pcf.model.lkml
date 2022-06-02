@@ -1,4 +1,4 @@
-connection: "io"
+connection: "pcf"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
@@ -94,17 +94,6 @@ explore: patients { view_name: patients
     relationship: many_to_one
     sql_on: ${patients.id} = ${orders.patient_id} ;;
   }
-
-  join: notes {
-    relationship: many_to_one
-    sql_on:  ${patients.id} = ${notes.patient_id};;
-  }
-
-  join: patient_point {
-    relationship: many_to_one
-    sql_on:  ${patients.id} = ${patient_point.patient_id};;
-  }
-
 }
 
 
