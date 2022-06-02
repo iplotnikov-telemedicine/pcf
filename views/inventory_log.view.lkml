@@ -29,6 +29,11 @@ view: inventory_log {
     sql: ${TABLE}.quantity ;;
   }
 
+  dimension: is_increased {
+    type: yesno
+    sql: ${quantity} > 0 ;;
+  }
+
   dimension: package_id {
     type: number
     sql: ${TABLE}.package_id ;;
@@ -61,6 +66,18 @@ view: inventory_log {
   measure: total_unit_quantity {
     type: sum
     sql: ${unit_quantity} ;;
+  }
+
+  measure: total_qty_increased_by {
+    type: sum
+    sql: ${unit_quantity} ;;
+    filters: [is_increased: "yes"]
+  }
+
+  measure: total_qty_decreased_by {
+    type: sum
+    sql: ${unit_quantity} ;;
+    filters: [is_increased: "no"]
   }
 
   dimension_group: created {
