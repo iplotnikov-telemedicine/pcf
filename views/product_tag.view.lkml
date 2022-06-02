@@ -1,8 +1,8 @@
-# The name of this view in Looker is "Barcode"
-view: barcode {
+# The name of this view in Looker is "Product Tag"
+view: product_tag {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: backend.barcode ;;
+  sql_table_name: product_tag ;;
   drill_fields: [id]
   # This primary key is the unique key for this table in the underlying database.
   # You need to define a primary key in a view in order to join to other views.
@@ -15,49 +15,15 @@ view: barcode {
 
   # Here's what a typical dimension looks like in LookML.
   # A dimension is a groupable field that can be used to filter query results.
-  # This dimension will be called "Code" in Explore.
+  # This dimension will be called "Name" in Explore.
 
-  dimension: code {
+  dimension: name {
     type: string
-    sql: ${TABLE}.code ;;
-  }
-
-  dimension: company_id {
-    type: number
-    sql: ${TABLE}.company_id ;;
+    sql: ${TABLE}.name ;;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
-
-  dimension_group: created_at {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.created_at ;;
-  }
-
-  dimension: product_checkin_id {
-    type: number
-    sql: ${TABLE}.product_checkin_id ;;
-  }
-
-  dimension: product_id {
-    type: number
-    sql: ${TABLE}.product_id ;;
-  }
-
-  dimension: product_type {
-    type: string
-    sql: ${TABLE}.product_type ;;
-  }
 
   dimension_group: sync_created {
     type: time
@@ -87,37 +53,13 @@ view: barcode {
     sql: ${TABLE}.sync_updated_at ;;
   }
 
-  dimension: type {
-    type: yesno
-    sql: ${TABLE}.type ;;
-  }
-
-  dimension_group: updated_at {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.updated_at ;;
-  }
-
   measure: count {
     type: count
-    drill_fields: [id]
+    drill_fields: [id, name]
   }
 
-  measure: max_barcode {
-    type: max
-    sql: ${code} ;;
-  }
-
-  measure: barcode_list {
+  measure: name_list {
     type: list
-    list_field: code
+    list_field: name
   }
 }

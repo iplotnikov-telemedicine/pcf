@@ -4,13 +4,63 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+explore: barcode {}
 
-explore: inventory_log {
-
-
-  join: products {
+explore: product_office_quantity {
+  join: offices {
     relationship: many_to_one
-    sql_on: ${products.id} = ${inventory_log.product_id};;
+    sql_on: ${product_office_quantity.office_id} = ${offices.office_id};;
+  }
+}
+
+explore: product_checkins {}
+
+explore: products {
+
+  join: product_tag_ref {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_tag_ref.product_id};;
+  }
+
+  join: product_tag {
+    relationship: many_to_many
+    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
+  }
+
+  # join: product_office_quantity {
+  #   relationship: many_to_many
+  #   sql_on: ${products.id} = ${product_office_quantity.product_id};;
+  # }
+
+  # join: offices {
+  #   relationship: many_to_one
+  #   sql_on: ${product_office_quantity.office_id} = ${offices.office_id};;
+  # }
+
+  join: product_office_quantity {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_office_quantity.product_id};;
+  }
+
+  # join: inventory_log {
+  #   relationship: one_to_many
+  #   sql_on: ${products.id} = ${inventory_log.product_id};;
+  # }
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${offices.office_id} = ${product_office_quantity.office_id};;
+  }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id};;
   }
 
   join: brands {
@@ -28,14 +78,26 @@ explore: inventory_log {
     sql_on: ${products.prod_category_id} = ${product_categories.id};;
   }
 
-  join: product_checkins {
-    relationship: one_to_many
-    sql_on: ${products.prod_category_id} = ${product_checkins.product_id};;
+  join: checkins_by_product {
+    relationship: one_to_one
+    sql_on: ${products.id} = ${checkins_by_product.product_id} ;;
   }
+
+  # join: product_checkins {
+  #   type: inner
+  #   relationship: one_to_one
+  #   sql_on: ${last_checkins_by_product.product_id} = ${product_checkins.product_id}
+  #     AND ${last_checkins_by_product.last_checkin_at_time} = ${product_checkins.date_raw};;
+  # }
+
+
+
 
   join: barcode {
     relationship: one_to_many
-    sql_on: ${product_checkins.id} = ${barcode.product_checkin_id} and ${barcode.company_id} = @{kolas_company_id};;
+    sql_on: ${products.id} = ${barcode.product_id}
+      and ${barcode.company_id} = @{kolas_company_id};;
+    # sql_on: ${product_checkins.id} = ${barcode.product_checkin_id} and ${barcode.company_id} = @{kolas_company_id};;
   }
   # LEFT JOIN product_types pt ON p.product_type_id = pt.id
   # LEFT JOIN product_categories pcat ON p.prod_category_id = pcat.id
@@ -43,8 +105,6 @@ explore: inventory_log {
 
 
 explore: order_items {
-
-  sql_always_where: ${offices.office_comp_id} = @{kolas_company_id};;
 
   join: products {
     relationship: many_to_one
@@ -146,8 +206,6 @@ explore: orders {
   #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
   # }
 
-  sql_always_where: ${offices.office_comp_id} = @{kolas_company_id};;
-
   join: patients {
     relationship: many_to_one
     sql_on: ${patients.id} = ${orders.patient_id} ;;
@@ -175,8 +233,6 @@ explore: orders {
 }
 
 explore: register_log {
-
-  sql_always_where: ${offices.office_comp_id} = @{kolas_company_id};;
 
   join: register {
     relationship: many_to_one

@@ -79,15 +79,15 @@ explore: order_items {
 explore: users {
 }
 
-explore: self_products {
-  extends: [products]
-  sql_always_where: ${products.brand_id} IN() ;;
-}
+# explore: self_products {
+#   extends: [products]
+#   sql_always_where: ${products.brand_id} IN() ;;
+# }
 
-explore: products_from_other_brand {
-  extends: [products]
-  sql_always_where: ${products.brand_id} NOT IN() ;;
-}
+# explore: products_from_other_brand {
+#   extends: [products]
+#   sql_always_where: ${products.brand_id} NOT IN() ;;
+# }
 
 explore: patients { view_name: patients
   join: orders {

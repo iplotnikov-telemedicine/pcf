@@ -39,7 +39,31 @@ view: inventory_log {
     sql: ${TABLE}.order_item_id ;;
   }
 
-  dimension_group: created_at {
+  dimension: unit_of_weight {
+    type: string
+    sql:
+    CASE item_type
+      WHEN 'gram' THEN 1
+      WHEN 'pp_eighth' THEN 3.5
+      WHEN 'pp_quarter' THEN 7
+      WHEN 'pp_half' THEN 14
+      WHEN 'pp_ounce' THEN 28
+      WHEN 'joint' THEN 1
+      ELSE 1
+    END ;;
+  }
+
+  dimension: unit_quantity {
+    type:  number
+    sql:  ${unit_of_weight} * ${quantity} ;;
+  }
+
+  measure: total_unit_quantity {
+    type: sum
+    sql: ${unit_quantity} ;;
+  }
+
+  dimension_group: created {
     type: time
     timeframes: [
       raw,
@@ -53,19 +77,32 @@ view: inventory_log {
     sql: ${TABLE}.created_at ;;
   }
 
-  measure: last_created_at {
-    sql: MAX(${TABLE}.created_at) ;;
+  # measure: last_created {
+  #   type:  max
+  #   sql: ${created_raw} ;;
+  # }
+
+  # measure: first_created {
+  #   type: min
+  #   sql: ${created_raw} ;;
+  # }
+
+  # measure: stocked_days {
+  #   type: number
+  #   sql: DATE_DIFF(${first_created}, ${last_created}) ;;
+  #   value_format_name: decimal_1
+  # }
+
+  measure: storage_quantity {
+    type: sum
+    sql: ${quantity} ;;
+    filters: [offices.is_storage: "Yes"]
   }
 
-  measure: first_created_at {
-    sql: MIN(${TABLE}.created_at) ;;
-  }
-
-  dimension_group: stocked_duration {
-    type: duration
-    sql_start: first_created_at ;;
-    sql_end: last_created_at ;;
-    intervals: [day]
+  measure: shelf_quantity {
+    type: sum
+    sql: ${quantity} ;;
+    filters: [offices.is_storage: "No"]
   }
 
   dimension: event_type {
