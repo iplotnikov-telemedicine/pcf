@@ -257,11 +257,12 @@ view: products {
 
   dimension: product_cost {
     type: number
-    sql: IF(product_office_quantity.poq_item_type = 'joint', ${TABLE}.prod_joint_cost, ${TABLE}.prod_price);;
+    sql: ${TABLE}.prod_price;;
     value_format_name: usd
   }
 
   dimension: price {
+    label: "Cost"
     type: number
     sql: ${TABLE}.prod_price ;;
   }

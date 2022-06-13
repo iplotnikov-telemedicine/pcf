@@ -42,6 +42,28 @@ view: product_transactions {
     sql: ${TABLE}.item_type ;;
   }
 
+  dimension: is_increased {
+    type: yesno
+    sql: ${TABLE}.type = 12;;
+  }
+
+  # measure: quantity_increased_by {
+  #   type: sum
+  #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %} and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+  #   filters: [is_increased: "yes"]
+  # }
+
+  dimension: is_decreased {
+    type: yesno
+    sql: ${TABLE}.type = 13;;
+  }
+
+  # measure: quantity_decreased_by {
+  #   type: sum
+  #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %} and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+  #   filters: [is_decreased: "yes"]
+  # }
+
   dimension: note {
     type: string
     sql: ${TABLE}.note ;;
@@ -129,8 +151,8 @@ view: product_transactions {
     sql: ${TABLE}.transfer_direction ;;
   }
 
-  dimension: type {
-    type: yesno
+  dimension: transaction_type {
+    type: number
     sql: ${TABLE}.type ;;
   }
 

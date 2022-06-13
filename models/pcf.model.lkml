@@ -4,25 +4,91 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
-explore: products {
-  view_name: products
-  join: product_categories {
+explore: product_transactions {}
+
+explore: product_office_quantity {}
+
+explore: inventory_log {
+  join: offices {
+    type: inner
     relationship: many_to_one
-    sql_on: ${products.category_id} = ${product_categories.id} ;;
+    sql_on: ${inventory_log.storage_id} = ${offices.office_id} and ${offices.office_comp_id} = 4546;;
   }
-  join: product_office_quantity {
-    view_label: "Product Office Quantity"
-    relationship: one_to_one
-    sql_on: ${products.id} = ${product_office_quantity.product_id} and 3781 = ${product_office_quantity.office_id} ;;
+
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on:  ${inventory_log.product_id} = ${products.id} ;;
   }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${inventory_log.item_type} = ${product_prices.weight_type} or ${product_prices.weight_type} IS NULL);;
+  }
+
   join: brands {
     relationship: many_to_one
     sql_on: ${products.brand_id} = ${brands.brand_id} ;;
   }
+
+
 }
 
-explore: product_categories {}
+explore: products {
 
+  view_name: products
+
+  join: product_checkins {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_checkins.product_id} ;;
+  }
+
+  # join: adjustments {
+  #   from: product_transactions
+  #   type: left_outer
+  #   relationship: one_to_many
+  #   sql_on: ${product_checkins.id} = ${adjustments.product_checkin_id}
+  #     AND ${adjustments.transaction_type} in (12,13) ;;
+  # }
+
+  join: adjustments_by_checkin {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${adjustments_by_checkin.product_checkin_id} ;;
+  }
+
+  join: order_items_by_checkin {
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${order_items_by_checkin.product_checkin_id};;
+      # and ${product_checkins.date_raw} <= ${order_items.created_raw};;
+  }
+
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.category_id} = ${product_categories.id} ;;
+  }
+
+  join: product_office_quantity_by_product {
+    relationship: one_to_one
+    sql_on: ${products.id} = ${product_office_quantity_by_product.product_id} ;;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+}
+
+
+explore: product_categories {}
 
 explore: order_items {
 

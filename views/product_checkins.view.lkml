@@ -277,6 +277,23 @@ view: product_checkins {
     drill_fields: [detail*]
   }
 
+  dimension: external_barcode {
+    type:  string
+    sql: ${TABLE}.external_barcode ;;
+  }
+  # measure: starting_amount {
+  #   type: number
+  #   sql:  ${qty_sum} - ${order_items.sum_order_item_quantity_sold_before_date_start};;
+  # }
+
+  # measure: ending_amount {
+  #   type: number
+  #   sql:  ${starting_amount}
+  #     + ${product_transactions.quantity_increased_by}
+  #     - ${product_transactions.quantity_decreased_by}
+  #     - ${order_items.sum_order_item_quantity_sold_in_range};;
+  # }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [

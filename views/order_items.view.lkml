@@ -2,6 +2,20 @@ view: order_items {
   sql_table_name: warehouse_order_items ;;
   drill_fields: [id]
 
+  parameter: from_date {
+    type: date
+  }
+
+  parameter: to_date {
+    type: date
+  }
+
+  filter: date_filter {
+    # lab: "Date Range"
+    type: date
+    default_value: "45 days"
+  }
+
   dimension: id {
     primary_key: yes
     type: number
@@ -146,6 +160,12 @@ view: order_items {
     type: yesno
     sql: ${TABLE}.is_returned ;;
   }
+
+  # dimension: is_confirmed {
+  #   type: yesno
+  #   sql: orders.confirmed_at IS NOT NULL;;
+  # }
+
 
   dimension: is_under_package_control {
     type: yesno
@@ -306,10 +326,10 @@ view: order_items {
     drill_fields: [detail*]
   }
 
-
   dimension: order_item_quantity {
     type: number
     sql: (${quantity} + ${quantity_free}) * ${count};;
+    value_format_name: decimal_0
   }
 
   dimension: gross_sale {
@@ -366,7 +386,38 @@ view: order_items {
   measure: sum_order_item_quantity {
     type: sum
     sql: ${order_item_quantity} ;;
-    value_format_name: decimal_2
+  }
+
+  measure: sum_order_item_quantity_sold {
+    type: sum
+    sql: ${order_item_quantity} ;;
+    # filters: [is_confirmed: "yes"]
+  }
+
+  measure: sum_order_item_quantity_sold_in_range {
+    type: sum
+    sql: CASE WHEN ${created_raw} between {% date_start date_filter %} and {% date_end date_filter %}
+    THEN ${order_item_quantity} END ;;
+    # filters: [is_confirmed: "yes"]
+  }
+
+  measure: sum_order_item_quantity_sold_before_date_start {
+    type: sum
+    sql: CASE WHEN ${created_raw} < {% date_start date_filter %} THEN ${order_item_quantity} END ;;
+    # filters: [is_confirmed: "yes"]
+  }
+
+  measure: sum_order_item_quantity_returned {
+    type: sum
+    sql: ${order_item_quantity} ;;
+    filters: [is_returned: "yes"]
+  }
+
+  measure: sum_order_item_quantity_returned_in_range {
+    type: sum
+    sql: CASE WHEN ${created_raw} between {% date_start date_filter %} and {% date_end date_filter %}
+      THEN ${order_item_quantity} END ;;
+    filters: [is_returned: "yes"]
   }
 
   measure: sum_gross_sale {

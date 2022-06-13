@@ -2,7 +2,6 @@ view: inventory_log {
 
   sql_table_name: inventory_log ;;
 
-
   dimension: id {
     primary_key: yes
     type: number
@@ -21,7 +20,7 @@ view: inventory_log {
 
   dimension: item_type {
     type: string
-    sql: ${TABLE}.item_type ;;
+    sql: REPLACE(${TABLE}.item_type, 'pp_', '') ;;
   }
 
   dimension: quantity {
@@ -36,7 +35,7 @@ view: inventory_log {
 
   dimension: package_id {
     type: number
-    sql: ${TABLE}.package_id ;;
+    sql: ${TABLE}.batch_id ;;
   }
 
   dimension: order_item_id {
@@ -94,35 +93,55 @@ view: inventory_log {
     sql: ${TABLE}.created_at ;;
   }
 
-  # measure: last_created {
-  #   type:  max
-  #   sql: ${created_raw} ;;
-  # }
+  measure: quantity_at_the_first_date {
+    type: sum
+    sql: ${quantity} ;;
+    filters: [event_type_name: "Package Create"]
 
-  # measure: first_created {
-  #   type: min
-  #   sql: ${created_raw} ;;
-  # }
+  }
 
+  measure: last_date {
+    type: date
+    sql: MAX(${created_raw}) ;;
+  }
+
+  measure: first_date {
+    type: date
+    sql: MIN(${created_raw}) ;;
+  }
+
+  measure: count {
+    type: count
+  }
   # measure: stocked_days {
   #   type: number
   #   sql: DATE_DIFF(${first_created}, ${last_created}) ;;
   #   value_format_name: decimal_1
   # }
 
-  measure: storage_quantity {
+  measure: storage_turnover {
     type: sum
     sql: ${quantity} ;;
     filters: [offices.is_storage: "Yes"]
   }
 
-  measure: shelf_quantity {
+  measure: shelf_turnover {
     type: sum
     sql: ${quantity} ;;
     filters: [offices.is_storage: "No"]
   }
 
-  dimension: event_type {
+  measure: quantity_at_the_last_date {
+    type: sum
+    sql: ${quantity} ;;
+  }
+
+  measure: average_inventory {
+    type: number
+    sql: (${quantity_at_the_first_date} + ${quantity_at_the_last_date}) / 2 ;;
+  }
+
+  dimension: event_type_name {
     case: {
       when: {
         sql: ${TABLE}.event_type = 1 ;;

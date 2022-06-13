@@ -13,6 +13,24 @@ explore: product_office_quantity {
   }
 }
 
+explore: inventory_log {
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${inventory_log.storage_id} = ${offices.office_id};;
+  }
+
+  join: products {
+    relationship: many_to_one
+    sql_on: ${inventory_log.product_id} = ${products.id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+}
+
 explore: product_checkins {}
 
 explore: products {
@@ -37,16 +55,25 @@ explore: products {
   #   sql_on: ${product_office_quantity.office_id} = ${offices.office_id};;
   # }
 
+
+
   join: product_office_quantity {
     type: inner
     relationship: one_to_many
     sql_on: ${products.id} = ${product_office_quantity.product_id};;
   }
 
-  # join: inventory_log {
-  #   relationship: one_to_many
-  #   sql_on: ${products.id} = ${inventory_log.product_id};;
-  # }
+  join: packages {
+    type:  inner
+    relationship: one_to_many
+    sql_on: ${products.id} = ${packages.product_id};;
+  }
+
+  join: product_checkins {
+    relationship: one_to_one
+    sql_on: ${packages.product_id} = ${product_checkins.product_id}
+      ${packages.office_id} = ${product_checkins.office_id} ;;
+  }
 
   join: offices {
     relationship: many_to_one
@@ -78,27 +105,13 @@ explore: products {
     sql_on: ${products.prod_category_id} = ${product_categories.id};;
   }
 
-  join: checkins_by_product {
-    relationship: one_to_one
-    sql_on: ${products.id} = ${checkins_by_product.product_id} ;;
-  }
-
-  # join: product_checkins {
-  #   type: inner
-  #   relationship: one_to_one
-  #   sql_on: ${last_checkins_by_product.product_id} = ${product_checkins.product_id}
-  #     AND ${last_checkins_by_product.last_checkin_at_time} = ${product_checkins.date_raw};;
+  # join: barcode {
+  #   relationship: one_to_many
+  #   sql_on: ${products.id} = ${barcode.product_id}
+  #     and ${checkins_by_package.checkin_id} = ${barcode.product_checkin_id}
+  #     and ${barcode.company_id} = @{kolas_company_id};;
+  #   # sql_on: ${product_checkins.id} = ${barcode.product_checkin_id} and ${barcode.company_id} = @{kolas_company_id};;
   # }
-
-
-
-
-  join: barcode {
-    relationship: one_to_many
-    sql_on: ${products.id} = ${barcode.product_id}
-      and ${barcode.company_id} = @{kolas_company_id};;
-    # sql_on: ${product_checkins.id} = ${barcode.product_checkin_id} and ${barcode.company_id} = @{kolas_company_id};;
-  }
   # LEFT JOIN product_types pt ON p.product_type_id = pt.id
   # LEFT JOIN product_categories pcat ON p.prod_category_id = pcat.id
 }
