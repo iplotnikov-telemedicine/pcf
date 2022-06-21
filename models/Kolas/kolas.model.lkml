@@ -98,7 +98,7 @@ explore: orders {
   #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
   # }
 
-  sql_always_where: ${offices.office_id} = 9928;;
+  sql_always_where: ${offices.office_comp_id} = 9928;;
 
   join: patients {
     relationship: many_to_one
