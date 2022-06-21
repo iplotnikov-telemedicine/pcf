@@ -126,6 +126,7 @@ view: products {
   dimension: prod_balance {
     type: number
     sql: ${TABLE}.prod_balance ;;
+    value_format_name: usd
   }
 
   dimension: category_id {
@@ -254,7 +255,14 @@ view: products {
     sql: ${TABLE}.prod_photo ;;
   }
 
+  dimension: product_cost {
+    type: number
+    sql: ${TABLE}.prod_price;;
+    value_format_name: usd
+  }
+
   dimension: price {
+    label: "Cost"
     type: number
     sql: ${TABLE}.prod_price ;;
   }
@@ -381,6 +389,12 @@ view: products {
     sql: ${TABLE}.product_type_id ;;
   }
 
+  dimension: prod_category_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.prod_category_id ;;
+  }
+
   dimension: show_on_leafly {
     type: yesno
     sql: ${TABLE}.show_on_leafly ;;
@@ -389,6 +403,37 @@ view: products {
   dimension: strain {
     type: yesno
     sql: ${TABLE}.strain ;;
+  }
+
+  dimension: strain_name {
+    type: string
+    case: {
+      when: {
+        sql: ${strain} = 0 ;;
+        label: "None"
+      }
+      when: {
+        sql: ${strain} = 1 ;;
+        label: "Indica"
+      }
+      when: {
+        sql: ${strain} = 2 ;;
+        label: "Sativa"
+      }
+      when: {
+        sql: ${strain} = 3 ;;
+        label: "Hybrid"
+      }
+      when: {
+        sql: ${strain} = 4 ;;
+        label: "CBD"
+      }
+    }
+  }
+
+  dimension: prod_price_type {
+    type:  string
+    sql: ${TABLE}.prod_price_type ;;
   }
 
   dimension: product_id_and_name {

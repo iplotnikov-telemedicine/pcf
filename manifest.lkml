@@ -11,6 +11,12 @@
 # }
 
 
-# constant: kolas_company_id {
-#   value: "9928"
-# }
+constant: kolas_company_id {
+  value: "9928"
+  export: override_optional
+}
+
+constant: dtpg_company_id {
+  value: "3583"
+  export: override_optional
+}

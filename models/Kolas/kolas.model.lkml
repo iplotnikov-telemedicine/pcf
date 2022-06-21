@@ -4,6 +4,117 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+explore: barcode {}
+
+explore: product_office_quantity {
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${product_office_quantity.office_id} = ${offices.office_id};;
+  }
+}
+
+explore: inventory_log {
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${inventory_log.storage_id} = ${offices.office_id};;
+  }
+
+  join: products {
+    relationship: many_to_one
+    sql_on: ${inventory_log.product_id} = ${products.id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+}
+
+explore: product_checkins {}
+
+explore: products {
+
+  join: product_tag_ref {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_tag_ref.product_id};;
+  }
+
+  join: product_tag {
+    relationship: many_to_many
+    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
+  }
+
+  # join: product_office_quantity {
+  #   relationship: many_to_many
+  #   sql_on: ${products.id} = ${product_office_quantity.product_id};;
+  # }
+
+  # join: offices {
+  #   relationship: many_to_one
+  #   sql_on: ${product_office_quantity.office_id} = ${offices.office_id};;
+  # }
+
+
+
+  join: product_office_quantity {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_office_quantity.product_id};;
+  }
+
+  join: packages {
+    type:  inner
+    relationship: one_to_many
+    sql_on: ${products.id} = ${packages.product_id};;
+  }
+
+  join: product_checkins {
+    relationship: one_to_one
+    sql_on: ${packages.product_id} = ${product_checkins.product_id}
+      ${packages.office_id} = ${product_checkins.office_id} ;;
+  }
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${offices.office_id} = ${product_office_quantity.office_id};;
+  }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_types {
+    relationship: many_to_one
+    sql_on: ${products.product_type_id} = ${product_types.id};;
+  }
+
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  # join: barcode {
+  #   relationship: one_to_many
+  #   sql_on: ${products.id} = ${barcode.product_id}
+  #     and ${checkins_by_package.checkin_id} = ${barcode.product_checkin_id}
+  #     and ${barcode.company_id} = @{kolas_company_id};;
+  #   # sql_on: ${product_checkins.id} = ${barcode.product_checkin_id} and ${barcode.company_id} = @{kolas_company_id};;
+  # }
+  # LEFT JOIN product_types pt ON p.product_type_id = pt.id
+  # LEFT JOIN product_categories pcat ON p.prod_category_id = pcat.id
+}
 
 
 explore: order_items {
@@ -37,6 +148,18 @@ explore: order_items {
     # sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
     sql_where: ${discounts.id} is not null;;
   }
+
+  # join: order_item_discounts {
+  #   from: discounts
+  #   relationship: many_to_one
+  #   sql_on: ${discounts.id} = ${order_items.discount_id} and ${discounts.apply_type} = "item";;
+  # }
+
+  # join: order_discounts {
+  #   from: discounts
+  #   relationship: many_to_one
+  #   sql_on: ${discounts.id} = ${orders.discount_id} and ${discounts.apply_type} = "cart";;
+  # }
 
   join: discount_amount_by_id {
     relationship: one_to_one
@@ -88,8 +211,6 @@ explore: order_items {
   # {% else %}
   # 1=1
   # {% endif %};;
-
-  sql_always_where: ${offices.office_id} = 9928;;
 }
 
 
@@ -127,8 +248,6 @@ explore: orders {
 }
 
 explore: register_log {
-
-  sql_always_where: ${offices.office_id} = 9928;;
 
   join: register {
     relationship: many_to_one
