@@ -194,9 +194,22 @@ explore: order_items {
     sql_on: ${order_item_refunds.id} = ${order_items.id} ;;
   }
 
-  join: users {
+  join: staff {
+    from: users
     relationship: many_to_one
-    sql_on: ${users.id} = ${orders.cashier_id} ;;
+    sql_on: ${staff.id} = ${orders.cashier_id} ;;
+  }
+
+  join: sf_guard_user_group {
+    relationship: many_to_many
+    sql_on: ${staff.id} = ${sf_guard_user_group.user_id} ;;
+  }
+
+  join: staff_category {
+    from: sf_guard_group
+    relationship: many_to_one
+    type: inner
+    sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
   }
 
   # join: self_brand_product {
