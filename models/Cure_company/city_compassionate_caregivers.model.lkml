@@ -133,7 +133,7 @@ explore: orders {
 
 explore: register_log {
 
-  sql_always_where: ${offices.office_id} = 7479;;
+  sql_always_where: ${offices.office_comp_id} = 7479;;
 
   join: register {
     relationship: many_to_one

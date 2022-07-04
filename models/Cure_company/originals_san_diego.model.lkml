@@ -99,7 +99,7 @@ explore: orders {
   #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
   # }
 
-  sql_always_where: ${offices.office_id} = 9624;;
+  sql_always_where: ${offices.office_comp_id} = 9624;;
 
   join: patients {
     relationship: many_to_one
@@ -129,7 +129,7 @@ explore: orders {
 
 explore: register_log {
 
-  sql_always_where: ${offices.office_id} = 9624;;
+  sql_always_where: ${offices.office_comp_id} = 9624;;
 
   join: register {
     relationship: many_to_one
