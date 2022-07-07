@@ -52,10 +52,10 @@ view: order_items {
     sql: ${TABLE}.created_at ;;
   }
 
-  dimension: delivery_tax {
-    type: number
-    sql: ${TABLE}.delivery_tax ;;
-  }
+  # dimension: delivery_tax {
+  #   type: number
+  #   sql: ${TABLE}.delivery_tax ;;
+  # }
 
   dimension: description {
     type: string
@@ -193,11 +193,13 @@ view: order_items {
   }
 
   dimension: price {
+    value_format_name: usd
     type: number
     sql: ${TABLE}.price ;;
   }
 
   dimension: price_per {
+    value_format_name: usd
     type: string
     sql: ${TABLE}.price_per ;;
   }
@@ -294,11 +296,13 @@ view: order_items {
 
   dimension: tax {
     type: number
+    value_format_name: usd
     sql: ${TABLE}.tax ;;
   }
 
   dimension: total_amount {
     type: number
+    value_format_name: usd
     sql: ${TABLE}.total_amount ;;
   }
 
@@ -318,6 +322,7 @@ view: order_items {
 
   dimension: wcii_cart_item {
     type: string
+    value_format_name: usd
     sql: ${TABLE}.wcii_cart_item ;;
   }
 

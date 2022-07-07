@@ -445,6 +445,7 @@ view: orders {
   }
 
   dimension: shipping_amount {
+    alias: [delivery_fee]
     type: number
     sql: ${TABLE}.shipping_amount ;;
     value_format_name: usd

@@ -226,6 +226,19 @@ explore: order_items {
   # {% endif %};;
 }
 
+explore: patients {
+
+  join: recommendations {
+    relationship: one_to_many
+    sql_on: ${patients.id} = ${recommendations.rec_pat_id} and ${recommendations.is_current} = 'Yes';;
+  }
+
+  join: orders {
+    relationship: one_to_many
+    sql_on: ${patients.id} = ${orders.patient_id} ;;
+  }
+
+}
 
 explore: orders {
   # always_filter: {
