@@ -349,12 +349,12 @@ view: order_items {
 
   dimension: net_sale_alt {
     type: number
-    sql: ${gross_sale} -  ${refund_wo_tax};;
+    sql: ${net_sale};;
   }
 
   dimension: net_sale {
     type: number
-    sql: ${gross_sale} -  ${refund_wo_tax} - ${discount_amount};;
+    sql: ${gross_sale} -  ${refund_wo_tax};;
   }
 
   dimension: product_is_internal {
