@@ -14,9 +14,15 @@ explore: product_office_quantity {
 }
 
 explore: inventory_log {
+
   join: offices {
     relationship: many_to_one
     sql_on: ${inventory_log.storage_id} = ${offices.office_id};;
+  }
+
+  join: product_checkins {
+    relationship: many_to_one
+    sql_on: ${inventory_log.package_id} = ${product_checkins.id};;
   }
 
   join: products {
@@ -29,12 +35,49 @@ explore: inventory_log {
     sql_on: ${products.brand_id} = ${brands.brand_id} ;;
   }
 
-}
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
 
+  join: product_categories_1 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories.id} <= ${product_categories_1.rgt}
+      and ${product_categories.id} >= ${product_categories_1.lft}
+      and ${product_categories.level} = ${product_categories_1.level} + 1 ;;
+  }
 
-explore: product_checkins {}
+  join: product_categories_2 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories_1.id} <= ${product_categories_2.rgt}
+    and ${product_categories_1.id} >= ${product_categories_2.lft}
+    and ${product_categories_1.level} = ${product_categories_2.level} + 1 ;;
+  }
 
-explore: products {
+  join: product_categories_3 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories_2.id} <= ${product_categories_3.rgt}
+    and ${product_categories_2.id} >= ${product_categories_3.lft}
+    and ${product_categories_2.level} = ${product_categories_3.level} + 1 ;;
+  }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
+  }
 
   join: product_tag_ref {
     relationship: one_to_many
@@ -45,18 +88,27 @@ explore: products {
     relationship: many_to_many
     sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
   }
-
-  # join: product_office_quantity {
-  #   relationship: many_to_many
-  #   sql_on: ${products.id} = ${product_office_quantity.product_id};;
-  # }
-
-  # join: offices {
-  #   relationship: many_to_one
-  #   sql_on: ${product_office_quantity.office_id} = ${offices.office_id};;
-  # }
+}
 
 
+explore: product_checkins {}
+
+explore: products {
+
+  join: inventory_log {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${inventory_log.product_id};;
+  }
+
+  join: product_tag_ref {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_tag_ref.product_id};;
+  }
+
+  join: product_tag {
+    relationship: many_to_many
+    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
+  }
 
   join: product_office_quantity {
     type: inner
@@ -88,7 +140,9 @@ explore: products {
 
   join: product_prices {
     relationship: many_to_one
-    sql_on: ${product_price_group.id} = ${product_prices.price_group_id};;
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
   }
 
   join: brands {
