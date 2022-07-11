@@ -31,6 +31,7 @@ explore: inventory_log {
 
 }
 
+
 explore: product_checkins {}
 
 explore: products {
@@ -118,6 +119,7 @@ explore: products {
 
 
 explore: order_items {
+  view_name: order_items
 
   join: products {
     relationship: many_to_one
@@ -133,6 +135,45 @@ explore: order_items {
     relationship: many_to_one
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
+
+  join: total_over_daily {
+    relationship: many_to_one
+    sql_on: ${orders.office_id} = ${total_over_daily.office_id}
+      and ${orders.confirmed_date} = ${total_over_daily.created_date} ;;
+  }
+
+  # aggregate_table: orders_daily {
+  #   query: {
+  #     dimensions: [orders.confirmed_date]
+  #     measures: [orders.atv, orders.avg_wait_time_delivery, orders.avg_wait_time_store, orders.number_of_cash_transactions, orders.number_of_credit_card_transactions, orders.sum_total_discounts, orders.total_cash_sales, orders.total_credit_card_sales, orders.total_tax, sum_gross_sale, sum_net_sales]
+  #     timezone: "America/Los_Angeles"
+  #   }
+  #   materialization: {
+  #     sql_trigger_value: SELECT CURDATE() ;;
+  #   }
+  # }
+
+
+  # join: service_history_sales {
+  #   from: service_history
+  #   relationship: one_to_one
+  #   sql_on: ${orders.id} = ${service_history_sales.order_id} and ${service_history_sales.type} = 'checkout';;
+  # }
+
+  # join: register_log_sales {
+  #   from: register_log
+  #   relationship: one_to_one
+  #   sql_on: ${service_history_sales.id} = ${register_log_sales.service_history_id} and ${register_log_sales.type} = 3;;
+  # }
+
+  # join: register_log_closes {
+  #   from: register_log
+  #   relationship: many_to_many
+  #   sql_on: ${register_log_sales.created_date} = ${register_log_closes.created_date}
+  #     and ${register_log_sales.register_id} = ${register_log_closes.register_id}
+  #     and ${register_log_sales.id} < ${register_log_closes.register_id}
+  #     and ${register_log_closes.type} = 4;;
+  # }
 
   join: discounts {
     relationship: many_to_one

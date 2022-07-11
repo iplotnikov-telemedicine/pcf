@@ -134,6 +134,16 @@ view: register_log {
     sql: ${TABLE}.service_history_id ;;
   }
 
+  measure: min_service_history_id {
+    type: min
+    sql: ${TABLE}.service_history_id ;;
+  }
+
+  measure: max_service_history_id {
+    type: max
+    sql: ${TABLE}.service_history_id ;;
+  }
+
   dimension: sf_guard_user_id {
     type: number
     # hidden: yes
