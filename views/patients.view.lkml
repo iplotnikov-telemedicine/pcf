@@ -33,6 +33,11 @@ view: patients {
     sql: ${TABLE}.current_rec_number ;;
   }
 
+  dimension: has_medical_recommendation {
+    type: yesno
+    sql: ${TABLE}.current_rec_number > 0 ;;
+  }
+
   dimension_group: current_rec_valid_to {
     type: time
     timeframes: [
@@ -607,7 +612,7 @@ view: patients {
 
   dimension: has_phone_consent {
     type: yesno
-    sql: if(${TABLE}.phone_consent_given_at, 1, 0) ;;
+    sql: ${TABLE}.phone_consent_given_at is not null ;;
   }
 
   dimension: phone_is_consented {
@@ -698,10 +703,10 @@ view: patients {
     }
   }
 
-  measure: is_repeated {
-    type: yesno
-    sql: CASE WHEN ${orders.count_of_orders} > 1 THEN TRUE ELSE FALSE END ;;
-  }
+  # measure: is_repeated {
+  #   type: yesno
+  #   sql: CASE WHEN ${orders.count_of_orders} > 1 THEN TRUE ELSE FALSE END ;;
+  # }
 
   measure: number_of_patients {
     type: count

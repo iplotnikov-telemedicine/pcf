@@ -287,30 +287,30 @@ view: products {
     sql: ${TABLE}.prod_price_type ;;
   }
 
-  dimension: price_weight_per_eighth {
-    type: number
-    sql: ${TABLE}.prod_price_weight_per_eighth ;;
-  }
+  # dimension: price_weight_per_eighth {
+  #   type: number
+  #   sql: ${TABLE}.prod_price_weight_per_eighth ;;
+  # }
 
-  dimension: price_weight_per_gram {
-    type: number
-    sql: ${TABLE}.prod_price_weight_per_gram ;;
-  }
+  # dimension: price_weight_per_gram {
+  #   type: number
+  #   sql: ${TABLE}.prod_price_weight_per_gram ;;
+  # }
 
-  dimension: prod_price_weight_per_half {
-    type: number
-    sql: ${TABLE}.prod_price_weight_per_half ;;
-  }
+  # dimension: prod_price_weight_per_half {
+  #   type: number
+  #   sql: ${TABLE}.prod_price_weight_per_half ;;
+  # }
 
-  dimension: price_weight_per_ounce {
-    type: number
-    sql: ${TABLE}.prod_price_weight_per_ounce ;;
-  }
+  # dimension: price_weight_per_ounce {
+  #   type: number
+  #   sql: ${TABLE}.prod_price_weight_per_ounce ;;
+  # }
 
-  dimension: price_weight_per_quarter {
-    type: number
-    sql: ${TABLE}.prod_price_weight_per_quarter ;;
-  }
+  # dimension: price_weight_per_quarter {
+  #   type: number
+  #   sql: ${TABLE}.prod_price_weight_per_quarter ;;
+  # }
 
   dimension: qty_o {
     type: number

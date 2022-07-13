@@ -176,4 +176,24 @@ view: tax_payment {
     type: count
     drill_fields: [id, products.prod_name, products.wm_product_id, products.brand_product_strain_name, tax_payment_additional.count]
   }
+
+  measure: total_state_sales_tax {
+    type: sum
+    sql: ${state_sales_tax} ;;
+  }
+
+  measure: total_city_sales_tax {
+    type: sum
+    sql: ${city_sales_tax} ;;
+  }
+
+  measure: total_city_local_tax {
+    type: sum
+    sql: ${city_local_tax} ;;
+  }
+
+  measure: tax_total {
+    type: number
+    sql: ${total_state_sales_tax} + ${total_city_sales_tax} + ${total_city_local_tax} ;;
+  }
 }

@@ -134,6 +134,10 @@ view: recommendations {
     sql: ${TABLE}.rec_number ;;
   }
 
+  dimension: json_details {
+    sql: CASE WHEN ${rec_number} > 0 THEN JSON_OBJECT('File ID', ${rec_number}, 'Type', ${rec_type}) END;;
+  }
+
   dimension: rec_office_address {
     type: string
     sql: ${TABLE}.rec_office_address ;;

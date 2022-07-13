@@ -12,6 +12,7 @@ view: orders {
   dimension: amount {
     type: number
     sql: ${TABLE}.amount ;;
+    value_format_name: usd
   }
 
   dimension: applied_potify_credits {
@@ -451,6 +452,17 @@ view: orders {
     value_format_name: usd
   }
 
+  dimension: fees {
+    type: string
+    sql: CONCAT('[{"Type": "Delivery", "Name": "Delivery Fee", "Amount": "$', round(${shipping_amount}, 2), '"}]') ;;
+  }
+
+  dimension: fee_total {
+    type: number
+    value_format_name: usd
+    sql: ${shipping_amount} ;;
+  }
+
   dimension: shipping_method_id {
     type: number
     sql: ${TABLE}.shipping_method_id ;;
@@ -688,6 +700,42 @@ view: orders {
     sql: ${method2_amount} ;;
     value_format_name: usd
   }
+
+  # measure: items {
+  #   type: string
+  #   sql: group_concat(concat(
+  #     '{"Product ID": "', ${order_items.product_id}, '", ',
+  #     '"Price": "', round(${order_items.price}, 2), '", ',
+  #     '"Quantity": "', ${order_items.count}, '"}'
+  #     ) SEPARATOR ', ');;
+  # }
+
+  # dimension: taxes {
+  #   type: string
+  #   sql: concat('{',
+  #     IF(${tax_payment.state_tax} > 0, '"State Tax: "' || round(${tax_payment.state_tax}, 2), NULL),
+  #     IF(${tax_payment.state_local_tax} > 0, '"State Local Tax: "' || round(${tax_payment.state_local_tax}, 2), NULL),
+  #     IF(${tax_payment.state_sales_tax} > 0, '"State Sales Tax: "' || round(${tax_payment.state_sales_tax}, 2), NULL),
+  #     IF(${tax_payment.state_mj_tax} > 0, '"State MJ Tax: "' || round(${tax_payment.state_mj_tax}, 2), NULL),
+  #     IF(${tax_payment.state_delivery_sales_tax} > 0, '"State Delivery Sales Tax: "' || round(${tax_payment.state_delivery_sales_tax}, 2), NULL),
+
+  #     IF(${tax_payment.county_tax} > 0, '"County Tax: "' || round(${tax_payment.county_tax}, 2), NULL),
+  #     IF(${tax_payment.county_local_tax} > 0, '"County Local Tax: "' || round(${tax_payment.county_local_tax}, 2), NULL),
+  #     IF(${tax_payment.county_mj_tax} > 0, '"County MJ Tax: "' || round(${tax_payment.county_mj_tax}, 2), NULL),
+  #     IF(${tax_payment.county_delivery_sales_tax} > 0, '"County Delivery Sales Tax: "' || round(${tax_payment.county_delivery_sales_tax}, 2), NULL),
+
+  #     IF(${tax_payment.city_tax} > 0, '"City Tax: "' || round(${tax_payment.city_tax}, 2), NULL),
+  #     IF(${tax_payment.city_local_tax} > 0, '"City Local Tax: "' || round(${tax_payment.city_local_tax}, 2), NULL),
+  #     IF(${tax_payment.city_sales_tax} > 0, '"City Sales Tax: "' || round(${tax_payment.city_sales_tax}, 2), NULL),
+  #     IF(${tax_payment.city_mj_tax} > 0, '"City MJ Tax: "' || round(${tax_payment.city_mj_tax}, 2), NULL),
+  #     IF(${tax_payment.city_delivery_sales_tax} > 0, '"City Delivery Sales Tax: "' || round(${tax_payment.city_delivery_sales_tax}, 2), NULL),
+
+  #     IF(${tax_payment.excise_tax} > 0, '"Excise Tax: "' || round(${tax_payment.excise_tax}, 2), NULL),
+  #     IF(${tax_payment.excise_delivery_tax} > 0, '"Excise Delivery Tax: "' || round(${tax_payment.excise_delivery_tax}, 2), NULL),
+  #     '}');;
+
+  #   }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

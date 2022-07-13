@@ -3,7 +3,7 @@
 
 view: returning_patients {
   derived_table: {
-    explore_source: patients {
+    explore_source: patients_with_orders {
       column: id {}
       column: is_repeated {}
       column: number_of_patients {}

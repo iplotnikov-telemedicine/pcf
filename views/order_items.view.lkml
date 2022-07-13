@@ -22,6 +22,9 @@ view: order_items {
     sql: ${TABLE}.id ;;
   }
 
+  dimension: json_details {
+    sql: JSON_OBJECT('Product ID', ${product_id}, 'Price', round(${amount}, 2), 'Quantity', ${count}) ;;
+  }
 
   dimension: amount {
     type: number

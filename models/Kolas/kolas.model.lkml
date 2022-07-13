@@ -6,10 +6,19 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 explore: barcode {}
 
+explore: tax_payment_flat {}
+
 explore: product_office_quantity {
   join: offices {
     relationship: many_to_one
     sql_on: ${product_office_quantity.office_id} = ${offices.office_id};;
+  }
+}
+
+explore: patients_with_orders {
+  join: orders {
+    relationship: one_to_many
+    sql_on: ${patients_with_orders.id} = ${orders.patient_id};;
   }
 }
 
@@ -171,6 +180,34 @@ explore: products {
   # LEFT JOIN product_categories pcat ON p.prod_category_id = pcat.id
 }
 
+explore: orders_with_items {
+  join: order_items {
+    relationship: one_to_many
+    sql_on: ${orders_with_items.id} = ${order_items.order_id} ;;
+  }
+
+  join: tax_payment_flat {
+    relationship: one_to_one
+    sql_on: ${orders_with_items.id} = ${tax_payment_flat.order_id} ;;
+  }
+
+  join: products {
+    relationship: many_to_one
+    sql_on: ${order_items.product_id} = ${products.id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+}
+
+explore: patients_with_details {
+  join: recommendations {
+    relationship: one_to_many
+    sql_on: ${patients_with_details.id} = ${recommendations.rec_pat_id};;
+  }
+}
 
 explore: order_items {
   view_name: order_items
@@ -280,8 +317,13 @@ explore: order_items {
 
   join: tax_payment {
     relationship: one_to_one
-    sql_on: ${tax_payment.order_item_id} = ${order_items.id} ;;
+    sql_on: ${order_items.id} = ${tax_payment.order_item_id} ;;
   }
+
+  # join: tax_payment_flat {
+  #   relationship: one_to_many
+  #   sql_on: ${order_items.id} = ${tax_payment_flat.order_item_id} ;;
+  # }
 
   join: order_item_refunds {
     from: order_items

@@ -23,6 +23,12 @@ explore: products {
 
 explore: product_categories {}
 
+explore: patients_with_orders {
+  join: orders {
+    relationship: one_to_many
+    sql_on: ${patients_with_orders.id} = ${orders.patient_id};;
+  }
+}
 
 explore: order_items {
 
