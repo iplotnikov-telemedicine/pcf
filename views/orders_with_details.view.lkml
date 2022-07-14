@@ -1,6 +1,6 @@
 include: "orders.view"
 
-view: orders_with_items {
+view: orders_with_details {
     extends: [orders]
 
     measure: items {

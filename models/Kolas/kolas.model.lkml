@@ -180,15 +180,15 @@ explore: products {
   # LEFT JOIN product_categories pcat ON p.prod_category_id = pcat.id
 }
 
-explore: orders_with_items {
+explore: orders_with_details {
   join: order_items {
     relationship: one_to_many
-    sql_on: ${orders_with_items.id} = ${order_items.order_id} ;;
+    sql_on: ${orders_with_details.id} = ${order_items.order_id} ;;
   }
 
   join: tax_payment_flat {
     relationship: one_to_one
-    sql_on: ${orders_with_items.id} = ${tax_payment_flat.order_id} ;;
+    sql_on: ${orders_with_details.id} = ${tax_payment_flat.order_id} ;;
   }
 
   join: products {
