@@ -164,7 +164,7 @@ explore: users {
 
 explore: patients { view_name: patients
   join: orders {
-    relationship: many_to_one
+    relationship: one_to_many
     sql_on: ${patients.id} = ${orders.patient_id} ;;
   }
 }
