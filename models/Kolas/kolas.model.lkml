@@ -9,6 +9,9 @@ explore: barcode {}
 explore: tax_payment_flat {}
 
 explore: product_office_quantity {
+
+  sql_always_where: ${offices.office_comp_id} = 9928;;
+
   join: offices {
     relationship: many_to_one
     sql_on: ${product_office_quantity.office_id} = ${offices.office_id};;
@@ -23,6 +26,8 @@ explore: patients_with_orders {
 }
 
 explore: inventory_log {
+
+  sql_always_where: ${offices.office_comp_id} = 9928;;
 
   join: offices {
     relationship: many_to_one
@@ -103,6 +108,8 @@ explore: inventory_log {
 explore: product_checkins {}
 
 explore: products {
+
+  sql_always_where: ${offices.office_comp_id} = 9928;;
 
   join: inventory_log {
     relationship: one_to_many
@@ -212,6 +219,8 @@ explore: patients_with_details {
 explore: order_items {
   view_name: order_items
 
+  sql_always_where: ${offices.office_comp_id} = 9928;;
+
   join: products {
     relationship: many_to_one
     sql_on: ${products.id} = ${order_items.product_id};;
@@ -267,6 +276,7 @@ explore: order_items {
   # }
 
   join: discounts {
+
     relationship: many_to_one
     sql_on: CASE
 
@@ -411,6 +421,8 @@ explore: orders {
 }
 
 explore: register_log {
+
+  sql_always_where: ${offices.office_comp_id} = 9928;;
 
   join: register {
     relationship: many_to_one
