@@ -340,6 +340,9 @@ view: offices {
     alias: [store_name]
     type: string
     sql: ${TABLE}.office_name ;;
+    bypass_suggest_restrictions: no
+    full_suggestions: yes
+    suggest_persist_for: "1 second"
   }
 
   dimension: office_password {

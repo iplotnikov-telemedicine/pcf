@@ -185,20 +185,22 @@ explore: orders_with_details {
     relationship: one_to_many
     sql_on: ${orders_with_details.id} = ${order_items.order_id} ;;
   }
-
   join: tax_payment_flat {
     relationship: one_to_one
     sql_on: ${orders_with_details.id} = ${tax_payment_flat.order_id} ;;
   }
-
   join: products {
     relationship: many_to_one
     sql_on: ${order_items.product_id} = ${products.id};;
   }
-
   join: brands {
     relationship: many_to_one
     sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${orders_with_details.office_id} = ${offices.office_id} ;;
+    fields: [office_name]
   }
 }
 
@@ -206,6 +208,11 @@ explore: patients_with_details {
   join: recommendations {
     relationship: one_to_many
     sql_on: ${patients_with_details.id} = ${recommendations.rec_pat_id};;
+  }
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${patients_with_details.office_id} = ${offices.office_id} ;;
+    fields: [office_name]
   }
 }
 
