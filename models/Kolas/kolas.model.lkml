@@ -188,6 +188,10 @@ explore: products {
 }
 
 explore: orders_with_details {
+  join: patients {
+    relationship: many_to_one
+    sql_on: ${orders_with_details.patient_id} = ${patients.id} ;;
+  }
   join: order_items {
     relationship: one_to_many
     sql_on: ${orders_with_details.id} = ${order_items.order_id} ;;
