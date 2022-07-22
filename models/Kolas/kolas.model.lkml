@@ -215,7 +215,6 @@ explore: patients_with_details {
   join: orders {
     relationship: one_to_many
     sql_on:  ${patients_with_details.id} = ${orders.patient_id};;
-    fields: [orders.confirmed_raw]
   }
   join: recommendations {
     relationship: one_to_many
