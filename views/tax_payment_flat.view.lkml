@@ -1,44 +1,45 @@
 view: tax_payment_flat {
 
-    derived_table: {
+  sql_table_name: looker_tmp.tax_payment_flat ;;
+  #   derived_table: {
 
-    sql:
-        SELECT
-          order_id,
-          # order_item_id,
-          # product_id,
-          "State Sales Tax" as tax_type,
-          sum(state_sales_tax) as tax_amount
-        FROM tax_payment
-        WHERE state_sales_tax > 0
-        GROUP BY 1,2
+  #   sql:
+  #       SELECT
+  #         order_id,
+  #         # order_item_id,
+  #         # product_id,
+  #         "State Sales Tax" as tax_type,
+  #         sum(state_sales_tax) as tax_amount
+  #       FROM tax_payment
+  #       WHERE state_sales_tax > 0
+  #       GROUP BY 1,2
 
-        UNION ALL
+  #       UNION ALL
 
-        SELECT
-          order_id,
-          # order_item_id,
-          # product_id,
-          "City Sales Tax" as tax_type,
-          sum(city_sales_tax) as tax_amount
-        FROM tax_payment
-        WHERE city_sales_tax > 0
-        GROUP BY 1,2
+  #       SELECT
+  #         order_id,
+  #         # order_item_id,
+  #         # product_id,
+  #         "City Sales Tax" as tax_type,
+  #         sum(city_sales_tax) as tax_amount
+  #       FROM tax_payment
+  #       WHERE city_sales_tax > 0
+  #       GROUP BY 1,2
 
-        UNION ALL
+  #       UNION ALL
 
-        SELECT
-          order_id,
-          # order_item_id,
-          # product_id,
-          "City Local Tax" as tax_type,
-          sum(city_local_tax) as tax_amount
-        FROM tax_payment
-        WHERE city_local_tax > 0
-        GROUP BY 1,2
+  #       SELECT
+  #         order_id,
+  #         # order_item_id,
+  #         # product_id,
+  #         "City Local Tax" as tax_type,
+  #         sum(city_local_tax) as tax_amount
+  #       FROM tax_payment
+  #       WHERE city_local_tax > 0
+  #       GROUP BY 1,2
 
-      ;;
-  }
+  #     ;;
+  # }
 
   dimension: order_id {
     type: number
