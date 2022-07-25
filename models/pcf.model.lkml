@@ -6,7 +6,21 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 explore: product_transactions {}
 
+explore: package_quantity_for_metrc {
+  from: package_quantity
+  sql_always_where:  ${product_checkins.is_metrc} = 1;;
+
+  join: product_checkins {
+    relationship: one_to_one
+    sql_on: ${package_quantity_for_metrc.package_id} = ${product_checkins.id} ;;
+  }
+
+}
+
 explore: product_office_quantity {}
+
+explore: product_checkins {}
+
 
 explore: patients_with_orders {
   join: orders {
@@ -14,6 +28,8 @@ explore: patients_with_orders {
     sql_on: ${patients_with_orders.id} = ${orders.patient_id};;
   }
 }
+
+explore: checkins_by_package {}
 
 explore: inventory_log {
   join: offices {

@@ -8,7 +8,6 @@ view: package_quantity {
     sql: ${TABLE}.id ;;
   }
 
-
   dimension: item_type {
     type: string
     sql: ${TABLE}.item_type ;;
@@ -38,6 +37,11 @@ view: package_quantity {
   dimension: quantity_available {
     type: number
     sql: ${TABLE}.quantity_available ;;
+  }
+
+  measure: total_quantity_available {
+    type: sum
+    sql: coalesce(${quantity_available}, 0) ;;
   }
 
   dimension: quantity_hold {
@@ -88,6 +92,10 @@ view: package_quantity {
     sql: ${TABLE}.sync_updated_at ;;
   }
 
+  measure: max_updated {
+    type: date_time
+    sql: max(${updated_raw}) ;;
+  }
 
   measure: number_of_package_quantity {
     type: count

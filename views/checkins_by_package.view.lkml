@@ -4,6 +4,7 @@
 view: checkins_by_package {
 # If necessary, uncomment the line below to include explore_source.
 # include: "kolas.model.lkml"
+
 derived_table: {
   explore_source: product_checkins {
     column: package_id {field: product_checkins.batch_id}
