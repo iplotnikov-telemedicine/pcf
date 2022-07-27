@@ -8,7 +8,7 @@ include: "/views/metrc/*.view.lkml"                # include all views in the vi
 # # and define the joins that connect them together.
 #
 explore: package {
-  sql_always_where: ${company.external_id} = 4546 ;;
+  sql_always_where: ${company.external_id} = 4546;;
 
   join: facility {
     relationship: many_to_one

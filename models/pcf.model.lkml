@@ -6,9 +6,68 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 explore: product_transactions {}
 
+explore: product_quantity_by_office_type {
+
+  join: offices {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${product_quantity_by_office_type.office_id} = ${offices.office_id};;
+  }
+
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on:  ${product_quantity_by_office_type.product_id} = ${products.id} ;;
+  }
+
+  join: product_types {
+    type: inner
+    relationship: many_to_one
+    sql_on:  ${product_types.id} = ${products.product_type_id} ;;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories_by_level {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+  }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.weight_type} is NULL
+        or ${product_prices.weight_type} = 'gram')
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
+  }
+
+  join: product_tag_ref {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_tag_ref.product_id};;
+  }
+
+  join: product_tag {
+    relationship: many_to_many
+    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
+  }
+}
+
+
 explore: package_quantity_for_metrc {
+
   from: package_quantity
-  sql_always_where:  ${product_checkins.is_metrc} = 1;;
+  sql_always_where:  ${product_checkins.is_metrc} = 1
+    and ${product_checkins.is_finished} = 0
+    and ${product_checkins.deleted_date} is NULL;;
 
   join: product_checkins {
     relationship: one_to_one
@@ -32,16 +91,59 @@ explore: patients_with_orders {
 explore: checkins_by_package {}
 
 explore: inventory_log {
+
   join: offices {
     type: inner
     relationship: many_to_one
-    sql_on: ${inventory_log.storage_id} = ${offices.office_id} and ${offices.office_comp_id} = 4546;;
+    sql_on: ${inventory_log.storage_id} = ${offices.office_id} ;;
+  }
+
+  join: product_checkins {
+    relationship: many_to_one
+    sql_on: ${inventory_log.package_id} = ${product_checkins.id};;
   }
 
   join: products {
     type: inner
     relationship: many_to_one
     sql_on:  ${inventory_log.product_id} = ${products.id} ;;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: product_categories_1 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories.id} <= ${product_categories_1.rgt}
+      and ${product_categories.id} >= ${product_categories_1.lft}
+      and ${product_categories.level} = ${product_categories_1.level} + 1 ;;
+  }
+
+  join: product_categories_2 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories_1.id} <= ${product_categories_2.rgt}
+          and ${product_categories_1.id} >= ${product_categories_2.lft}
+          and ${product_categories_1.level} = ${product_categories_2.level} + 1 ;;
+  }
+
+  join: product_categories_3 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories_2.id} <= ${product_categories_3.rgt}
+          and ${product_categories_2.id} >= ${product_categories_3.lft}
+          and ${product_categories_2.level} = ${product_categories_3.level} + 1 ;;
   }
 
   join: product_price_group {
@@ -52,15 +154,26 @@ explore: inventory_log {
   join: product_prices {
     relationship: many_to_one
     sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
-      and (${inventory_log.item_type} = ${product_prices.weight_type} or ${product_prices.weight_type} IS NULL);;
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
   }
 
-  join: brands {
-    relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  # join: product_prices {
+  #   relationship: many_to_one
+  #   sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+  #     and (${inventory_log.item_type} = ${product_prices.weight_type}
+  #       or ${product_prices.weight_type} IS NULL);;
+  # }
+
+  join: product_tag_ref {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_tag_ref.product_id};;
   }
 
-
+  join: product_tag {
+    relationship: many_to_many
+    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
+  }
 }
 
 explore: products {
@@ -90,7 +203,7 @@ explore: products {
   join: order_items_by_checkin {
     relationship: one_to_one
     sql_on: ${product_checkins.id} = ${order_items_by_checkin.product_checkin_id};;
-      # and ${product_checkins.date_raw} <= ${order_items.created_raw};;
+    # and ${product_checkins.date_raw} <= ${order_items.created_raw};;
   }
 
   join: product_categories {
@@ -109,9 +222,6 @@ explore: products {
   }
 
 }
-
-
-explore: product_categories {}
 
 explore: order_items {
 
@@ -164,6 +274,37 @@ explore: order_items {
   # }
 }
 
+explore: product_categories {
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories_1 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories.rgt} < ${product_categories_1.rgt}
+      and ${product_categories.lft} > ${product_categories_1.lft}
+      and ${product_categories.level} = ${product_categories_1.level} + 1 ;;
+  }
+
+  join: product_categories_2 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories_1.rgt} < ${product_categories_2.rgt}
+          and ${product_categories_1.lft} > ${product_categories_2.lft}
+          and ${product_categories_1.level} = ${product_categories_2.level} + 1 ;;
+  }
+
+}
 
 explore: users {
 }

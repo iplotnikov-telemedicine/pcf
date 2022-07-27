@@ -2,6 +2,7 @@ view: inventory_log {
 
   sql_table_name: inventory_log ;;
 
+
   dimension: id {
     primary_key: yes
     type: number
@@ -27,6 +28,42 @@ view: inventory_log {
     type: number
     sql: ${TABLE}.quantity ;;
   }
+
+  dimension: end_of_the_snapshot_day {
+    type: date_time
+    sql: {% parameter snapshot_date %} + INTERVAL 1 DAY - INTERVAL 1 SECOND ;;
+  }
+
+  measure: turnover_until_snapshot_date {
+    type: number
+    sql: coalesce(sum(case when ${created_raw} <= ${end_of_the_snapshot_day}
+      then ${quantity} end), 0);;
+  }
+
+  measure: shelf_turnover_until_snapshot_date {
+    type: number
+    sql: coalesce(sum(case when ${created_raw} <= ${end_of_the_snapshot_day}
+      and ${offices.is_storage} = 0 then ${quantity} end), 0);;
+  }
+
+  measure: storage_turnover_until_snapshot_date {
+    type: number
+    sql: coalesce(sum(case when ${created_raw} <= ${end_of_the_snapshot_day}
+      and ${offices.is_storage} = 1 then ${quantity} end), 0);;
+  }
+
+  # measure: quantity_after_snapshot_date {
+  #   type: number
+  #   sql: sum(case when ${created_raw} > {% parameter snapshot_date %}
+  #     then ${quantity} end);;
+  # }
+
+  # sql_always_where: ${orders.created_date} BETWEEN
+  # date_add({% parameter orders.date_filter %},
+    # interval -DAY({% parameter orders.date_filter %})+1 DAY)
+
+  # AND {% parameter orders.date_filter %} ;;
+
 
   dimension: is_increased {
     type: yesno
@@ -91,6 +128,12 @@ view: inventory_log {
       year
     ]
     sql: ${TABLE}.created_at ;;
+  }
+
+  parameter: end_of_the_day {
+    alias: [snapshot_date]
+    type: date_time
+    description: "Use this field to select a date for a snapshot"
   }
 
   measure: quantity_at_the_first_date {

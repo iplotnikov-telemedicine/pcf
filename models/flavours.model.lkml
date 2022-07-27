@@ -5,6 +5,197 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 
+explore: product_categories_by_level {}
+
+explore: product_categories {
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories_1 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories.rgt} < ${product_categories_1.rgt}
+      and ${product_categories.lft} > ${product_categories_1.lft}
+      and ${product_categories.level} = ${product_categories_1.level} + 1 ;;
+  }
+
+  join: product_categories_2 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories_1.rgt} < ${product_categories_2.rgt}
+          and ${product_categories_1.lft} > ${product_categories_2.lft}
+          and ${product_categories_1.level} = ${product_categories_2.level} + 1 ;;
+  }
+
+}
+
+explore: inventory_log {
+
+  join: offices {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${inventory_log.storage_id} = ${offices.office_id};;
+  }
+
+  join: product_checkins {
+    relationship: many_to_one
+    sql_on: ${inventory_log.package_id} = ${product_checkins.id};;
+  }
+
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on:  ${inventory_log.product_id} = ${products.id} ;;
+  }
+
+  join: product_types {
+    type: inner
+    relationship: many_to_one
+    sql_on:  ${product_types.id} = ${products.product_type_id} ;;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories_by_level {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+  }
+
+  join: product_categories {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: product_categories_1 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories.rgt} < ${product_categories_1.rgt}
+      and ${product_categories.lft} > ${product_categories_1.lft}
+      and ${product_categories.level} = ${product_categories_1.level} + 1 ;;
+  }
+
+  join: product_categories_2 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories_1.rgt} < ${product_categories_2.rgt}
+          and ${product_categories_1.lft} > ${product_categories_2.lft}
+          and ${product_categories_1.level} = ${product_categories_2.level} + 1 ;;
+  }
+
+  # join: product_categories_3 {
+  #   from: product_categories
+  #   fields: [name]
+  #   relationship: many_to_one
+  #   sql_on: ${product_categories_2.rgt} < ${product_categories_3.rgt}
+  #         and ${product_categories_2.lft} > ${product_categories_3.lft}
+  #         and ${product_categories_2.level} = ${product_categories_3.level} + 1 ;;
+  # }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
+  }
+
+  # join: product_prices {
+  #   relationship: many_to_one
+  #   sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+  #     and (${inventory_log.item_type} = ${product_prices.weight_type}
+  #       or ${product_prices.weight_type} IS NULL);;
+  # }
+
+  join: product_tag_ref {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_tag_ref.product_id};;
+  }
+
+  join: product_tag {
+    relationship: many_to_many
+    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
+  }
+}
+
+
+
+explore: product_quantity_by_office_type {
+
+  join: offices {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${product_quantity_by_office_type.office_id} = ${offices.office_id};;
+  }
+
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on:  ${product_quantity_by_office_type.product_id} = ${products.id} ;;
+  }
+
+  join: product_types {
+    type: inner
+    relationship: many_to_one
+    sql_on:  ${product_types.id} = ${products.product_type_id} ;;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories_by_level {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+  }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.weight_type} is NULL
+        or ${product_prices.weight_type} = 'gram')
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
+  }
+
+  join: product_tag_ref {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_tag_ref.product_id};;
+  }
+
+  join: product_tag {
+    relationship: many_to_many
+    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
+  }
+}
+
+
+
 explore: order_items {
 
   join: products {
