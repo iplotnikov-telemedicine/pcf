@@ -179,6 +179,13 @@ view: product_checkins {
     sql: ${TABLE}.price ;;
   }
 
+  dimension: cost_per_unit {
+    type: number
+    sql: ${price} / ${qty} ;;
+    value_format_name: usd
+  }
+
+
   measure: price_sum {
     type: sum
     sql: ${TABLE}.price ;;

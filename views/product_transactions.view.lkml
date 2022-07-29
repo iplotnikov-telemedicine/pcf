@@ -42,26 +42,83 @@ view: product_transactions {
     sql: ${TABLE}.item_type ;;
   }
 
-  dimension: is_increased {
+  dimension: is_adjustment_increase {
     type: yesno
     sql: ${TABLE}.type = 12;;
   }
 
-  # measure: quantity_increased_by {
-  #   type: sum
-  #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %} and {% date_end order_items.date_filter %} THEN ${qty} END ;;
-  #   filters: [is_increased: "yes"]
-  # }
+  measure: quantity_increased_by {
+    type: sum
+    sql:  ${qty} ;;
+  #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
+  # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+    filters: [is_adjustment_increase: "yes"]
+  }
 
-  dimension: is_decreased {
+  dimension: is_adjustment_decrease {
     type: yesno
     sql: ${TABLE}.type = 13;;
   }
 
-  # measure: quantity_decreased_by {
+  measure: quantity_decreased_by {
+    type: sum
+    sql: -${qty} ;;
+  #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
+  # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+    filters: [is_adjustment_decrease: "yes"]
+  }
+
+  dimension: is_sold {
+    type: yesno
+    sql: ${TABLE}.type = 3;;
+  }
+
+  measure: quantity_sold {
+    type: sum
+    sql:  -${qty} ;;
+    #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
+    # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+    filters: [is_sold: "yes"]
+  }
+
+  dimension: is_unlinked {
+    description: "Transferred to another product"
+    type: yesno
+    sql: ${TABLE}.type = 10;;
+  }
+
+  measure: quantity_unlinked {
+    type: sum
+    sql:  -${qty} ;;
+    #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
+    # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+    filters: [is_unlinked: "yes"]
+  }
+
+  dimension: is_returned {
+    type: yesno
+    sql: ${TABLE}.type = 9 ;;
+  }
+
+  measure: quantity_returned {
+    type: sum
+    sql:  ${qty} ;;
+    #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
+    # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+    filters: [is_returned: "yes"]
+  }
+
+  # dimension: is_hold {
+  #   type: yesno
+  #   sql: ${TABLE}.type in (16) ;;
+  # }
+
+  # measure: quantity_hold {
   #   type: sum
-  #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %} and {% date_end order_items.date_filter %} THEN ${qty} END ;;
-  #   filters: [is_decreased: "yes"]
+  #   sql:  -${qty} ;;
+  #   #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
+  #   # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+  #   filters: [is_hold: "yes"]
   # }
 
   dimension: note {

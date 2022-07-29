@@ -4,7 +4,6 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
-explore: product_transactions {}
 
 explore: product_quantity_and_offices {
   join: offices {
@@ -93,6 +92,54 @@ explore: patients_with_orders {
 
 explore: checkins_by_package {}
 
+
+
+explore: product_transactions {
+
+  sql_always_where: ${product_checkins.uid} IS NOT NULL ;;
+
+  join: product_checkins {
+    relationship: many_to_one
+    sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id};;
+  }
+
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on:  ${product_transactions.product_id} = ${products.id} ;;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: package_quantity {
+    relationship: one_to_many
+    sql_on: ${product_checkins.id} = ${package_quantity.package_id};;
+  }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.weight_type} is NULL
+        or ${product_prices.weight_type} = 'gram')
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
+  }
+}
+
+
 explore: inventory_log {
 
   join: offices {
@@ -157,16 +204,11 @@ explore: inventory_log {
   join: product_prices {
     relationship: many_to_one
     sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.weight_type} is NULL
+        or ${product_prices.weight_type} = 'gram')
       and (${product_prices.range_from} is NULL
         or ${product_prices.range_from} = 1);;
   }
-
-  # join: product_prices {
-  #   relationship: many_to_one
-  #   sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
-  #     and (${inventory_log.item_type} = ${product_prices.weight_type}
-  #       or ${product_prices.weight_type} IS NULL);;
-  # }
 
   join: product_tag_ref {
     relationship: one_to_many
