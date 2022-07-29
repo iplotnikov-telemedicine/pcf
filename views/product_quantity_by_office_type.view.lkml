@@ -1,21 +1,29 @@
-include: "product_office_quantity.view"
+# If necessary, uncomment the line below to include explore_source.
+# include: "blue_fire.model.lkml"
 
-view: product_quantity_by_office_type {
-  extends: [product_office_quantity]
-
-  measure: total_quantity {
-    type: number
-    sql:  COALESCE(SUM(${quantity}), 0);;
+view: quantity_by_product {
+  derived_table: {
+    explore_source: product_quantity_and_offices {
+      column: product_id {}
+      column: shelf_quantity {}
+      column: storage_quantity {}
+      column: total_quantity {}
+    }
   }
-
-  measure: shelf_quantity {
+  dimension: product_id {
+    description: ""
     type: number
-    sql:  COALESCE(SUM(CASE ${offices.is_storage} WHEN 0 THEN ${quantity} END), 0);;
   }
-
-  measure: storage_quantity {
+  dimension: shelf_quantity {
+    description: ""
     type: number
-    sql:  COALESCE(SUM(CASE ${offices.is_storage} WHEN 1 THEN ${quantity} END), 0);;
   }
-
+  dimension: storage_quantity {
+    description: ""
+    type: number
+  }
+  dimension: total_quantity {
+    description: ""
+    type: number
+  }
 }

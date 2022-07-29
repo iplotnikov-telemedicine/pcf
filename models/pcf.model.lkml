@@ -6,18 +6,21 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 explore: product_transactions {}
 
-explore: product_quantity_by_office_type {
-
+explore: product_quantity_and_offices {
   join: offices {
     type: inner
     relationship: many_to_one
-    sql_on: ${product_quantity_by_office_type.office_id} = ${offices.office_id};;
+    sql_on: ${product_quantity_and_offices.office_id} = ${offices.office_id};;
   }
+}
+
+explore: quantity_by_product {
+  sql_always_where: ${products.deleted_raw} IS NULL ;;
 
   join: products {
     type: inner
     relationship: many_to_one
-    sql_on:  ${product_quantity_by_office_type.product_id} = ${products.id} ;;
+    sql_on:  ${quantity_by_product.product_id} = ${products.id} ;;
   }
 
   join: product_types {

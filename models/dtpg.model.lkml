@@ -39,62 +39,6 @@ explore: product_categories {
 }
 
 
-explore: product_quantity_by_office_type {
-
-  join: offices {
-    type: inner
-    relationship: many_to_one
-    sql_on: ${product_quantity_by_office_type.office_id} = ${offices.office_id};;
-  }
-
-  join: products {
-    type: inner
-    relationship: many_to_one
-    sql_on:  ${product_quantity_by_office_type.product_id} = ${products.id} ;;
-  }
-
-  join: product_types {
-    type: inner
-    relationship: many_to_one
-    sql_on:  ${product_types.id} = ${products.product_type_id} ;;
-  }
-
-  join: brands {
-    relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
-  }
-
-  join: product_categories_by_level {
-    relationship: many_to_one
-    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
-  }
-
-  join: product_price_group {
-    relationship: many_to_one
-    sql_on: ${products.id} = ${product_price_group.product_id};;
-  }
-
-  join: product_prices {
-    relationship: many_to_one
-    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
-      and (${product_prices.weight_type} is NULL
-        or ${product_prices.weight_type} = 'gram')
-      and (${product_prices.range_from} is NULL
-        or ${product_prices.range_from} = 1);;
-  }
-
-  join: product_tag_ref {
-    relationship: one_to_many
-    sql_on: ${products.id} = ${product_tag_ref.product_id};;
-  }
-
-  join: product_tag {
-    relationship: many_to_many
-    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
-  }
-}
-
-
 explore: order_items {
 
   # 3583
