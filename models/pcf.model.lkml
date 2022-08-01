@@ -96,11 +96,18 @@ explore: checkins_by_package {}
 
 explore: product_transactions {
 
-  sql_always_where: ${product_checkins.uid} IS NOT NULL ;;
+  sql_always_where: ${product_checkins.uid} IS NOT NULL
+    AND {% if product_transactions.date_filter._in_query %}
+    ${product_checkins.date_raw} <= {% date_start product_transactions.date_filter %}
+    {% else %}
+    1 = 1
+    {% endif %} ;;
 
   join: product_checkins {
     relationship: many_to_one
-    sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id};;
+    type: inner
+    sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id} ;;
+      # AND ${product_transactions.date_raw} >= ${product_checkins.date_raw};;
   }
 
   join: products {

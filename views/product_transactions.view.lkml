@@ -1,6 +1,11 @@
 view: product_transactions {
   sql_table_name: product_transactions ;;
+
   drill_fields: [id]
+
+  filter: date_filter {
+    type: date_time
+  }
 
   dimension: id {
     primary_key: yes
@@ -42,30 +47,71 @@ view: product_transactions {
     sql: ${TABLE}.item_type ;;
   }
 
+  dimension: is_filtered_with_dates {
+    hidden: yes
+    type: yesno
+    sql: {% if date_filter._in_query %}
+    ${date_raw} between {% date_start date_filter %} and {% date_end date_filter %}
+    {% else %}
+    1 = 1
+    {% endif %} ;;
+  }
+
+  dimension: is_earlier_than_filtered {
+    hidden: yes
+    type: yesno
+    sql: {% if date_filter._in_query %}
+          ${date_raw} < {% date_start date_filter %}
+          {% else %}
+          1 = 1
+          {% endif %} ;;
+  }
+
+  dimension: is_checked_in {
+    type: yesno
+    sql: ${TABLE}.type = 1;;
+  }
+
+  measure: quantity_checked_in {
+    type: sum
+    sql:  ${qty} ;;
+    filters: [is_checked_in: "yes"]
+  }
+
   dimension: is_adjustment_increase {
     type: yesno
-    sql: ${TABLE}.type = 12;;
+    sql: ${TABLE}.type in (12, 15) ;;
   }
 
   measure: quantity_increased_by {
     type: sum
     sql:  ${qty} ;;
-  #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
-  # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
-    filters: [is_adjustment_increase: "yes"]
+    filters: [is_adjustment_increase: "yes", is_filtered_with_dates: "yes"]
+  }
+
+  measure: quantity_increased_by_earlier {
+    hidden: yes
+    type: sum
+    sql:  ${qty} ;;
+    filters: [is_adjustment_increase: "yes", is_earlier_than_filtered: "yes"]
   }
 
   dimension: is_adjustment_decrease {
     type: yesno
-    sql: ${TABLE}.type = 13;;
+    sql: ${TABLE}.type in (13, 16) ;;
   }
 
   measure: quantity_decreased_by {
     type: sum
     sql: -${qty} ;;
-  #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
-  # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
-    filters: [is_adjustment_decrease: "yes"]
+    filters: [is_adjustment_decrease: "yes", is_filtered_with_dates: "yes"]
+  }
+
+  measure: quantity_decreased_by_earlier {
+    hidden: yes
+    type: sum
+    sql: -${qty} ;;
+    filters: [is_adjustment_decrease: "yes", is_earlier_than_filtered: "yes"]
   }
 
   dimension: is_sold {
@@ -75,10 +121,20 @@ view: product_transactions {
 
   measure: quantity_sold {
     type: sum
-    sql:  -${qty} ;;
-    #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
-    # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
-    filters: [is_sold: "yes"]
+    sql: -${qty} ;;
+    filters: [is_sold: "yes", is_filtered_with_dates: "yes"]
+  }
+
+  measure: quantity_sold_earlier {
+    hidden: yes
+    type: sum
+    sql: -${qty} ;;
+    filters: [is_sold: "yes", is_earlier_than_filtered: "yes"]
+  }
+
+  measure: quantity_sold_within_date_range {
+    type: number
+    sql: -${quantity_sold} ;;
   }
 
   dimension: is_unlinked {
@@ -90,9 +146,14 @@ view: product_transactions {
   measure: quantity_unlinked {
     type: sum
     sql:  -${qty} ;;
-    #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
-    # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
-    filters: [is_unlinked: "yes"]
+    filters: [is_unlinked: "yes", is_filtered_with_dates: "yes"]
+  }
+
+  measure: quantity_unlinked_earlier {
+    hidden: yes
+    type: sum
+    sql:  -${qty} ;;
+    filters: [is_unlinked: "yes", is_earlier_than_filtered: "yes"]
   }
 
   dimension: is_returned {
@@ -103,15 +164,40 @@ view: product_transactions {
   measure: quantity_returned {
     type: sum
     sql:  ${qty} ;;
-    #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
-    # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
-    filters: [is_returned: "yes"]
+    filters: [is_returned: "yes", is_filtered_with_dates: "yes"]
   }
 
-  # dimension: is_hold {
-  #   type: yesno
-  #   sql: ${TABLE}.type in (16) ;;
-  # }
+  measure: quantity_returned_earlier {
+    hidden: yes
+    type: sum
+    sql:  ${qty} ;;
+    filters: [is_returned: "yes", is_earlier_than_filtered: "yes"]
+  }
+
+
+  measure: quantity_at_the_beginning {
+    description: "Quantity available at the beginning of filtered range"
+    type: number
+    sql:  ${quantity_checked_in}
+          + ${quantity_decreased_by_earlier}
+          + ${quantity_increased_by_earlier}
+          + ${quantity_sold_earlier}
+          + ${quantity_returned_earlier}
+          + ${quantity_unlinked_earlier}
+          ;;
+  }
+
+  measure: quantity_at_the_end {
+    description: "Quantity available at the end of filtered range"
+    type: number
+    sql: ${quantity_at_the_beginning}
+          + ${quantity_decreased_by}
+          + ${quantity_increased_by}
+          + ${quantity_sold}
+          + ${quantity_returned}
+          + ${quantity_unlinked}
+          ;;
+  }
 
   # measure: quantity_hold {
   #   type: sum
