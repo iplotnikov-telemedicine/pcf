@@ -42,6 +42,11 @@ view: register_log {
     sql: ${TABLE}.created_at ;;
   }
 
+  dimension: report_date {
+    type: date
+    sql: CONVERT_TZ(${TABLE}.created_at,'America/Los_Angeles','UTC') ;;
+  }
+
   dimension: dc_cash_change {
     type: number
     sql: ${TABLE}.dc_cash_change ;;

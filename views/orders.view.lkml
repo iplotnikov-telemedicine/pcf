@@ -676,6 +676,16 @@ view: orders {
     sql_end: ${delivery_datetime_raw};;
   }
 
+  measure: delivery_orders_count {
+    type: sum
+    sql: if(${delivery_datetime_raw} IS NOT NULL, 1, 0) ;;
+  }
+
+  measure: sum_minutes_wait_time_store {
+    type: sum
+    sql: ${minutes_wait_time_store} ;;
+    value_format_name: decimal_1
+  }
 
   measure: avg_wait_time_store {
     type: average
@@ -683,6 +693,11 @@ view: orders {
     value_format_name: decimal_1
   }
 
+  measure: sum_minutes_wait_time_delivery {
+    type: sum
+    sql: ${minutes_wait_time_delivery} ;;
+    value_format_name: decimal_1
+  }
   measure: avg_wait_time_delivery {
     type: average
     sql: ${minutes_wait_time_delivery} ;;

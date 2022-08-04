@@ -309,6 +309,12 @@ view: order_items {
     sql: ${TABLE}.total_amount ;;
   }
 
+  measure: sum_total_amount {
+    type: sum
+    value_format_name: usd
+    sql: ${total_amount} ;;
+  }
+
   dimension_group: updated {
     type: time
     timeframes: [
@@ -343,6 +349,12 @@ view: order_items {
   dimension: gross_sale {
     type: number
     sql: ${paid_amount} - ${tax} ;;
+  }
+
+  measure: sum_gross_sale {
+    type: sum
+    sql: ${gross_sale} ;;
+    value_format_name: usd
   }
 
   dimension: refund_wo_tax {
@@ -428,12 +440,6 @@ view: order_items {
     filters: [is_returned: "yes"]
   }
 
-  measure: sum_gross_sale {
-    type: sum
-    sql: ${gross_sale} ;;
-    value_format_name: usd
-  }
-
   measure: sum_discount_amount {
     type: sum
     sql: ${discount_amount} ;;
@@ -471,6 +477,12 @@ view: order_items {
   measure: total_income {
     type: sum
     sql: ${income} ;;
+    value_format_name: usd
+  }
+
+  measure: total_returned_amount {
+    type: sum
+    sql: ${returned_amount} ;;
     value_format_name: usd
   }
 

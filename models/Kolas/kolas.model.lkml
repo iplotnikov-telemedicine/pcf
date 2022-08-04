@@ -231,6 +231,28 @@ explore: patients_with_details {
   }
 }
 
+explore: orders_daily {
+
+  sql_always_where: ${offices.office_comp_id} = 9928;;
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${orders_daily.office_id} = ${offices.office_id} ;;
+  }
+
+  join: total_over_daily {
+    relationship: one_to_one
+    sql_on: ${orders_daily.office_id} = ${total_over_daily.office_id}
+      and ${orders_daily.report_date} = ${total_over_daily.report_date} ;;
+  }
+
+  join: refunds_daily {
+    relationship: one_to_one
+    sql_on: ${total_over_daily.office_id} = ${refunds_daily.office_id}
+      and ${total_over_daily.report_date} = ${refunds_daily.report_date} ;;
+  }
+}
+
 explore: order_items {
   view_name: order_items
 
@@ -251,11 +273,17 @@ explore: order_items {
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
 
-  join: total_over_daily {
-    relationship: many_to_one
-    sql_on: ${orders.office_id} = ${total_over_daily.office_id}
-      and ${orders.confirmed_date} = ${total_over_daily.created_date} ;;
-  }
+  # join: total_over_daily {
+  #   relationship: many_to_one
+  #   sql_on: ${orders.office_id} = ${total_over_daily.office_id}
+  #     and ${orders.confirmed_date} = ${total_over_daily.created_date} ;;
+  # }
+
+  # join: refunds_daily {
+  #   relationship: one_to_one
+  #   sql_on: ${total_over_daily.office_id} = ${refunds_daily.office_id}
+  #     and ${total_over_daily.created_date} = ${refunds_daily.returned_date} ;;
+  # }
 
   # aggregate_table: orders_daily {
   #   query: {
@@ -353,7 +381,7 @@ explore: order_items {
   join: order_item_refunds {
     from: order_items
     relationship: one_to_one
-    sql_on: ${order_item_refunds.id} = ${order_items.id} ;;
+    sql_on: ${order_item_refunds.id} = ${order_items.id} AND ${order_item_refunds.is_returned} = 1;;
   }
 
   join: staff {
