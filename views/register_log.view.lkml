@@ -114,7 +114,7 @@ view: register_log {
 
   dimension: over {
     type: number
-    sql: ${TABLE}.over ;;
+    sql: ${TABLE}.over_drawer ;;
   }
 
   dimension: pending_amount {
