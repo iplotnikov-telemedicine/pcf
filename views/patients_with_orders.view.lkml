@@ -8,4 +8,9 @@ view: patients_with_orders {
     sql: ${orders.count_of_orders} > 1;;
   }
 
+  measure: latest_order_confirmed {
+    type: date_time
+    sql: MAX(${orders.confirmed_raw});;
+  }
+
 }

@@ -26,9 +26,21 @@ view: order_items {
     sql: JSON_OBJECT('Product ID', ${product_id}, 'Price', round(${amount}, 2), 'Quantity', ${count}) ;;
   }
 
+  measure: price_list {
+    type: list
+    list_field: amount_formatted
+  }
+
   dimension: amount {
     type: number
     sql: ${TABLE}.amount ;;
+
+  }
+
+  dimension: amount_formatted {
+    type: number
+    sql: ${amount} ;;
+    value_format_name: usd
   }
 
   dimension: base_amount {
@@ -183,6 +195,11 @@ view: order_items {
   dimension: name {
     type: string
     sql: ${TABLE}.name ;;
+  }
+
+  measure: product_list {
+    type: list
+    list_field: name
   }
 
   dimension: order_id {

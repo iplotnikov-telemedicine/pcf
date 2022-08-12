@@ -188,6 +188,13 @@ explore: products {
 }
 
 explore: orders_with_details {
+  join: latest_patient_orders {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${orders_with_details.confirmed_raw} = ${latest_patient_orders.latest_order_confirmed}
+      and ${orders_with_details.patient_id} = ${latest_patient_orders.patient_id}
+      and ${latest_patient_orders.has_orders_after_date} = 'No' ;;
+  }
   join: patients {
     relationship: many_to_one
     sql_on: ${orders_with_details.patient_id} = ${patients.id} ;;

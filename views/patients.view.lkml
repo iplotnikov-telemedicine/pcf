@@ -278,6 +278,11 @@ view: patients {
     sql: ${TABLE}.pat_first_name ;;
   }
 
+  dimension: full_name {
+    type: string
+    sql: CONCAT(${first_name}, ' ', ${last_name}) ;;
+  }
+
   dimension: gender {
     type: string
     sql: ${TABLE}.pat_gender ;;
