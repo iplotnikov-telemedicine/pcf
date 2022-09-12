@@ -47,6 +47,12 @@ explore: product_quantity_and_offices {
 explore: quantity_by_product {
   sql_always_where: ${products.deleted_raw} IS NULL ;;
 
+  join: total_cost_by_product {
+    type: inner
+    relationship: one_to_one
+    sql_on:  ${quantity_by_product.product_id} = ${total_cost_by_product.product_id} ;;
+  }
+
   join: products {
     type: inner
     relationship: many_to_one
@@ -94,6 +100,12 @@ explore: quantity_by_product {
   }
 }
 
+explore: package_quantity_ext {
+  join: product_checkins {
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${package_quantity_ext.package_id} ;;
+  }
+}
 
 explore: order_items {
 
