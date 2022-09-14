@@ -4,111 +4,8 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
-
-explore: product_categories {
-  join: products {
-    type: inner
-    relationship: many_to_one
-    sql_on: ${products.prod_category_id} = ${product_categories.id};;
-  }
-
-  join: brands {
-    relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
-  }
-
-  join: product_categories_1 {
-    from: product_categories
-    fields: [name]
-    relationship: many_to_one
-    sql_on: ${product_categories.rgt} < ${product_categories_1.rgt}
-      and ${product_categories.lft} > ${product_categories_1.lft}
-      and ${product_categories.level} = ${product_categories_1.level} + 1 ;;
-  }
-
-  join: product_categories_2 {
-    from: product_categories
-    fields: [name]
-    relationship: many_to_one
-    sql_on: ${product_categories_1.rgt} < ${product_categories_2.rgt}
-          and ${product_categories_1.lft} > ${product_categories_2.lft}
-          and ${product_categories_1.level} = ${product_categories_2.level} + 1 ;;
-  }
-
-}
-
-explore: product_quantity_and_offices {
-  join: offices {
-    type: inner
-    relationship: many_to_one
-    sql_on: ${product_quantity_and_offices.office_id} = ${offices.office_id};;
-  }
-}
-
-explore: quantity_by_product {
-  sql_always_where: ${products.deleted_raw} IS NULL ;;
-
-  join: total_cost_by_product {
-    type: inner
-    relationship: one_to_one
-    sql_on:  ${quantity_by_product.product_id} = ${total_cost_by_product.product_id} ;;
-  }
-
-  join: products {
-    type: inner
-    relationship: many_to_one
-    sql_on:  ${quantity_by_product.product_id} = ${products.id} ;;
-  }
-
-  join: product_types {
-    type: inner
-    relationship: many_to_one
-    sql_on:  ${product_types.id} = ${products.product_type_id} ;;
-  }
-
-  join: brands {
-    relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
-  }
-
-  join: product_categories_by_level {
-    relationship: many_to_one
-    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
-  }
-
-  join: product_price_group {
-    relationship: many_to_one
-    sql_on: ${products.id} = ${product_price_group.product_id};;
-  }
-
-  join: product_prices {
-    relationship: many_to_one
-    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
-      and (${product_prices.weight_type} is NULL
-        or ${product_prices.weight_type} = 'gram')
-      and (${product_prices.range_from} is NULL
-        or ${product_prices.range_from} = 1);;
-  }
-
-  join: product_tag_ref {
-    relationship: one_to_many
-    sql_on: ${products.id} = ${product_tag_ref.product_id};;
-  }
-
-  join: product_tag {
-    relationship: many_to_many
-    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
-  }
-}
-
-explore: package_quantity_ext {
-  join: product_checkins {
-    relationship: one_to_one
-    sql_on: ${product_checkins.id} = ${package_quantity_ext.package_id} ;;
-  }
-}
-
 explore: order_items {
+  view_name: order_items
 
   join: products {
     relationship: many_to_one
@@ -125,6 +22,90 @@ explore: order_items {
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
 
+  # join: total_over_daily {
+  #   relationship: many_to_one
+  #   sql_on: ${orders.office_id} = ${total_over_daily.office_id}
+  #     and ${orders.confirmed_date} = ${total_over_daily.created_date} ;;
+  # }
+
+  # join: refunds_daily {
+  #   relationship: one_to_one
+  #   sql_on: ${total_over_daily.office_id} = ${refunds_daily.office_id}
+  #     and ${total_over_daily.created_date} = ${refunds_daily.returned_date} ;;
+  # }
+
+  # aggregate_table: orders_daily {
+  #   query: {
+  #     dimensions: [orders.confirmed_date]
+  #     measures: [orders.atv, orders.avg_wait_time_delivery, orders.avg_wait_time_store, orders.number_of_cash_transactions, orders.number_of_credit_card_transactions, orders.sum_total_discounts, orders.total_cash_sales, orders.total_credit_card_sales, orders.total_tax, sum_gross_sale, sum_net_sales]
+  #     timezone: "America/Los_Angeles"
+  #   }
+  #   materialization: {
+  #     sql_trigger_value: SELECT CURDATE() ;;
+  #   }
+  # }
+
+
+  # join: service_history_sales {
+  #   from: service_history
+  #   relationship: one_to_one
+  #   sql_on: ${orders.id} = ${service_history_sales.order_id} and ${service_history_sales.type} = 'checkout';;
+  # }
+
+  # join: register_log_sales {
+  #   from: register_log
+  #   relationship: one_to_one
+  #   sql_on: ${service_history_sales.id} = ${register_log_sales.service_history_id} and ${register_log_sales.type} = 3;;
+  # }
+
+  # join: register_log_closes {
+  #   from: register_log
+  #   relationship: many_to_many
+  #   sql_on: ${register_log_sales.created_date} = ${register_log_closes.created_date}
+  #     and ${register_log_sales.register_id} = ${register_log_closes.register_id}
+  #     and ${register_log_sales.id} < ${register_log_closes.register_id}
+  #     and ${register_log_closes.type} = 4;;
+  # }
+
+  join: discounts {
+
+    relationship: many_to_one
+    sql_on: CASE
+
+          WHEN ${discounts.discount_apply_type} = "cart"
+
+      THEN ${orders.discount_id} = ${discounts.id}
+
+      ELSE ${order_items.discount_id} = ${discounts.id}
+
+      END ;;
+    # sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
+    sql_where: ${discounts.id} is not null;;
+  }
+
+  # join: order_item_discounts {
+  #   from: discounts
+  #   relationship: many_to_one
+  #   sql_on: ${discounts.id} = ${order_items.discount_id} and ${discounts.apply_type} = "item";;
+  # }
+
+  # join: order_discounts {
+  #   from: discounts
+  #   relationship: many_to_one
+  #   sql_on: ${discounts.id} = ${orders.discount_id} and ${discounts.apply_type} = "cart";;
+  # }
+
+  join: discount_amount_by_id {
+    relationship: one_to_one
+    sql_on: ${discounts.id} = ${discount_amount_by_id.id} ;;
+  }
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${orders.office_id} = ${offices.office_id} ;;
+    # sql_where: ${offices.company_id} = @{kolas_company_id} ;;
+  }
+
   join: patients {
     relationship: many_to_one
     sql_on: ${orders.patient_id} = ${patients.id} ;;
@@ -138,18 +119,48 @@ explore: order_items {
 
   join: tax_payment {
     relationship: one_to_one
-    sql_on: ${tax_payment.order_item_id} = ${order_items.id} ;;
+    sql_on: ${order_items.id} = ${tax_payment.order_item_id} ;;
   }
+
+  # join: tax_payment_flat {
+  #   relationship: one_to_many
+  #   sql_on: ${order_items.id} = ${tax_payment_flat.order_item_id} ;;
+  # }
 
   join: order_item_refunds {
     from: order_items
     relationship: one_to_one
-    sql_on: ${order_item_refunds.id} = ${order_items.id} ;;
+    sql_on: ${order_item_refunds.id} = ${order_items.id} AND ${order_item_refunds.is_returned} = 1;;
   }
 
-  join: users {
+  join: staff {
+    from: users
     relationship: many_to_one
-    sql_on: ${users.id} = ${orders.cashier_id} ;;
+    sql_on: ${staff.id} = ${orders.cashier_id} ;;
   }
 
+  join: sf_guard_user_group {
+    relationship: many_to_many
+    sql_on: ${staff.id} = ${sf_guard_user_group.user_id} ;;
+  }
+
+  join: staff_category {
+    from: sf_guard_group
+    relationship: many_to_one
+    type: inner
+    sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
+  }
+
+  # join: self_brand_product {
+  #   from: product
+  #   relationship: many_to_one
+  #   sql_on: ${self_brand_product.id} = ${orderItem.product_id} ;;
+  # }
+
+  # sql_always_where:
+  # {% if order_items.namesearch._is_filtered %}
+  # ${order_items.filter_by_product} = 'yes'
+  # {% else %}
+  # 1=1
+  # {% endif %};;
 }
