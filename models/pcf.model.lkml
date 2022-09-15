@@ -13,23 +13,23 @@ explore: product_quantity_and_offices {
   }
 }
 
-explore: quantity_by_product {
+explore: products {
   sql_always_where: ${products.deleted_raw} IS NULL ;;
 
+  join: quantity_by_product {
+    type: left_outer
+    relationship: one_to_one
+    sql_on:  ${products.id} = ${quantity_by_product.product_id} ;;
+  }
+
   join: total_cost_by_product {
-    type: inner
+    type: left_outer
     relationship: one_to_one
     sql_on:  ${quantity_by_product.product_id} = ${total_cost_by_product.product_id} ;;
   }
 
-  join: products {
-    type: inner
-    relationship: many_to_one
-    sql_on:  ${quantity_by_product.product_id} = ${products.id} ;;
-  }
-
   join: product_types {
-    type: inner
+    type: left_outer
     relationship: many_to_one
     sql_on:  ${product_types.id} = ${products.product_type_id} ;;
   }
@@ -67,6 +67,35 @@ explore: quantity_by_product {
     relationship: many_to_many
     sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
   }
+
+  join: product_checkins {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_checkins.product_id} ;;
+  }
+
+  join: adjustments_by_checkin {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${adjustments_by_checkin.product_checkin_id} ;;
+  }
+
+  join: order_items_by_checkin {
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${order_items_by_checkin.product_checkin_id};;
+    # and ${product_checkins.date_raw} <= ${order_items.created_raw};;
+  }
+
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.category_id} = ${product_categories.id} ;;
+  }
+
+  join: product_office_quantity_by_product {
+    relationship: one_to_one
+    sql_on: ${products.id} = ${product_office_quantity_by_product.product_id} ;;
+  }
+
 }
 
 
@@ -107,9 +136,7 @@ explore: package_quantity_ext {
 
 explore: product_transactions {
 
-  sql_always_where:
-    ${product_checkins.uid} IS NOT NULL
-    AND ${products.deleted_date} IS NULL
+  sql_always_where: ${product_checkins.uid} IS NOT NULL
     AND ${product_checkins.uid} <> ''
     AND {% if product_transactions.date_filter._in_query %}
     ${product_checkins.date_raw} <= {% date_start product_transactions.date_filter %}
@@ -121,19 +148,13 @@ explore: product_transactions {
     relationship: many_to_one
     type: inner
     sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id} ;;
-      # AND ${product_transactions.date_raw} >= ${product_checkins.date_raw};;
+    # AND ${product_transactions.date_raw} >= ${product_checkins.date_raw};;
   }
 
   join: products {
     type: inner
     relationship: many_to_one
     sql_on:  ${product_transactions.product_id} = ${products.id} ;;
-  }
-
-  join: total_tax_by_product {
-    type: left_outer
-    relationship: one_to_one
-    sql_on:  ${products.id} = ${total_tax_by_product.product_id} ;;
   }
 
   join: brands {
@@ -164,74 +185,8 @@ explore: product_transactions {
       and (${product_prices.range_from} is NULL
         or ${product_prices.range_from} = 1);;
   }
-
 }
 
-explore: product_with_tax {
-
-  join: brands {
-    relationship: many_to_one
-    sql_on: ${product_with_tax.brand_id} = ${brands.brand_id} ;;
-  }
-
-  join: product_price_group {
-    relationship: many_to_one
-    sql_on: ${product_with_tax.id} = ${product_price_group.product_id};;
-  }
-
-  join: product_prices {
-    relationship: many_to_one
-    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
-      and (${product_prices.weight_type} is NULL
-        or ${product_prices.weight_type} = 'gram')
-      and (${product_prices.range_from} is NULL
-        or ${product_prices.range_from} = 1);;
-  }
-
-  join: tax_tier {
-    type: inner
-    relationship: many_to_one
-    sql_on: 1=1 ;;
-  }
-
-  join: tax_tier_versions {
-    type: inner
-    relationship: one_to_many
-    sql_on: ${tax_tier.tax_tier_version_id} = ${tax_tier_versions.id} ;;
-  }
-
-  join: tax_excise {
-    type: inner
-    relationship: one_to_one
-    sql_on: ${tax_tier_versions.id} = ${tax_excise.tax_tier_version_id} ;;
-  }
-
-  join: tax_city_local {
-    type: inner
-    relationship: one_to_one
-    sql_on: ${tax_tier_versions.id} = ${tax_city_local.tax_tier_version_id} ;;
-  }
-
-  join: tax_sales {
-    type: inner
-    relationship: one_to_one
-    sql_on: ${tax_tier_versions.id} = ${tax_sales.tax_tier_version_id} ;;
-  }
-
-  join: tax_city_local_rates {
-    type: inner
-    relationship: one_to_many
-    sql_on: ${tax_city_local.id} = ${tax_city_local_rates.city_local_tax_id}
-      and ${tax_city_local_rates.location_type} = 'city';;
-  }
-
-  join: tax_sales_rates {
-    type: inner
-    relationship: one_to_many
-    sql_on: ${tax_sales.id} = ${tax_sales_rates.sales_tax_id}
-      and ${tax_sales_rates.location_type} = 'state';;
-  }
-}
 
 explore: inventory_log {
 
@@ -314,52 +269,6 @@ explore: inventory_log {
   }
 }
 
-explore: products {
-
-  view_name: products
-
-  join: product_checkins {
-    type: inner
-    relationship: one_to_many
-    sql_on: ${products.id} = ${product_checkins.product_id} ;;
-  }
-
-  # join: adjustments {
-  #   from: product_transactions
-  #   type: left_outer
-  #   relationship: one_to_many
-  #   sql_on: ${product_checkins.id} = ${adjustments.product_checkin_id}
-  #     AND ${adjustments.transaction_type} in (12,13) ;;
-  # }
-
-  join: adjustments_by_checkin {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${product_checkins.id} = ${adjustments_by_checkin.product_checkin_id} ;;
-  }
-
-  join: order_items_by_checkin {
-    relationship: one_to_one
-    sql_on: ${product_checkins.id} = ${order_items_by_checkin.product_checkin_id};;
-    # and ${product_checkins.date_raw} <= ${order_items.created_raw};;
-  }
-
-  join: product_categories {
-    relationship: many_to_one
-    sql_on: ${products.category_id} = ${product_categories.id} ;;
-  }
-
-  join: product_office_quantity_by_product {
-    relationship: one_to_one
-    sql_on: ${products.id} = ${product_office_quantity_by_product.product_id} ;;
-  }
-
-  join: brands {
-    relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
-  }
-
-}
 
 explore: order_items {
 
@@ -465,24 +374,68 @@ explore: patients { view_name: patients
 }
 
 
-# explore: new_patients {
-#   extends: [patients]
-#   sql_always_where:  ;;
-# }
+explore: product_with_tax {
 
-# explore: product_office_quantity {}
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${product_with_tax.brand_id} = ${brands.brand_id} ;;
+  }
 
-# # Select the views that should be a part of this model,
-# # and define the joins that connect them together.
-#
-# explore: order_items {
-#   join: orders {
-#     relationship: many_to_one
-#     sql_on: ${orders.id} = ${order_items.order_id} ;;
-#   }
-#
-#   join: users {
-#     relationship: many_to_one
-#     sql_on: ${users.id} = ${orders.user_id} ;;
-#   }
-# }
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${product_with_tax.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.weight_type} is NULL
+        or ${product_prices.weight_type} = 'gram')
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
+  }
+
+  join: tax_tier {
+    type: inner
+    relationship: many_to_one
+    sql_on: 1=1 ;;
+  }
+
+  join: tax_tier_versions {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${tax_tier.tax_tier_version_id} = ${tax_tier_versions.id} ;;
+  }
+
+  join: tax_excise {
+    type: inner
+    relationship: one_to_one
+    sql_on: ${tax_tier_versions.id} = ${tax_excise.tax_tier_version_id} ;;
+  }
+
+  join: tax_city_local {
+    type: inner
+    relationship: one_to_one
+    sql_on: ${tax_tier_versions.id} = ${tax_city_local.tax_tier_version_id} ;;
+  }
+
+  join: tax_sales {
+    type: inner
+    relationship: one_to_one
+    sql_on: ${tax_tier_versions.id} = ${tax_sales.tax_tier_version_id} ;;
+  }
+
+  join: tax_city_local_rates {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${tax_city_local.id} = ${tax_city_local_rates.city_local_tax_id}
+      and ${tax_city_local_rates.location_type} = 'city';;
+  }
+
+  join: tax_sales_rates {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${tax_sales.id} = ${tax_sales_rates.sales_tax_id}
+      and ${tax_sales_rates.location_type} = 'state';;
+  }
+}
