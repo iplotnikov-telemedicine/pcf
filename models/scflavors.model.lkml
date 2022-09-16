@@ -13,23 +13,23 @@ explore: product_quantity_and_offices {
   }
 }
 
-explore: quantity_by_product {
+explore: products {
   sql_always_where: ${products.deleted_raw} IS NULL ;;
 
+  join: quantity_by_product {
+    type: left_outer
+    relationship: one_to_one
+    sql_on:  ${products.id} = ${quantity_by_product.product_id} ;;
+  }
+
   join: total_cost_by_product {
-    type: inner
+    type: left_outer
     relationship: one_to_one
     sql_on:  ${quantity_by_product.product_id} = ${total_cost_by_product.product_id} ;;
   }
 
-  join: products {
-    type: inner
-    relationship: many_to_one
-    sql_on:  ${quantity_by_product.product_id} = ${products.id} ;;
-  }
-
   join: product_types {
-    type: inner
+    type: left_outer
     relationship: many_to_one
     sql_on:  ${product_types.id} = ${products.product_type_id} ;;
   }
@@ -67,6 +67,35 @@ explore: quantity_by_product {
     relationship: many_to_many
     sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
   }
+
+  join: product_checkins {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_checkins.product_id} ;;
+  }
+
+  join: adjustments_by_checkin {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${adjustments_by_checkin.product_checkin_id} ;;
+  }
+
+  join: order_items_by_checkin {
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${order_items_by_checkin.product_checkin_id};;
+    # and ${product_checkins.date_raw} <= ${order_items.created_raw};;
+  }
+
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.category_id} = ${product_categories.id} ;;
+  }
+
+  join: product_office_quantity_by_product {
+    relationship: one_to_one
+    sql_on: ${products.id} = ${product_office_quantity_by_product.product_id} ;;
+  }
+
 }
 
 
@@ -240,52 +269,6 @@ explore: inventory_log {
   }
 }
 
-explore: products {
-
-  view_name: products
-
-  join: product_checkins {
-    type: inner
-    relationship: one_to_many
-    sql_on: ${products.id} = ${product_checkins.product_id} ;;
-  }
-
-  # join: adjustments {
-  #   from: product_transactions
-  #   type: left_outer
-  #   relationship: one_to_many
-  #   sql_on: ${product_checkins.id} = ${adjustments.product_checkin_id}
-  #     AND ${adjustments.transaction_type} in (12,13) ;;
-  # }
-
-  join: adjustments_by_checkin {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${product_checkins.id} = ${adjustments_by_checkin.product_checkin_id} ;;
-  }
-
-  join: order_items_by_checkin {
-    relationship: one_to_one
-    sql_on: ${product_checkins.id} = ${order_items_by_checkin.product_checkin_id};;
-    # and ${product_checkins.date_raw} <= ${order_items.created_raw};;
-  }
-
-  join: product_categories {
-    relationship: many_to_one
-    sql_on: ${products.category_id} = ${product_categories.id} ;;
-  }
-
-  join: product_office_quantity_by_product {
-    relationship: one_to_one
-    sql_on: ${products.id} = ${product_office_quantity_by_product.product_id} ;;
-  }
-
-  join: brands {
-    relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
-  }
-
-}
 
 explore: order_items {
 
