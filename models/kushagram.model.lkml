@@ -2,7 +2,7 @@ connection: "kg"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
-# include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
+# include: "/my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 explore: order_items {
   view_name: order_items
@@ -22,78 +22,16 @@ explore: order_items {
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
 
-  # join: total_over_daily {
-  #   relationship: many_to_one
-  #   sql_on: ${orders.office_id} = ${total_over_daily.office_id}
-  #     and ${orders.confirmed_date} = ${total_over_daily.created_date} ;;
-  # }
-
-  # join: refunds_daily {
-  #   relationship: one_to_one
-  #   sql_on: ${total_over_daily.office_id} = ${refunds_daily.office_id}
-  #     and ${total_over_daily.created_date} = ${refunds_daily.returned_date} ;;
-  # }
-
-  # aggregate_table: orders_daily {
-  #   query: {
-  #     dimensions: [orders.confirmed_date]
-  #     measures: [orders.atv, orders.avg_wait_time_delivery, orders.avg_wait_time_store, orders.number_of_cash_transactions, orders.number_of_credit_card_transactions, orders.sum_total_discounts, orders.total_cash_sales, orders.total_credit_card_sales, orders.total_tax, sum_gross_sale, sum_net_sales]
-  #     timezone: "America/Los_Angeles"
-  #   }
-  #   materialization: {
-  #     sql_trigger_value: SELECT CURDATE() ;;
-  #   }
-  # }
-
-
-  # join: service_history_sales {
-  #   from: service_history
-  #   relationship: one_to_one
-  #   sql_on: ${orders.id} = ${service_history_sales.order_id} and ${service_history_sales.type} = 'checkout';;
-  # }
-
-  # join: register_log_sales {
-  #   from: register_log
-  #   relationship: one_to_one
-  #   sql_on: ${service_history_sales.id} = ${register_log_sales.service_history_id} and ${register_log_sales.type} = 3;;
-  # }
-
-  # join: register_log_closes {
-  #   from: register_log
-  #   relationship: many_to_many
-  #   sql_on: ${register_log_sales.created_date} = ${register_log_closes.created_date}
-  #     and ${register_log_sales.register_id} = ${register_log_closes.register_id}
-  #     and ${register_log_sales.id} < ${register_log_closes.register_id}
-  #     and ${register_log_closes.type} = 4;;
-  # }
-
   join: discounts {
-
     relationship: many_to_one
-    sql_on: CASE
-
-          WHEN ${discounts.discount_apply_type} = "cart"
-
-      THEN ${orders.discount_id} = ${discounts.id}
-
-      ELSE ${order_items.discount_id} = ${discounts.id}
-
-      END ;;
-    # sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
-    sql_where: ${discounts.id} is not null;;
+    sql_on: ${discounts.id} = ${order_items.discount_id} ;;
   }
 
-  # join: order_item_discounts {
-  #   from: discounts
-  #   relationship: many_to_one
-  #   sql_on: ${discounts.id} = ${order_items.discount_id} and ${discounts.apply_type} = "item";;
-  # }
-
-  # join: order_discounts {
-  #   from: discounts
-  #   relationship: many_to_one
-  #   sql_on: ${discounts.id} = ${orders.discount_id} and ${discounts.apply_type} = "cart";;
-  # }
+  join: order_item_discounts {
+    from: discounts
+    relationship: many_to_one
+    sql_on: ${discounts.id} = ${order_items.discount_id} and ${discounts.discount_apply_type} = "item";;
+  }
 
   join: discount_amount_by_id {
     relationship: one_to_one
@@ -103,7 +41,6 @@ explore: order_items {
   join: offices {
     relationship: many_to_one
     sql_on: ${orders.office_id} = ${offices.office_id} ;;
-    # sql_where: ${offices.company_id} = @{kolas_company_id} ;;
   }
 
   join: patients {
@@ -111,21 +48,10 @@ explore: order_items {
     sql_on: ${orders.patient_id} = ${patients.id} ;;
   }
 
-  # join: returning_patients {
-  #   relationship: one_to_one
-  #   type: inner
-  #   sql_on: ${patients.id} = ${returning_patients.id} ;;
-  # }
-
   join: tax_payment {
     relationship: one_to_one
     sql_on: ${order_items.id} = ${tax_payment.order_item_id} ;;
   }
-
-  # join: tax_payment_flat {
-  #   relationship: one_to_many
-  #   sql_on: ${order_items.id} = ${tax_payment_flat.order_item_id} ;;
-  # }
 
   join: order_item_refunds {
     from: order_items
@@ -151,11 +77,167 @@ explore: order_items {
     sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
   }
 
+  join: discount_preset {
+    relationship: many_to_one
+    sql_on: ${orders.id} = ${discount_preset.id} ;;
+  }
+
+  join: order_discounts {
+    from: discounts
+    relationship: many_to_one
+    sql_on: ${discounts.id} = ${orders.discount_id} and ${discounts.discount_apply_type} = "cart";;
+  }
+
+  join: notes {
+    relationship: many_to_one
+    sql_on:  ${patients.id} = ${notes.patient_id};;
+  }
+
+  join: company {
+    relationship: one_to_many
+    sql_on: ${offices.office_comp_id} = ${company.id} ;;
+  }
+
+  join: product_categories {
+    relationship: many_to_one
+    sql_on: ${products.category_id} = ${product_categories.id} ;;
+  }
+
+  join: product_checkins {
+    relationship: many_to_one
+    sql_on: ${product_checkins.id} = ${order_items.product_checkin_id} ;;
+  }
+
+  join: recommendations {
+    relationship: many_to_one
+    sql_on: ${orders.patient_id} = ${recommendations.rec_pat_id}
+          AND ${recommendations.rec_valid_from_date} <= ${orders.confirmed_raw}
+          AND ${recommendations.rec_valid_to_raw} >= ${orders.confirmed_raw};;
+  }
+
+  join: returning_patients {
+    relationship: one_to_one
+    type: inner
+    sql_on: ${patients.id} = ${returning_patients.id} ;;
+  }
+
+  join: refunds {
+    from: order_items
+    relationship: many_to_one
+    sql_on: ${refunds.order_id} = ${orders.id} ;;
+  }
+
+  join: register_log {
+    relationship: one_to_one
+    sql_on: ${service_history.id} = ${register_log.service_history_id} ;;
+  }
+
+  join: service_history {
+    relationship: many_to_one
+    sql_on: ${orders.id} = ${service_history.order_id} ;;
+  }
+
+  join: tax_excise {
+    relationship: one_to_many
+    sql_on: ${orders.tax_tier_version_id} = ${tax_excise.tax_tier_version_id} ;;
+  }
+
+  join: users {
+    relationship: many_to_one
+    sql_on: ${users.id} = ${orders.cashier_id} ;;
+  }
+}
+
+explore: patients_with_orders {
+  join: orders {
+    relationship: one_to_many
+    sql_on: ${patients_with_orders.id} = ${orders.patient_id};;
+  }
+}
+
+
+  # join: total_over_daily {
+  #   relationship: many_to_one
+  #   sql_on: ${orders.office_id} = ${total_over_daily.office_id}
+  #     and ${orders.confirmed_date} = ${total_over_daily.created_date} ;;
+  # }
+
+  # join: refunds_daily {
+  #   relationship: one_to_one
+  #   sql_on: ${total_over_daily.office_id} = ${refunds_daily.office_id}
+  #     and ${total_over_daily.created_date} = ${refunds_daily.returned_date} ;;
+  # }
+
+  # aggregate_table: orders_daily {
+  #   query: {
+  #     dimensions: [orders.confirmed_date]
+  #     measures: [orders.atv, orders.avg_wait_time_delivery, orders.avg_wait_time_store, orders.number_of_cash_transactions, orders.number_of_credit_card_transactions, orders.sum_total_discounts, orders.total_cash_sales, orders.total_credit_card_sales, orders.total_tax, sum_gross_sale, sum_net_sales]
+  #     timezone: "America/Los_Angeles"
+  #   }
+  #   materialization: {
+  #     sql_trigger_value: SELECT CURDATE() ;;
+  #   }
+  # }
+
+  # join: service_history_sales {
+  #   from: service_history
+  #   relationship: one_to_one
+  #   sql_on: ${orders.id} = ${service_history_sales.order_id} and ${service_history_sales.type} = 'checkout';;
+  # }
+
+  # join: register_log_sales {
+  #   from: register_log
+  #   relationship: one_to_one
+  #   sql_on: ${service_history_sales.id} = ${register_log_sales.service_history_id} and ${register_log_sales.type} = 3;;
+  # }
+
+  # join: register_log_closes {
+  #   from: register_log
+  #   relationship: many_to_many
+  #   sql_on: ${register_log_sales.created_date} = ${register_log_closes.created_date}
+  #     and ${register_log_sales.register_id} = ${register_log_closes.register_id}
+  #     and ${register_log_sales.id} < ${register_log_closes.register_id}
+  #     and ${register_log_closes.type} = 4;;
+  # }
+
   # join: self_brand_product {
   #   from: product
   #   relationship: many_to_one
   #   sql_on: ${self_brand_product.id} = ${orderItem.product_id} ;;
   # }
+
+  # join: order_item_discounts {
+  #   from: discounts
+  #   relationship: many_to_one
+  #   sql_on: ${discounts.id} = ${order_items.discount_id} and ${discounts.apply_type} = "item";;
+  # }
+
+  # join: order_discounts {
+  #   from: discounts
+  #   relationship: many_to_one
+  #   sql_on: ${discounts.id} = ${orders.discount_id} and ${discounts.apply_type} = "cart";;
+  # }
+
+  # join: returning_patients {
+  #   relationship: one_to_one
+  #   type: inner
+  #   sql_on: ${patients.id} = ${returning_patients.id} ;;
+  # }
+
+  # join: tax_payment_flat {
+  #   relationship: one_to_many
+  #   sql_on: ${order_items.id} = ${tax_payment_flat.order_item_id} ;;
+  # }
+
+  # join: discounts {
+  #   relationship: many_to_one
+  #   sql_on: CASE
+  #         WHEN ${discounts.discount_apply_type} = "cart"
+  #     THEN ${orders.discount_id} = ${discounts.id}
+  #     ELSE ${order_items.discount_id} = ${discounts.id}
+  #     END ;;
+  #   # sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
+  #   sql_where: ${discounts.id} is not null;;
 
   # sql_always_where:
   # {% if order_items.namesearch._is_filtered %}
@@ -163,4 +245,3 @@ explore: order_items {
   # {% else %}
   # 1=1
   # {% endif %};;
-}

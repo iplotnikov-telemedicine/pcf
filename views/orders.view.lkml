@@ -578,6 +578,13 @@ view: orders {
   }
 
 
+  measure: number_of_orders {
+    type: count
+    value_format_name: decimal_0
+    drill_fields: [detail*]
+  }
+
+
   measure: count_of_orders {
     type: count
     value_format_name: decimal_0
