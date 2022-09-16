@@ -4,6 +4,49 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "/my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+
+
+explore: monthly_sales {
+
+  join: monthly_patients {
+    relationship: one_to_one
+    sql_on: ${monthly_sales.confirmed_month} = ${monthly_patients.created_month} ;;
+  }
+
+  join: monthly_refunds {
+    relationship: one_to_one
+    sql_on: ${monthly_sales.confirmed_month} = ${monthly_refunds.returned_month} ;;
+  }
+
+}
+
+explore: service_history {
+
+  join: users {
+    relationship: many_to_one
+    sql_on: ${service_history.user_id} = ${users.id} ;;
+  }
+
+  join: services {
+    relationship: many_to_one
+    sql_on: ${service_history.service_id} = ${services.id} ;;
+  }
+
+  join: service_company_ref {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${services.id} = ${service_company_ref.service_id} ;;
+  }
+
+  join: orders {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${service_history.order_id} = ${orders.id} ;;
+  }
+
+}
+
+
 explore: order_items {
   view_name: order_items
 
