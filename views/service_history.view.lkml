@@ -222,4 +222,22 @@ view: service_history {
     type: count
     drill_fields: [id, register.id, register.name, register.application_name, register_log.count]
   }
+
+  measure: new_patient_count {
+    type: count_distinct
+    sql: ${patient_id} ;;
+    filters: [service_id: "8"]
+  }
+
+  measure: rep_patient_count {
+    type: count_distinct
+    sql: ${patient_id} ;;
+    filters: [service_id: "9"]
+  }
+
+  measure: total_patient_count {
+    type: count_distinct
+    sql: ${patient_id} ;;
+    filters: [service_id: "9, 8"]
+  }
 }
