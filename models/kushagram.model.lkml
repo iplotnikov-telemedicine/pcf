@@ -33,13 +33,13 @@ explore: service_history {
   }
 
   join: service_company_ref {
-    type: inner
+  #  type: inner
     relationship: many_to_one
     sql_on: ${services.id} = ${service_company_ref.service_id} ;;
   }
 
   join: orders {
-    type: inner
+  #  type: inner
     relationship: many_to_one
     sql_on: ${service_history.order_id} = ${orders.id} ;;
   }
@@ -116,7 +116,7 @@ explore: order_items {
   join: staff_category {
     from: sf_guard_group
     relationship: many_to_one
-    type: inner
+    #type: inner
     sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
   }
 
@@ -160,7 +160,7 @@ explore: order_items {
 
   join: returning_patients {
     relationship: one_to_one
-    type: inner
+    #type: inner
     sql_on: ${patients.id} = ${returning_patients.id} ;;
   }
 
