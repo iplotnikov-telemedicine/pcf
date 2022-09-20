@@ -6,11 +6,11 @@ view: total_tax_by_product {
     explore_source: product_with_tax {
       column: product_id {field: product_with_tax.id}
       column: product_name {field: product_with_tax.name}
-      column: tax_tier_1_retail_price {}
+      column: tax_tier_1_otd_price {}
       column: tax_tier_1_total_tax {}
-      column: tax_tier_2_retail_price {}
+      column: tax_tier_2_otd_price {}
       column: tax_tier_2_total_tax {}
-      column: tax_tier_3_retail_price {}
+      column: tax_tier_3_otd_price {}
       column: tax_tier_3_total_tax {}
       column: sales_price {}
       filters: {
@@ -26,7 +26,7 @@ view: total_tax_by_product {
   dimension: product_name {
     description: ""
   }
-  dimension: tax_tier_1_retail_price {
+  dimension: tax_tier_1_otd_price {
     description: ""
     value_format: "$#,##0.00"
     type: number
@@ -36,7 +36,7 @@ view: total_tax_by_product {
     value_format: "$#,##0.00"
     type: number
   }
-  dimension: tax_tier_2_retail_price {
+  dimension: tax_tier_2_otd_price {
     description: ""
     value_format: "$#,##0.00"
     type: number
@@ -46,7 +46,7 @@ view: total_tax_by_product {
     value_format: "$#,##0.00"
     type: number
   }
-  dimension: tax_tier_3_retail_price {
+  dimension: tax_tier_3_otd_price {
     description: ""
     value_format: "$#,##0.00"
     type: number

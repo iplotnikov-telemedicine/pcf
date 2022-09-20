@@ -121,26 +121,26 @@ view: product_with_tax {
     filters: [tax_tier.id: "3"]
   }
 
-  measure: tax_tier_1_retail_price {
+  measure: tax_tier_1_otd_price {
     type: number
     sql:  ${sales_price} + ${tax_tier_1_total_tax} ;;
     value_format_name: usd
   }
 
-  measure: tax_tier_2_retail_price {
+  measure: tax_tier_2_otd_price {
     type: number
     sql:  ${sales_price} + ${tax_tier_1_total_tax} ;;
     value_format_name: usd
   }
 
-  measure: tax_tier_3_retail_price {
+  measure: tax_tier_3_otd_price {
     type: number
     sql:  ${sales_price} + ${tax_tier_1_total_tax} ;;
     value_format_name: usd
   }
 
-  dimension: retail_price {
-    alias: [otd_price]
+  dimension: otd_price {
+    alias: [total_price]
     type: number
     sql:  ${sales_price} + ${total_tax} ;;
     value_format_name: usd
