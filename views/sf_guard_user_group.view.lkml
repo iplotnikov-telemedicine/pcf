@@ -2,7 +2,7 @@
 view: sf_guard_user_group {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: sf_guard_user_group ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}sf_guard_user_group ;;
   fields_hidden_by_default: yes
   # No primary key is defined for this view. In order to join this view in an Explore,
   # define primary_key: yes on a dimension that has no repeated values.

@@ -10,6 +10,23 @@
 #   }
 # }
 
+constant: pcf_comp_ids {
+  value: "4546,5722,6745,7539,8907,7740"
+}
+
+constant: schema_name {
+  export: override_optional
+  value: "{% if companies.company._parameter_value == 'pcf' %}
+  ext_indica_c4546_company{% elsif companies.company._parameter_value == 'flavors' %}
+  ext_indica_c5722_company{% elsif companies.company._parameter_value == 'phenos' %}
+  ext_indica_c6745_company{% elsif companies.company._parameter_value == 'bluefire' %}
+  ext_indica_c7539_company{% elsif companies.company._parameter_value == 'packs' %}
+  ext_indica_c7740_company{% elsif companies.company._parameter_value == 'firehouseca' %}
+  ext_indica_c8907_company{% else %}
+  {% if _user_attributes['companies'] != null and _user_attributes['companies'] != '' %}
+  ext_indica_c{{_user_attributes['companies']| split: ',' | strip | first}}_company
+  {% else %}ext_indica_c4546_company{% endif %}"
+}
 
 constant: kolas_company_id {
   value: "9928"

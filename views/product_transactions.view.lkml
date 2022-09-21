@@ -1,5 +1,5 @@
 view: product_transactions {
-  sql_table_name: product_transactions ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}product_transactions ;;
 
   drill_fields: [id]
 
@@ -103,14 +103,14 @@ view: product_transactions {
 
   measure: quantity_decreased_by {
     type: sum
-    sql: -${qty} ;;
+    sql: ${qty} ;;
     filters: [is_adjustment_decrease: "yes", is_filtered_with_dates: "yes"]
   }
 
   measure: quantity_decreased_by_earlier {
     hidden: yes
     type: sum
-    sql: -${qty} ;;
+    sql: ${qty} ;;
     filters: [is_adjustment_decrease: "yes", is_earlier_than_filtered: "yes"]
   }
 
@@ -121,20 +121,20 @@ view: product_transactions {
 
   measure: quantity_sold {
     type: sum
-    sql: -${qty} ;;
+    sql: ${qty} ;;
     filters: [is_sold: "yes", is_filtered_with_dates: "yes"]
   }
 
   measure: quantity_sold_earlier {
     hidden: yes
     type: sum
-    sql: -${qty} ;;
+    sql: ${qty} ;;
     filters: [is_sold: "yes", is_earlier_than_filtered: "yes"]
   }
 
   measure: quantity_sold_within_date_range {
     type: number
-    sql: -${quantity_sold} ;;
+    sql: ${quantity_sold} ;;
   }
 
   dimension: is_unlinked {
@@ -145,14 +145,14 @@ view: product_transactions {
 
   measure: quantity_unlinked {
     type: sum
-    sql:  -${qty} ;;
+    sql:  ${qty} ;;
     filters: [is_unlinked: "yes", is_filtered_with_dates: "yes"]
   }
 
   measure: quantity_unlinked_earlier {
     hidden: yes
     type: sum
-    sql:  -${qty} ;;
+    sql:  ${qty} ;;
     filters: [is_unlinked: "yes", is_earlier_than_filtered: "yes"]
   }
 
@@ -179,11 +179,11 @@ view: product_transactions {
     description: "Quantity available at the beginning of filtered range"
     type: number
     sql:  ${quantity_checked_in}
-          + ${quantity_decreased_by_earlier}
+          - ${quantity_decreased_by_earlier}
           + ${quantity_increased_by_earlier}
-          + ${quantity_sold_earlier}
+          - ${quantity_sold_earlier}
           + ${quantity_returned_earlier}
-          + ${quantity_unlinked_earlier}
+          - ${quantity_unlinked_earlier}
           ;;
   }
 
@@ -191,11 +191,11 @@ view: product_transactions {
     description: "Quantity available at the end of filtered range"
     type: number
     sql: ${quantity_at_the_beginning}
-          + ${quantity_decreased_by}
+          - ${quantity_decreased_by}
           + ${quantity_increased_by}
-          + ${quantity_sold}
+          - ${quantity_sold}
           + ${quantity_returned}
-          + ${quantity_unlinked}
+          - ${quantity_unlinked}
           ;;
   }
 

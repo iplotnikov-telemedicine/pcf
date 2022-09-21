@@ -1,5 +1,5 @@
 view: warehouse_order_logs {
-  sql_table_name: warehouse_order_logs ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}warehouse_order_logs ;;
   drill_fields: [id]
 
   dimension: id {

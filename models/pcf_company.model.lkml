@@ -1,11 +1,21 @@
-connection: "scflavors"
+connection: "analytics"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
-
 explore: product_quantity_and_offices {
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
   join: offices {
     type: inner
     relationship: many_to_one
@@ -15,6 +25,16 @@ explore: product_quantity_and_offices {
 
 explore: products {
   sql_always_where: ${products.deleted_raw} IS NULL ;;
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
 
   join: quantity_by_product {
     type: left_outer
@@ -100,6 +120,16 @@ explore: products {
 
 explore: product_with_tax {
 
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
   join: brands {
     relationship: many_to_one
     sql_on: ${product_with_tax.brand_id} = ${brands.brand_id} ;;
@@ -167,6 +197,17 @@ explore: product_with_tax {
 explore: package_quantity_for_metrc {
 
   from: package_quantity
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
   sql_always_where:  ${product_checkins.is_metrc} = 1
     and ${product_checkins.is_finished} = 0
     and ${product_checkins.deleted_date} is NULL;;
@@ -178,21 +219,77 @@ explore: package_quantity_for_metrc {
 
 }
 
-explore: product_office_quantity {}
+explore: product_office_quantity {
 
-explore: product_checkins {}
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+}
+
+explore: product_checkins {
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+}
 
 
 explore: patients_with_orders {
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
   join: orders {
     relationship: one_to_many
     sql_on: ${patients_with_orders.id} = ${orders.patient_id};;
   }
 }
 
-explore: checkins_by_package {}
+explore: checkins_by_package {
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
+}
 
 explore: package_quantity_ext {
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
   join: product_checkins {
     relationship: one_to_one
     sql_on: ${product_checkins.id} = ${package_quantity_ext.package_id} ;;
@@ -201,18 +298,26 @@ explore: package_quantity_ext {
 
 explore: product_transactions {
 
-  sql_always_where: ${product_checkins.uid} IS NOT NULL
-    AND ${product_checkins.uid} <> ''
-    AND {% if product_transactions.date_filter._in_query %}
-    ${product_checkins.date_raw} <= {% date_start product_transactions.date_filter %}
-    {% else %}
-    1 = 1
-    {% endif %} ;;
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
 
   join: product_checkins {
     relationship: many_to_one
     type: inner
-    sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id} ;;
+    sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id}
+    AND ${product_checkins.uid} IS NOT NULL AND ${product_checkins.uid} <> ''
+    {% if product_transactions.date_filter._in_query %}
+    AND ${product_checkins.date_raw} <= {% date_start product_transactions.date_filter %}
+    {% else %}
+    1 = 1
+    {% endif %};;
     # AND ${product_transactions.date_raw} >= ${product_checkins.date_raw};;
   }
 
@@ -260,6 +365,16 @@ explore: product_transactions {
 
 
 explore: inventory_log {
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
 
   join: offices {
     type: inner
@@ -343,6 +458,16 @@ explore: inventory_log {
 
 explore: order_items {
 
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
   join: products {
     relationship: many_to_one
     sql_on: ${products.id} = ${order_items.product_id};;
@@ -393,6 +518,17 @@ explore: order_items {
 }
 
 explore: product_categories {
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
   join: products {
     type: inner
     relationship: many_to_one
@@ -425,6 +561,16 @@ explore: product_categories {
 }
 
 explore: users {
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
 }
 
 # explore: self_products {
@@ -438,31 +584,19 @@ explore: users {
 # }
 
 explore: patients { view_name: patients
+
+  always_filter: {
+    filters: [companies.company: "NULL"]
+  }
+  # "{{_user_attributes['default_domain_prefix']}}"
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
   join: orders {
     relationship: one_to_many
     sql_on: ${patients.id} = ${orders.patient_id} ;;
   }
 }
-
-
-# explore: new_patients {
-#   extends: [patients]
-#   sql_always_where:  ;;
-# }
-
-# explore: product_office_quantity {}
-
-# # Select the views that should be a part of this model,
-# # and define the joins that connect them together.
-#
-# explore: order_items {
-#   join: orders {
-#     relationship: many_to_one
-#     sql_on: ${orders.id} = ${order_items.order_id} ;;
-#   }
-#
-#   join: users {
-#     relationship: many_to_one
-#     sql_on: ${users.id} = ${orders.user_id} ;;
-#   }
-# }

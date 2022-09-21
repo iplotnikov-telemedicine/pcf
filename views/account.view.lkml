@@ -1,5 +1,5 @@
 view: account {
-  sql_table_name: account ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}account ;;
   drill_fields: [id]
 
   dimension: id {

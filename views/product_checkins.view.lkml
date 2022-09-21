@@ -1,5 +1,5 @@
 view: product_checkins {
-  sql_table_name: product_checkins ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}product_checkins ;;
   drill_fields: [id]
 
   dimension: id {
@@ -181,7 +181,7 @@ view: product_checkins {
 
   dimension: cost_per_unit {
     type: number
-    sql: ${price} / ${qty} ;;
+    sql: ${price} / nullif(${qty}, 0) ;;
     value_format_name: usd
   }
 

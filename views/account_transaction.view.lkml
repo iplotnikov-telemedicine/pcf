@@ -1,5 +1,5 @@
 view: account_transaction {
-  sql_table_name: account_transaction ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}account_transaction ;;
   drill_fields: [transfer_account_transaction_id]
 
   dimension: id {

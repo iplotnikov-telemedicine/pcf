@@ -1,5 +1,5 @@
 view: package_quantity {
-  sql_table_name: package_quantity ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}package_quantity ;;
   drill_fields: [id]
 
   dimension: id {

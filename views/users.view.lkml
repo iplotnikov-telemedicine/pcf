@@ -1,5 +1,5 @@
 view: users {
-  sql_table_name: sf_guard_user ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}sf_guard_user ;;
   drill_fields: [id]
 
   dimension: id {

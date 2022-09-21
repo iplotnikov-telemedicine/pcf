@@ -1,5 +1,5 @@
 view: notes {
-  sql_table_name: notes ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}notes ;;
   drill_fields: [id]
 
   dimension: id {

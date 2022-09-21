@@ -1,5 +1,5 @@
 view: offices {
-  sql_table_name: backend.offices ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}ext_indica_{% endif %}backend.offices ;;
   drill_fields: [office_id]
 
   dimension: office_id {

@@ -1,6 +1,6 @@
 view: discounts {
 
-  sql_table_name: discounts ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}discounts ;;
 
   dimension: id {
     description: "Unique ID for each discount"

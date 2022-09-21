@@ -2,7 +2,7 @@
 view: product_tag_ref {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: product_tag_ref ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}product_tag_ref ;;
   fields_hidden_by_default: yes
   drill_fields: [id]
   # This primary key is the unique key for this table in the underlying database.

@@ -1,5 +1,5 @@
 view: recommendations {
-  sql_table_name: recommendations ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}recommendations ;;
 
   dimension_group: deleted {
     type: time

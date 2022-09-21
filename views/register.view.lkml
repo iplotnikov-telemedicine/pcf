@@ -1,5 +1,5 @@
 view: register {
-  sql_table_name: register ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}register ;;
   drill_fields: [id]
 
   dimension: id {

@@ -1,5 +1,5 @@
 view: special_hours {
-  sql_table_name: special_hours ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}special_hours ;;
   drill_fields: [id]
 
   dimension: id {

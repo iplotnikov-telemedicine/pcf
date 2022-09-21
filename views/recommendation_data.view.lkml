@@ -1,5 +1,5 @@
 view: recommendation_data {
-  sql_table_name: recommendation_data ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}recommendation_data ;;
   drill_fields: [id]
 
   dimension: id {

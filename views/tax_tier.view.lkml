@@ -1,5 +1,5 @@
 view: tax_tier {
-  sql_table_name: tax_tier ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}tax_tier ;;
   drill_fields: [id]
 
   dimension: id {

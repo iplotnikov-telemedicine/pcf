@@ -1,5 +1,5 @@
 view: patients {
-  sql_table_name: patients ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}patients ;;
 
 
   dimension: id {

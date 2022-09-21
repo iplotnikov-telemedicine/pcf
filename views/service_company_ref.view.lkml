@@ -1,5 +1,7 @@
 view: service_company_ref {
 
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}service_company_ref ;;
+
   dimension: bundle_deal_image_mobile {
     type: string
     sql: ${TABLE}.bundle_deal_image_mobile ;;

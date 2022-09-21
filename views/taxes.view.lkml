@@ -1,5 +1,5 @@
 view: taxes {
-  sql_table_name: taxes ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}taxes ;;
   drill_fields: [id]
 
   dimension: id {

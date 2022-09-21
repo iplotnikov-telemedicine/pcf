@@ -1,5 +1,5 @@
 view: orders {
-  sql_table_name: warehouse_orders ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}warehouse_orders ;;
   label: "Orders"
   drill_fields: [id]
 

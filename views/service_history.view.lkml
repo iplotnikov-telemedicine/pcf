@@ -1,5 +1,5 @@
 view: service_history {
-  sql_table_name: service_history ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}service_history ;;
   drill_fields: [id]
 
   dimension: id {

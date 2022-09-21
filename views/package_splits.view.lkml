@@ -1,5 +1,5 @@
 view: package_splits {
-  sql_table_name: package_splits ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}package_splits ;;
   drill_fields: [id]
 
   dimension: id {
