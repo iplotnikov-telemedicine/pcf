@@ -23,9 +23,10 @@ constant: schema_name {
   ext_indica_c7539_company{% elsif companies.company._parameter_value == 'packs' %}
   ext_indica_c7740_company{% elsif companies.company._parameter_value == 'firehouseca' %}
   ext_indica_c8907_company{% else %}
-  {% if _user_attributes['companies'] != null and _user_attributes['companies'] != '' %}
-  ext_indica_c{{_user_attributes['companies']| split: ',' | strip | first}}_company
-  {% else %}ext_indica_c4546_company{% endif %}"
+    {% if _user_attributes['companies'] != null and _user_attributes['companies'] != '' %}
+    ext_indica_c{{_user_attributes['companies']| split: ',' | strip | first}}_company
+    {% else %}ext_indica_c4546_company{% endif %}
+  {% endif %}"
 }
 
 constant: kolas_company_id {
