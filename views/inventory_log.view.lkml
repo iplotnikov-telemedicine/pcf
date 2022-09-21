@@ -31,7 +31,7 @@ view: inventory_log {
 
   dimension: end_of_the_snapshot_day {
     type: date_time
-    sql: {% parameter snapshot_date %} + INTERVAL 1 DAY - INTERVAL 1 SECOND ;;
+    sql: {% parameter end_of_the_day %} + INTERVAL 1 DAY - INTERVAL 1 SECOND ;;
   }
 
   measure: turnover_until_snapshot_date {
@@ -54,7 +54,7 @@ view: inventory_log {
 
   # measure: quantity_after_snapshot_date {
   #   type: number
-  #   sql: sum(case when ${created_raw} > {% parameter snapshot_date %}
+  #   sql: sum(case when ${created_raw} > {% parameter end_of_the_day %}
   #     then ${quantity} end);;
   # }
 

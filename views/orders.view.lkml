@@ -723,6 +723,13 @@ view: orders {
     value_format_name: usd
   }
 
+  measure: sum_applied_potify_credits {
+    type: sum
+    sql: ${applied_potify_credits} ;;
+    value_format_name: usd
+  }
+
+
   # measure: items {
   #   type: string
   #   sql: group_concat(concat(
