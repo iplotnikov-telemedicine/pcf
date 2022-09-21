@@ -1,5 +1,5 @@
 view: tax_rates_info {
-  sql_table_name: tax_rates_info ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}tax_rates_info ;;
   drill_fields: [id]
 
   dimension: id {

@@ -13,8 +13,8 @@ view: order_items_by_checkin {
               THEN ( (order_items.qty + order_items.qty_free) * order_items.count ) END), 0) AS `quantity_sold`,
             COALESCE(SUM(CASE WHEN order_items.is_returned AND order_items.created_at between {% date_start date_filter %} and {% date_end date_filter %}
               THEN ( (order_items.qty + order_items.qty_free) * order_items.count ) END), 0) AS `quantity_returned`
-        FROM warehouse_order_items  AS order_items
-        INNER JOIN product_checkins AS product_checkins
+        FROM {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}warehouse_order_items  AS order_items
+        INNER JOIN {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}product_checkins AS product_checkins
          ON order_items.product_checkin_id = product_checkins.id
           AND order_items.created_at > product_checkins.date
         GROUP BY

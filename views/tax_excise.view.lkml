@@ -1,5 +1,5 @@
 view: tax_excise {
-  sql_table_name: tax_excise ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}tax_excise ;;
   drill_fields: [id]
 
   dimension: id {

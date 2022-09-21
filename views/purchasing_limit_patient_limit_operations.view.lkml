@@ -1,5 +1,5 @@
 view: purchasing_limit_patient_limit_operations {
-  sql_table_name: purchasing_limit_patient_limit_operations ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}purchasing_limit_patient_limit_operations ;;
   drill_fields: [id]
 
   dimension: id {

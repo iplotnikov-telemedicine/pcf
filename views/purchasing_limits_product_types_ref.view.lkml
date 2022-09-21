@@ -1,5 +1,5 @@
 view: purchasing_limits_product_types_ref {
-  sql_table_name: purchasing_limits_product_types_ref ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}purchasing_limits_product_types_ref ;;
   drill_fields: [id]
 
   dimension: id {

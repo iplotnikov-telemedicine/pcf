@@ -1,9 +1,10 @@
 view: product_office_quantity {
-  sql_table_name: product_office_qty ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}product_office_qty ;;
 
   dimension: id {
     type: number
     sql: ${TABLE}.poq_id ;;
+    primary_key: yes
   }
 
   dimension: item_type {

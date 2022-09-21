@@ -1,5 +1,5 @@
 view: refund_products {
-  sql_table_name: refund_products ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}refund_products ;;
   drill_fields: [id]
 
   dimension: id {

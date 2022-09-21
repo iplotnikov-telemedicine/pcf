@@ -4,7 +4,7 @@
 view: product_categories_by_level {
   derived_table: {
     # persist_for: "24 hours"
-    indexes: ["id"]
+    # indexes: ["id"]
     explore_source: product_categories {
       column: id { field: products.id }
       column: name { field: products.name }

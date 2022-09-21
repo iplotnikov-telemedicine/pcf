@@ -1,5 +1,5 @@
 view: products {
-  sql_table_name: products ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}products ;;
   drill_fields: [id]
 
   dimension: id {

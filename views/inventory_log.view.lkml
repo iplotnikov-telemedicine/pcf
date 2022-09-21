@@ -1,6 +1,6 @@
 view: inventory_log {
 
-  sql_table_name: inventory_log ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}inventory_log ;;
 
 
   dimension: id {

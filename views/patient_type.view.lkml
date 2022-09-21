@@ -1,5 +1,5 @@
 view: patient_type {
-  sql_table_name: patient_type ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}patient_type ;;
   drill_fields: [id]
 
   dimension: id {

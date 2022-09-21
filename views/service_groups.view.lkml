@@ -1,5 +1,5 @@
 view: service_groups {
-  sql_table_name: service_groups ;;
+  sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}service_groups ;;
   drill_fields: [id]
 
   dimension: id {
