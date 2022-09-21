@@ -200,6 +200,12 @@ explore: package_quantity_ext {
   }
 }
 
+
+explore: product_transactions_new {
+  from: product_transactions
+}
+
+
 explore: product_transactions {
 
   sql_always_where: ${product_checkins.uid} IS NOT NULL

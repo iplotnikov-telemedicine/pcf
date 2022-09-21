@@ -25,8 +25,7 @@ constant: schema_name {
   ext_indica_c8907_company{% else %}
   {% if _user_attributes['companies'] != null and _user_attributes['companies'] != '' %}
   ext_indica_c{{_user_attributes['companies']| split: ',' | strip | first}}_company
-  {% else %}ext_indica_c4546_company{% endif %}
-  {% endif %}"
+  {% else %}ext_indica_c4546_company{% endif %}"
 }
 
 constant: kolas_company_id {

@@ -98,42 +98,6 @@ explore: products {
 
 }
 
-
-explore: package_quantity_for_metrc {
-
-  from: package_quantity
-  sql_always_where:  ${product_checkins.is_metrc} = 1
-    and ${product_checkins.is_finished} = 0
-    and ${product_checkins.deleted_date} is NULL;;
-
-  join: product_checkins {
-    relationship: one_to_one
-    sql_on: ${package_quantity_for_metrc.package_id} = ${product_checkins.id} ;;
-  }
-
-}
-
-explore: product_office_quantity {}
-
-explore: product_checkins {}
-
-
-explore: patients_with_orders {
-  join: orders {
-    relationship: one_to_many
-    sql_on: ${patients_with_orders.id} = ${orders.patient_id};;
-  }
-}
-
-explore: checkins_by_package {}
-
-explore: package_quantity_ext {
-  join: product_checkins {
-    relationship: one_to_one
-    sql_on: ${product_checkins.id} = ${package_quantity_ext.package_id} ;;
-  }
-}
-
 explore: product_with_tax {
 
   join: brands {
@@ -197,6 +161,41 @@ explore: product_with_tax {
     relationship: one_to_many
     sql_on: ${tax_sales.id} = ${tax_sales_rates.sales_tax_id}
       and ${tax_sales_rates.location_type} = 'state';;
+  }
+}
+
+explore: package_quantity_for_metrc {
+
+  from: package_quantity
+  sql_always_where:  ${product_checkins.is_metrc} = 1
+    and ${product_checkins.is_finished} = 0
+    and ${product_checkins.deleted_date} is NULL;;
+
+  join: product_checkins {
+    relationship: one_to_one
+    sql_on: ${package_quantity_for_metrc.package_id} = ${product_checkins.id} ;;
+  }
+
+}
+
+explore: product_office_quantity {}
+
+explore: product_checkins {}
+
+
+explore: patients_with_orders {
+  join: orders {
+    relationship: one_to_many
+    sql_on: ${patients_with_orders.id} = ${orders.patient_id};;
+  }
+}
+
+explore: checkins_by_package {}
+
+explore: package_quantity_ext {
+  join: product_checkins {
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${package_quantity_ext.package_id} ;;
   }
 }
 
