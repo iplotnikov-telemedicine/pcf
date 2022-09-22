@@ -80,6 +80,7 @@ view: order_items {
   dimension: discount_amount {
     type: number
     sql: ${TABLE}.discount_amount ;;
+    value_format_name: usd
   }
 
   dimension: discount_count {

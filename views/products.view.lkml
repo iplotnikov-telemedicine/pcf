@@ -489,11 +489,6 @@ view: products {
     sql: ${brand_id} NOT IN(1) ;;
   }
 
-  dimension: is_internal_product {
-    type: yesno
-    sql: ${brands.is_internal} ;;
-  }
-
   measure: number_of_products {
     type: count
     drill_fields: [detail*]
@@ -507,8 +502,6 @@ view: products {
       brand_product_strain_name,
       product_types.id,
       product_types.name,
-      brands.brand_id,
-      brands.brand_name,
       package_quantity.count,
       product_checkins.count,
       product_docs.count,

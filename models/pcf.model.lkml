@@ -15,6 +15,7 @@ explore: product_quantity_and_offices {
 }
 
 explore: products {
+  from: products_with_brands
   sql_always_where: ${products.deleted_raw} IS NULL ;;
 
   join: quantity_by_product {

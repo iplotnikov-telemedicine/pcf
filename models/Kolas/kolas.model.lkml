@@ -8,6 +8,65 @@ explore: barcode {}
 
 explore: tax_payment_flat {}
 
+explore: product_categories {
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories_1 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories.rgt} < ${product_categories_1.rgt}
+      and ${product_categories.lft} > ${product_categories_1.lft}
+      and ${product_categories.level} = ${product_categories_1.level} + 1 ;;
+  }
+
+  join: product_categories_2 {
+    from: product_categories
+    fields: [name]
+    relationship: many_to_one
+    sql_on: ${product_categories_1.rgt} < ${product_categories_2.rgt}
+          and ${product_categories_1.lft} > ${product_categories_2.lft}
+          and ${product_categories_1.level} = ${product_categories_2.level} + 1 ;;
+  }
+
+}
+
+explore: product_transactions {
+  from: product_transactions
+
+  join: products {
+    relationship: many_to_one
+    sql_on: ${product_transactions.product_id} = ${products.id} ;;
+  }
+
+  join: product_categories_by_level {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+  }
+
+  join: order_items {
+    sql_on: ${product_transactions.order_id} = ${order_items.order_id}
+      AND ${product_transactions.product_id} = ${order_items.product_id} ;;
+    type: inner
+    relationship: many_to_one
+  }
+
+  join: patients {
+    relationship: many_to_one
+    sql_on: ${product_transactions.patient_id} = ${patients.id} ;;
+    type: left_outer
+  }
+}
+
 explore: product_office_quantity {
 
   sql_always_where: ${offices.office_comp_id} = 9928;;

@@ -119,6 +119,11 @@ view: product_transactions {
     sql: ${TABLE}.type = 3;;
   }
 
+  dimension: is_returned {
+    type: yesno
+    sql: ${TABLE}.type = 9;;
+  }
+
   measure: quantity_sold {
     type: sum
     sql: ${qty} ;;
@@ -154,11 +159,6 @@ view: product_transactions {
     type: sum
     sql:  ${qty} ;;
     filters: [is_unlinked: "yes", is_earlier_than_filtered: "yes"]
-  }
-
-  dimension: is_returned {
-    type: yesno
-    sql: ${TABLE}.type = 9 ;;
   }
 
   measure: quantity_returned {
@@ -235,6 +235,7 @@ view: product_transactions {
   dimension: price {
     type: number
     sql: ${TABLE}.price ;;
+    value_format_name: usd
   }
 
   dimension: price_per {
@@ -287,6 +288,7 @@ view: product_transactions {
   dimension: total_price {
     type: number
     sql: ${TABLE}.total_price ;;
+    value_format_name: usd
   }
 
   dimension: transfer_direction {
