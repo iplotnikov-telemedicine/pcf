@@ -3,6 +3,7 @@ view: products {
   drill_fields: [id]
 
   dimension: id {
+    alias: [prod_id]
     primary_key: yes
     type: number
     sql: ${TABLE}.prod_id ;;
@@ -236,6 +237,7 @@ view: products {
   }
 
   dimension: name {
+    alias: [prod_name]
     type: string
     sql: ${TABLE}.prod_name ;;
   }
@@ -256,6 +258,7 @@ view: products {
   }
 
   dimension: product_cost {
+    alias: [prod_price]
     type: number
     sql: ${TABLE}.prod_price;;
     value_format_name: usd

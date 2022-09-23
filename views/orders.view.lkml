@@ -729,6 +729,18 @@ view: orders {
     value_format_name: usd
   }
 
+  dimension: confirmed_at {
+    type: date_time
+    sql: ${confirmed_raw} ;;
+    html: {{ rendered_value | date: "%D %r" }} ;;
+    convert_tz: no
+  }
+
+  dimension: num_days {
+    type: number
+    sql: {% if _model._name == 'analytics' %}CEILING(datediff(hours, {% date_start confirmed_at %},{% date_end confirmed_at %})/24)
+      {% else %}CEILING(TIMESTAMPDIFF(HOUR,{% date_start confirmed_at %},{% date_end confirmed_at %})/24){% endif %} ;;
+  }
 
   # measure: items {
   #   type: string

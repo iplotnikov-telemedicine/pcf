@@ -16,16 +16,16 @@ explore: product_quantity_and_offices {
 explore: products {
   sql_always_where: ${products.deleted_raw} IS NULL ;;
 
-  join: quantity_by_product {
+  join: quantities_by_product {
     type: left_outer
     relationship: one_to_one
-    sql_on:  ${products.id} = ${quantity_by_product.product_id} ;;
+    sql_on:  ${products.id} = ${quantities_by_product.product_id} ;;
   }
 
   join: total_cost_by_product {
     type: left_outer
     relationship: one_to_one
-    sql_on:  ${quantity_by_product.product_id} = ${total_cost_by_product.product_id} ;;
+    sql_on:  ${quantities_by_product.product_id} = ${total_cost_by_product.product_id} ;;
   }
 
   join: product_types {
@@ -91,9 +91,9 @@ explore: products {
     sql_on: ${products.category_id} = ${product_categories.id} ;;
   }
 
-  join: product_office_quantity_by_product {
+  join: product_office_quantities_by_product {
     relationship: one_to_one
-    sql_on: ${products.id} = ${product_office_quantity_by_product.product_id} ;;
+    sql_on: ${products.id} = ${product_office_quantities_by_product.product_id} ;;
   }
 
 }

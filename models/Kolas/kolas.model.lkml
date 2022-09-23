@@ -60,6 +60,12 @@ explore: product_transactions {
     relationship: many_to_one
   }
 
+  join: orders {
+    sql_on: ${order_items.order_id} = ${orders.id} ;;
+    type: inner
+    relationship: many_to_one
+  }
+
   join: patients {
     relationship: many_to_one
     sql_on: ${product_transactions.patient_id} = ${patients.id} ;;

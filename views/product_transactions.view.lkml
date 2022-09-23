@@ -238,6 +238,12 @@ view: product_transactions {
     value_format_name: usd
   }
 
+  dimension: price_per_unit {
+    type: number
+    sql: ${price} / ${qty} ;;
+    value_format_name: usd
+  }
+
   dimension: price_per {
     type: string
     sql: ${TABLE}.price_per ;;
@@ -299,6 +305,14 @@ view: product_transactions {
   dimension: transaction_type {
     type: number
     sql: ${TABLE}.type ;;
+  }
+
+  dimension: transaction_type_name {
+    type: string
+    sql: CASE ${transaction_type}
+      WHEN 3 THEN 'Sale'
+      WHEN 9 THEN 'Return'
+      END ;;
   }
 
   dimension: user_id {

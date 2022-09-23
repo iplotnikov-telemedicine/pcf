@@ -27,6 +27,11 @@ view: product_office_quantity {
     sql: ${TABLE}.poq_qty ;;
   }
 
+  measure: total_quantity {
+    type: sum
+    sql: ${quantity} ;;
+  }
+
   dimension: reserved_qty {
     type: number
     sql: ${TABLE}.reserved_qty ;;

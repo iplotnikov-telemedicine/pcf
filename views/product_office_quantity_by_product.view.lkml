@@ -1,7 +1,7 @@
 # If necessary, uncomment the line below to include explore_source.
 include: "product_office_quantity.view"
 
-view: product_office_quantity_by_product {
+view: product_office_quantities_by_product {
   derived_table: {
     explore_source: product_office_quantity {
       column: product_id {}

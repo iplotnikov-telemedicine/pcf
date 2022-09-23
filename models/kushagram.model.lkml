@@ -4,7 +4,113 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "/my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+explore: product_quantity_and_offices {
+  join: offices {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${product_quantity_and_offices.office_id} = ${offices.office_id};;
+  }
+}
 
+explore: products {
+  from: products
+
+  join: product_office_quantity {
+    type: inner
+    relationship: one_to_many
+    sql_on:  ${products.id}  = ${product_office_quantity.product_id} ;;
+  }
+
+  join: runrates {
+    type: inner
+    relationship: one_to_one
+    sql_on:  ${products.id}  = ${runrates.prod_id} ;;
+  }
+
+  join: quantity_by_product {
+    type: left_outer
+    relationship: one_to_many
+    sql_on:  ${products.id}  = ${quantity_by_product.product_id} ;;
+  }
+
+  join: product_categories {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: active_products {
+    relationship: one_to_one
+    type: left_outer
+    sql_on: ${products.id} = ${active_products.prod_id} ;;
+  }
+
+  join: patients {
+    relationship: many_to_one
+    sql_on: ${orders.patient_id} = ${patients.id} ;;
+  }
+
+  join: order_items {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${order_items.product_id} ;;
+  }
+
+  join: orders {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${order_items.order_id} = ${orders.id} ;;
+  }
+
+  join: patient_offices {
+    from: offices
+    relationship: many_to_one
+    sql_on: ${patients.office_id} = ${patient_offices.office_id} ;;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.id} ;;
+  }
+
+  join: product_categories_by_level {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+  }
+
+}
+
+explore: product_categories {
+  join: products {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${products.prod_category_id} = ${product_categories.id};;
+  }
+
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+
+  join: product_categories_1 {
+    from: product_categories
+    fields: [id, name]
+    relationship: many_to_one
+    sql_on: ${product_categories.rgt} < ${product_categories_1.rgt}
+      and ${product_categories.lft} > ${product_categories_1.lft}
+      and ${product_categories.level} = ${product_categories_1.level} + 1 ;;
+  }
+
+  join: product_categories_2 {
+    from: product_categories
+    fields: [id, name]
+    relationship: many_to_one
+    sql_on: ${product_categories_1.rgt} < ${product_categories_2.rgt}
+          and ${product_categories_1.lft} > ${product_categories_2.lft}
+          and ${product_categories_1.level} = ${product_categories_2.level} + 1 ;;
+  }
+
+}
 
 explore: monthly_sales {
 
