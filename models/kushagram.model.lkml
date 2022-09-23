@@ -4,6 +4,48 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "/my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+explore: orders_with_details {
+  join: latest_patient_orders {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${orders_with_details.confirmed_raw} = ${latest_patient_orders.latest_order_confirmed}
+      and ${orders_with_details.patient_id} = ${latest_patient_orders.patient_id}
+      and ${latest_patient_orders.has_orders_after_date} = 'No' ;;
+  }
+  join: patients {
+    relationship: many_to_one
+    sql_on: ${orders_with_details.patient_id} = ${patients.id} ;;
+  }
+  join: order_items {
+    relationship: one_to_many
+    type: inner
+    sql_on: ${orders_with_details.id} = ${order_items.order_id} ;;
+  }
+  join: tax_payment_flat {
+    relationship: one_to_one
+    sql_on: ${orders_with_details.id} = ${tax_payment_flat.order_id} ;;
+  }
+  join: products {
+    relationship: many_to_one
+    sql_on: ${order_items.product_id} = ${products.id};;
+  }
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+  }
+  join: offices {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${orders_with_details.office_id} = ${offices.office_id} ;;
+    fields: [office_name, office_is_active]
+  }
+  join: net_sales_by_office {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${orders_with_details.office_id} = ${net_sales_by_office.office_id} ;;
+  }
+}
+
 explore: product_quantity_and_offices {
   join: offices {
     type: inner
