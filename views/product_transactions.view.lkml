@@ -291,6 +291,11 @@ view: product_transactions {
     sql: ${TABLE}.qty_free ;;
   }
 
+  dimension: qty_total {
+    type: number
+    sql: ${qty} + ${qty_free} ;;
+  }
+
   dimension: total_price {
     type: number
     sql: ${TABLE}.total_price ;;

@@ -34,7 +34,12 @@ view: order_items {
   dimension: amount {
     type: number
     sql: ${TABLE}.amount ;;
+  }
 
+  dimension: unit_price {
+    type: number
+    sql: ${amount} / ${quantity} ;;
+    value_format_name: usd
   }
 
   dimension: amount_formatted {
