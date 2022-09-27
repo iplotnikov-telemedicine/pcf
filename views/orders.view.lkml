@@ -723,7 +723,7 @@ view: orders {
     value_format_name: usd
   }
 
-  measure: sum_applied_potify_credits {
+  measure: sum_applied_sweede_credits {
     type: sum
     sql: ${applied_potify_credits} ;;
     value_format_name: usd
