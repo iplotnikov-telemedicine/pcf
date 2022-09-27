@@ -50,7 +50,7 @@ view: product_categories {
 
   dimension: name {
     type: string
-    sql: replace(${TABLE}.name, 'Root Category', NULL) ;;
+    sql: ${TABLE}.name ;;
   }
 
   dimension: photo {

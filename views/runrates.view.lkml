@@ -5,7 +5,7 @@ view: runrates {
   derived_table: {
     explore_source: products {
       column: prod_id {}
-      column: prod_name {}
+      column: prod_name { field: products.name }
       column: prod_price {}
       column: total_quantity { field: quantity_by_product.total_quantity }
       column: brand_name { field: brands.brand_name }
