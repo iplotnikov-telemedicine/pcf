@@ -153,6 +153,16 @@ view: tax_payment {
     sql: ${excise_tax} + ${excise_delivery_tax} ;;
   }
 
+  dimension: sales_tax {
+    type: number
+    sql: ${state_sales_tax} + ${county_sales_tax} + ${city_sales_tax} ;;
+  }
+
+  dimension: local_tax {
+    type: number
+    sql: ${state_local_tax} + ${county_local_tax} + ${city_local_tax} ;;
+  }
+
   dimension_group: updated {
     type: time
     timeframes: [

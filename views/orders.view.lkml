@@ -488,6 +488,29 @@ view: orders {
     sql: ${TABLE}.status ;;
   }
 
+  dimension: order_status {
+    type: string
+    sql: ${TABLE}.order_status ;;
+  }
+
+  dimension: payment_status {
+    type: string
+    sql: ${TABLE}.payment_status ;;
+  }
+
+  dimension: payment_method_name {
+    type: string
+    sql: CONCAT(
+          IF(${method1_amount} > 0, 'via Cash, ', ''),
+          IF(${method2_amount} > 0, 'via Credit Card, ', ''),
+          IF(${method3_amount} > 0, 'via Check, ', ''),
+          IF(${method4_amount} > 0, 'via CC Terminal, ', ''),
+          IF(${method5_amount} > 0, 'via Bonus, ', ''),
+          IF(${method6_amount} > 0, 'via Potify Bonus, ', ''),
+          IF(${method7_amount} > 0, 'via DC Terminal, ', '')
+          );;
+  }
+
   dimension: sum_discount {
     type: number
     sql: ${TABLE}.sum_discount ;;
