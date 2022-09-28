@@ -346,6 +346,8 @@ explore: patients_with_orders {
   }
 }
 
+explore: customer_frequency {}
+
 
   # join: total_over_daily {
   #   relationship: many_to_one
