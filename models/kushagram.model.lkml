@@ -70,7 +70,7 @@ explore: products {
   }
 
   join: quantity_by_product {
-    type: left_outer
+    type: inner
     relationship: one_to_many
     sql_on:  ${products.id}  = ${quantity_by_product.product_id} ;;
   }
