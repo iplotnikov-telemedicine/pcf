@@ -196,7 +196,7 @@ explore: service_history {
 
 
 explore: order_items {
-  view_name: order_items
+  from: order_items_with_details
 
   join: products {
     relationship: many_to_one

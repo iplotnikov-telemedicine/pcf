@@ -237,7 +237,6 @@ view: products {
   }
 
   dimension: name {
-    alias: [prod_name]
     type: string
     sql: ${TABLE}.prod_name ;;
   }
