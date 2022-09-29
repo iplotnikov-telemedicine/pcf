@@ -4,6 +4,8 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "/my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+explore: brands {}
+
 explore: orders_with_details {
   join: latest_patient_orders {
     relationship: many_to_one
@@ -31,7 +33,7 @@ explore: orders_with_details {
   }
   join: brands {
     relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+    sql_on: ${products.brand_id} = ${brands.id} ;;
   }
   join: product_categories_by_level {
     relationship: many_to_one

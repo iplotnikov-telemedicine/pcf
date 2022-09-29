@@ -238,7 +238,7 @@ view: products {
 
   dimension: name {
     type: string
-    sql: ${TABLE}.prod_name ;;
+    sql: CONVERT(BINARY(CONVERT(${TABLE}.prod_name USING latin1)) USING utf8mb4) ;;
   }
 
   dimension: ounce_prepack_qty_o {

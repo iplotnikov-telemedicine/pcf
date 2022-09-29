@@ -20,6 +20,7 @@ view: product_categories_by_level {
   }
   dimension: prod_name {
     description: "Product Name"
+    sql: ${TABLE}.prod_name ;;
   }
   dimension: level {
     description: ""
