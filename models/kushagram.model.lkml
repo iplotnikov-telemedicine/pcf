@@ -3,6 +3,20 @@ connection: "kg"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "/my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
+# include: "//viz_multiple_value/"
+
+explore: sales_by_product {
+  join: products {
+    relationship: one_to_one
+    sql_on: ${sales_by_product.id} = ${products.id};;
+  }
+
+  join: quantity_by_product {
+    relationship: one_to_one
+    type: left_outer
+    sql_on: ${sales_by_product.id} = ${quantity_by_product.product_id};;
+  }
+}
 
 explore: brands {}
 
@@ -62,6 +76,12 @@ explore: product_quantity_and_offices {
 
 explore: products {
   from: products
+
+  join: sales_by_product {
+    type: inner
+    relationship: one_to_one
+    sql_on: ${products.id}  = ${sales_by_product.id} ;;
+  }
 
   join: product_office_quantity {
     type: inner
