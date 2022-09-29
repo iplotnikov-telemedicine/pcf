@@ -42,6 +42,22 @@ view: order_items {
     value_format_name: usd
   }
 
+  measure: amount_sum {
+    type: sum
+    sql: ${amount} ;;
+  }
+
+  measure: quantity_sum {
+    type: sum
+    sql: ${quantity} ;;
+  }
+
+  measure: avg_unit_price {
+    type: number
+    sql: ${amount_sum} / ${quantity_sum} ;;
+    value_format_name: usd
+  }
+
   dimension: amount_formatted {
     type: number
     sql: ${amount} ;;
