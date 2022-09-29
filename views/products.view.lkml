@@ -263,11 +263,11 @@ view: products {
     value_format_name: usd
   }
 
-  dimension: price {
-    label: "Cost"
-    type: number
-    sql: ${TABLE}.prod_price ;;
-  }
+  # dimension: price {
+  #   label: "Cost"
+  #   type: number
+  #   sql: ${TABLE}.prod_price ;;
+  # }
 
   dimension: price_joint {
     type: number
