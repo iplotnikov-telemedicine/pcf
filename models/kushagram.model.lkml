@@ -33,6 +33,10 @@ explore: orders_with_details {
     relationship: many_to_one
     sql_on: ${products.brand_id} = ${brands.brand_id} ;;
   }
+  join: product_categories_by_level {
+    relationship: many_to_one
+    sql_on: ${order_items.product_id} = ${product_categories_by_level.id} ;;
+  }
   join: offices {
     relationship: many_to_one
     type: inner
