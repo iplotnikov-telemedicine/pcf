@@ -20,7 +20,7 @@ explore: order_items {
 
   join: brands {
     relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+    sql_on: ${products.brand_id} = ${brands.id} ;;
   }
 
   join: orders {

@@ -17,7 +17,7 @@ explore: product_categories {
 
   join: brands {
     relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+    sql_on: ${products.brand_id} = ${brands.id} ;;
   }
 
   join: product_categories_1 {
@@ -111,7 +111,7 @@ explore: inventory_log {
 
   join: brands {
     relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+    sql_on: ${products.brand_id} = ${brands.id} ;;
   }
 
   join: product_categories {
@@ -228,7 +228,7 @@ explore: products {
 
   join: brands {
     relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+    sql_on: ${products.brand_id} = ${brands.id} ;;
   }
 
   join: product_types {
@@ -278,7 +278,7 @@ explore: orders_with_details {
   }
   join: brands {
     relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+    sql_on: ${products.brand_id} = ${brands.id} ;;
   }
   join: offices {
     relationship: many_to_one
@@ -337,7 +337,7 @@ explore: order_items {
 
   join: brands {
     relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+    sql_on: ${products.brand_id} = ${brands.id} ;;
   }
 
   join: orders {
