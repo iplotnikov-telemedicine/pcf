@@ -7,7 +7,7 @@ view: product_categories_by_level {
     # indexes: ["id"]
     explore_source: product_categories {
       column: id { field: products.id }
-      column: name { field: products.name }
+      column: prod_name { field: products.name }
       column: level { field: product_categories.level }
       column: cat_name { field: product_categories.name }
       column: cat_name_1 { field: product_categories_1.name }
@@ -20,6 +20,7 @@ view: product_categories_by_level {
   }
   dimension: prod_name {
     description: "Product Name"
+    sql: ${TABLE}.prod_name ;;
   }
   dimension: level {
     description: ""

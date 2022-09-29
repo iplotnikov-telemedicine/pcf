@@ -5,7 +5,7 @@ view: net_sales_by_office {
       column: office_id {}
       column: office_name {field: offices.office_name}
       column: sum_net_sales { field: order_items.sum_net_sales }
-      column: sum_applied_sweede_credits {}
+      column: sum_order_item_quantity {field: order_items.sum_order_item_quantity}
       filters: [offices.office_name: "-%DO NOT USE%, -%DEFECTIVE%"]
       bind_all_filters: yes
     }
@@ -21,6 +21,11 @@ view: net_sales_by_office {
   dimension: sum_net_sales {
     description: ""
     value_format: "$#,##0.00"
+    type: number
+  }
+  dimension: sum_order_item_quantity {
+    description: ""
+    value_format: "#,##0"
     type: number
   }
 }

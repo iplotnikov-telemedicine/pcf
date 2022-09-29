@@ -18,6 +18,8 @@ explore: sales_by_product {
   }
 }
 
+explore: brands {}
+
 explore: orders_with_details {
   join: latest_patient_orders {
     relationship: many_to_one
@@ -45,7 +47,11 @@ explore: orders_with_details {
   }
   join: brands {
     relationship: many_to_one
-    sql_on: ${products.brand_id} = ${brands.brand_id} ;;
+    sql_on: ${products.brand_id} = ${brands.id} ;;
+  }
+  join: product_categories_by_level {
+    relationship: many_to_one
+    sql_on: ${order_items.product_id} = ${product_categories_by_level.id} ;;
   }
   join: offices {
     relationship: many_to_one
