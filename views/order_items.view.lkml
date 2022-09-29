@@ -140,6 +140,7 @@ view: order_items {
   dimension: income {
     type: number
     sql: ${TABLE}.income ;;
+    value_format_name: usd
   }
 
   dimension: is_charge_by_order {
