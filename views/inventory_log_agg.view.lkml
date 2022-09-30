@@ -10,6 +10,7 @@ view: inventory_log_agg {
       column: total_unit_quantity {}
       column: item_type {}
       column: storage_id {}
+      column: created_date {}
     }
   }
   dimension: id {
@@ -33,6 +34,20 @@ view: inventory_log_agg {
   }
   dimension: storage_id {
     description: ""
+    type: number
   }
-
+  dimension: created_date {
+    description: ""
+    type: date
+  }
+  measure: sum_total_unit_quantity {
+    type: sum
+    value_format: "0"
+    sql: ${TABLE}.total_unit_quantity;;
+  }
+  measure: running_total_unit_quantity {
+    type: running_total
+    value_format: "0"
+    sql: ${TABLE}.total_unit_quantity ;;
+  }
 }

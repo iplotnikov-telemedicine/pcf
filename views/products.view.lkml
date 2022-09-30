@@ -238,7 +238,8 @@ view: products {
 
   dimension: name {
     type: string
-    sql: CONVERT(BINARY(CONVERT(${TABLE}.prod_name USING latin1)) USING utf8mb4) ;;
+    sql: {% if _model._name == 'pcf_company' %}${TABLE}.prod_name
+    {% else %}CONVERT(BINARY(CONVERT(${TABLE}.prod_name USING latin1)) USING utf8mb4){% endif %} ;;
   }
 
   dimension: ounce_prepack_qty_o {
