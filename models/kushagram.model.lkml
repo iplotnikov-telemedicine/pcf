@@ -18,8 +18,6 @@ explore: sales_by_product {
   }
 }
 
-explore: brands {}
-
 explore: orders_with_details {
   join: latest_patient_orders {
     relationship: many_to_one
@@ -453,8 +451,4 @@ explore: inventory_log {
     relationship: many_to_many
     sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
   }
-}
-
-explore: sales_and_stock {
-  view_name: inventory_log_agg
 }
