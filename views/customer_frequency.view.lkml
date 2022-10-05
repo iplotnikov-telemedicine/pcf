@@ -71,7 +71,7 @@ view: customer_frequency {
   }
   dimension: patient_month_orders_tier {
     type: tier
-    tiers: [0, 4, 7, 10, 13, 16, 19, 25, 31, 37, 42, 66, 100]
+    tiers: [0, 4, 7, 10, 13]
     style: integer
     sql: ${patient_month_orders_num} ;;
   }
