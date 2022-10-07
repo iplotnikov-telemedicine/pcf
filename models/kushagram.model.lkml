@@ -235,7 +235,7 @@ explore: order_items {
   }
 
   join: orders {
-    type: inner
+#    type: inner
     relationship: many_to_one
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
@@ -257,13 +257,13 @@ explore: order_items {
   }
 
   join: offices {
-    type: inner
+    #type: inner
     relationship: many_to_one
     sql_on: ${orders.office_id} = ${offices.office_id} ;;
   }
 
   join: patients {
-    type: inner
+    #type: inner
     relationship: many_to_one
     sql_on: ${orders.patient_id} = ${patients.id} ;;
   }
@@ -280,7 +280,7 @@ explore: order_items {
   }
 
   join: staff {
-    type: inner
+    #type: inner
     from: users
     relationship: many_to_one
     sql_on: ${staff.id} = ${orders.cashier_id} ;;
@@ -294,7 +294,7 @@ explore: order_items {
   join: staff_category {
     from: sf_guard_group
     relationship: many_to_one
-    type: inner
+    #type: inner
     sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
   }
 
@@ -338,7 +338,7 @@ explore: order_items {
 
   join: returning_patients {
     relationship: one_to_one
-    type: inner
+    #type: inner
     sql_on: ${patients.id} = ${returning_patients.id} ;;
   }
 

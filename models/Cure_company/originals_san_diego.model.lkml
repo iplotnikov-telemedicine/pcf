@@ -5,8 +5,6 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 explore: order_items {
-
-  # 3583
   sql_always_where: ${offices.office_comp_id} = 9624;;
 
   join: products {
@@ -27,15 +25,10 @@ explore: order_items {
   join: discounts {
     relationship: many_to_one
     sql_on: CASE
-
-      WHEN ${discounts.discount_apply_type} = "cart"
-
-      THEN ${orders.discount_id} = ${discounts.id}
-
-      ELSE ${order_items.discount_id} = ${discounts.id}
-
-      END ;;
-    # sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
+              WHEN ${discounts.discount_apply_type} = "cart"
+              THEN ${orders.discount_id} = ${discounts.id}
+              ELSE ${order_items.discount_id} = ${discounts.id}
+            END ;;
     sql_where: ${discounts.id} is not null;;
   }
 
@@ -47,19 +40,12 @@ explore: order_items {
   join: offices {
     relationship: many_to_one
     sql_on: ${orders.office_id} = ${offices.office_id} ;;
-    # sql_where: ${offices.company_id} = @{kolas_company_id} ;;
   }
 
   join: patients {
     relationship: many_to_one
     sql_on: ${orders.patient_id} = ${patients.id} ;;
   }
-
-  # join: returning_patients {
-  #   relationship: one_to_one
-  #   type: inner
-  #   sql_on: ${patients.id} = ${returning_patients.id} ;;
-  # }
 
   join: tax_payment {
     relationship: one_to_one
@@ -76,29 +62,10 @@ explore: order_items {
     relationship: many_to_one
     sql_on: ${users.id} = ${orders.cashier_id} ;;
   }
-
-  # join: self_brand_product {
-  #   from: product
-  #   relationship: many_to_one
-  #   sql_on: ${self_brand_product.id} = ${orderItem.product_id} ;;
-  # }
-
-  # sql_always_where:
-  # {% if order_items.namesearch._is_filtered %}
-  # ${order_items.filter_by_product} = 'yes'
-  # {% else %}
-  # 1=1
-  # {% endif %};;
-
-  # sql_always_where: ${offices.office_id} = 3583;;
 }
 
 
 explore: orders {
-  # always_filter: {
-  #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
-  # }
-
   sql_always_where: ${offices.office_comp_id} = 9624;;
 
   join: patients {
@@ -128,7 +95,6 @@ explore: orders {
 }
 
 explore: register_log {
-
   sql_always_where: ${offices.office_comp_id} = 9624;;
 
   join: register {
