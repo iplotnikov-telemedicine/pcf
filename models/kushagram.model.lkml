@@ -235,7 +235,7 @@ explore: order_items {
   }
 
   join: orders {
-#    type: inner
+    type: inner
     relationship: many_to_one
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
@@ -257,13 +257,13 @@ explore: order_items {
   }
 
   join: offices {
-    #type: inner
+    type: inner
     relationship: many_to_one
     sql_on: ${orders.office_id} = ${offices.office_id} ;;
   }
 
   join: patients {
-    #type: inner
+    type: inner
     relationship: many_to_one
     sql_on: ${orders.patient_id} = ${patients.id} ;;
   }
@@ -280,7 +280,7 @@ explore: order_items {
   }
 
   join: staff {
-    #type: inner
+    type: inner
     from: users
     relationship: many_to_one
     sql_on: ${staff.id} = ${orders.cashier_id} ;;
@@ -294,7 +294,7 @@ explore: order_items {
   join: staff_category {
     from: sf_guard_group
     relationship: many_to_one
-    #type: inner
+    type: inner
     sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
   }
 
@@ -339,7 +339,7 @@ explore: order_items {
 
   join: returning_patients {
     relationship: one_to_one
-    #type: inner
+    type: inner
     sql_on: ${patients.id} = ${returning_patients.id} ;;
   }
 
@@ -595,8 +595,8 @@ explore: product_transactions {
   }
 
 explore: order_items_CDTFA {
-  extends: [order_items]
   view_name: order_items
+  from: order_items_with_details
   sql_always_where: DATE(CONVERT_TZ(orders.sync_created_at ,'UTC','America/Los_Angeles')) >= cast('2019-01-01' as DATETIME)
                     AND DATE(CONVERT_TZ(orders.sync_created_at ,'UTC','America/Los_Angeles')) <= cast('2021-12-31' as DATETIME)
                     AND (orders.office_zip_name ) IN ('94022', '94023', '94024', '94028', '94035', '94039', '94040', '94041', '94042', '94043', '94085',
@@ -616,4 +616,52 @@ explore: order_items_CDTFA {
                     '95129', '95130', '95131', '95132', '95133', '95134', '95135', '95136', '95137', '95138', '95139', '95140', '95141', '95142', '95148',
                     '95150', '95151', '95152', '95153', '95154', '95155', '95156', '95157', '95158', '95159', '95160', '95161', '95164', '95170', '95171',
                     '95172', '95173', '95190', '95191', '95192', '95193', '95194', '95196', '95219', '95377', '95391');;
+
+  join: products {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${order_items.product_id};;
+  }
+
+  join: orders {
+  relationship: many_to_one
+  sql_on: ${orders.id} = ${order_items.order_id} ;;
+  }
+
+  join: discounts {
+    relationship: many_to_one
+    sql_on: ${discounts.id} = ${order_items.discount_id} ;;
+  }
+
+  join: patients {
+    relationship: many_to_one
+    sql_on: ${orders.patient_id} = ${patients.id} ;;
+  }
+
+  join: tax_payment {
+    relationship: one_to_one
+    sql_on: ${order_items.id} = ${tax_payment.order_item_id} ;;
+  }
+
+  join: staff {
+    from: users
+    relationship: many_to_one
+    sql_on: ${staff.id} = ${orders.cashier_id} ;;
+  }
+
+  join: product_checkins {
+    relationship: many_to_one
+    sql_on: ${product_checkins.id} = ${order_items.product_checkin_id} ;;
+  }
+
+  join: recommendations {
+    relationship: many_to_one
+    sql_on: ${orders.patient_id} = ${recommendations.rec_pat_id}
+            AND ${recommendations.rec_valid_from_date} <= ${orders.confirmed_raw}
+            AND ${recommendations.rec_valid_to_raw} >= ${orders.confirmed_raw};;
+  }
+
+  join: tax_excise {
+    relationship: one_to_many
+    sql_on: ${orders.tax_tier_version_id} = ${tax_excise.tax_tier_version_id} ;;
+  }
 }

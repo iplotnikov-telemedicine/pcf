@@ -4,7 +4,7 @@
 view: discount_preset {
   derived_table: {
     explore_source: order_items {
-      #bind_all_filters: yes
+      bind_all_filters: yes
       column: id { field: orders.id }
       column: discount_id { field: orders.discount_id }
       column: sum_discount { field: orders.sum_discount }
