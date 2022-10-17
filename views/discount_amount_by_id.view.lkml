@@ -1,6 +1,7 @@
 view: discount_amount_by_id {
   derived_table: {
     explore_source: order_items {
+      bind_all_filters: yes
       column: id { field: discounts.id }
       column: sum_total_discounts { field: orders.sum_total_discounts }
       column: sum_discount_amount {}

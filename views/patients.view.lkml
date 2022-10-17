@@ -280,7 +280,7 @@ view: patients {
 
   dimension: full_name {
     type: string
-    sql: CONCAT(${first_name}, ' ', ${last_name}) ;;
+    sql: {% if _model._name == 'pcf_company' %}CONCAT(${first_name}, ' ', ${last_name}){% else %}CONVERT(BINARY(CONVERT(CONCAT(${first_name}, ' ', ${last_name}) USING latin1)) USING utf8mb4){% endif %} ;;
   }
 
   dimension: gender {
