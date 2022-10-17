@@ -287,7 +287,7 @@ explore: order_items {
   }
 
   join: order_item_refunds {
-    from: order_items
+    from: order_items_with_details
     relationship: one_to_one
     sql_on: ${order_item_refunds.id} = ${order_items.id} AND ${order_item_refunds.is_returned} = 1;;
   }

@@ -3,19 +3,17 @@
 
 view: sales_by_product {
   derived_table: {
-    explore_source: products {
-      column: id {}
-      column: name {}
-      column: product_cost {}
-      column: num_days { field: orders.num_days }
+    explore_source: order_items {
+      column: id { field: order_items.product_id }
+      column: product_cost { field: order_items.product_cost }
       column: sum_order_item_quantity { field: order_items.sum_order_item_quantity }
       column: sum_net_sales { field: order_items.sum_net_sales }
       column: avg_unit_price { field: order_items.avg_unit_price }
       column: amount_sum { field: order_items.amount_sum }
       column: quantity_sum { field: order_items.quantity_sum }
-      filters: {
-        field: orders.confirmed_at
-        value: "2 days"
+      bind_filters: {
+        from_field: orders.confirmed_at
+        to_field: orders.confirmed_at
       }
     }
   }
@@ -23,16 +21,9 @@ view: sales_by_product {
     description: ""
     type: number
   }
-  dimension: name {
-    description: ""
-  }
   dimension: product_cost {
     description: ""
     value_format: "$#,##0.00"
-    type: number
-  }
-  dimension: num_days {
-    description: ""
     type: number
   }
   dimension: sum_order_item_quantity {

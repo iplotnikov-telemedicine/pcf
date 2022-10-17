@@ -1,7 +1,6 @@
 view: order_items {
   sql_table_name: {% if _model._name == 'pcf_company' %}@{schema_name}.{% endif %}warehouse_order_items ;;
   drill_fields: [id]
-
   parameter: from_date {
     type: date
   }
@@ -235,7 +234,8 @@ view: order_items {
     sql: ${TABLE}.paid_amount ;;
   }
 
-  dimension: price {
+  dimension: product_cost {
+    alias: [price]
     value_format_name: usd
     type: number
     sql: ${TABLE}.price ;;
