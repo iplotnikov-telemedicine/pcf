@@ -7,11 +7,11 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 explore: sales_by_product {
 
-  # join: quantity_by_product {
-  #   type: inner
-  #   relationship: one_to_many
-  #   sql_on:  ${sales_by_product.id}  = ${quantity_by_product.product_id} ;;
-  # }
+  join: quantity_by_product {
+    type: inner
+    relationship: one_to_many
+    sql_on:  ${sales_by_product.id}  = ${quantity_by_product.product_id} ;;
+  }
 
   join: order_items {
     from: order_items_with_details
@@ -278,7 +278,6 @@ explore: order_items {
   join: orders {
     type: inner
     relationship: many_to_one
-    type: inner
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
 
