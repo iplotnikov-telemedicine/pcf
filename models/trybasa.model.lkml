@@ -310,38 +310,6 @@ explore: package_quantity_ext {
   }
 }
 
-explore: sale_and_return_transactions {
-  from: product_transactions
-
-  join: products {
-    relationship: many_to_one
-    sql_on: ${sale_and_return_transactions.product_id} = ${products.id} ;;
-  }
-
-  join: product_categories_by_level {
-    relationship: many_to_one
-    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
-  }
-
-  join: order_items {
-    sql_on: ${sale_and_return_transactions.order_id} = ${order_items.order_id}
-      AND ${sale_and_return_transactions.product_checkin_id} = ${order_items.product_checkin_id};;
-    type: inner
-    relationship: many_to_one
-  }
-
-  join: orders {
-    sql_on: ${order_items.order_id} = ${orders.id} ;;
-    type: inner
-    relationship: many_to_one
-  }
-
-  join: patients {
-    relationship: many_to_one
-    sql_on: ${sale_and_return_transactions.patient_id} = ${patients.id} ;;
-    type: left_outer
-  }
-}
 
 explore: product_transactions {
 
@@ -387,6 +355,36 @@ explore: product_transactions {
     sql_on: ${product_checkins.id} = ${package_quantity.package_id};;
   }
 
+  join: product_categories_by_level {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+  }
+
+  join: order_items {
+    sql_on: ${product_transactions.order_id} = ${order_items.order_id}
+      AND ${product_transactions.product_checkin_id} = ${order_items.product_checkin_id};;
+    type: inner
+    relationship: many_to_one
+  }
+
+  join: orders {
+    sql_on: ${order_items.order_id} = ${orders.id} ;;
+    type: inner
+    relationship: many_to_one
+  }
+
+  join: discounts_by_order {
+    sql_on: ${orders.id} = ${discounts_by_order.id} ;;
+    type: left_outer
+    relationship: one_to_one
+  }
+
+  join: patients {
+    relationship: many_to_one
+    sql_on: ${product_transactions.patient_id} = ${patients.id} ;;
+    type: left_outer
+  }
+
   join: product_price_group {
     relationship: many_to_one
     sql_on: ${products.id} = ${product_price_group.product_id};;
@@ -400,6 +398,7 @@ explore: product_transactions {
       and (${product_prices.range_from} is NULL
         or ${product_prices.range_from} = 1);;
   }
+
 }
 
 
