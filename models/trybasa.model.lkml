@@ -2,31 +2,10 @@ connection: "trybasa"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
-# include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
+include: "/dashboards/run_rate.dashboard"   # include a LookML dashboard called my_dashboard
 
-
-explore: orders_daily {
-
-  join: offices {
-    relationship: many_to_one
-    sql_on: ${orders_daily.office_id} = ${offices.office_id} ;;
-  }
-
-  join: total_over_daily {
-    relationship: one_to_one
-    sql_on: ${orders_daily.office_id} = ${total_over_daily.office_id}
-      and ${orders_daily.report_date} = ${total_over_daily.report_date} ;;
-  }
-
-  join: refunds_daily {
-    relationship: one_to_one
-    sql_on: ${total_over_daily.office_id} = ${refunds_daily.office_id}
-      and ${total_over_daily.report_date} = ${refunds_daily.report_date} ;;
-  }
-}
 
 explore: register_log {
-
   join: register {
     relationship: many_to_one
     sql_on: ${register.id} = ${register_log.register_id} ;;
@@ -49,6 +28,27 @@ explore: register_log {
   }
 }
 
+explore: orders_daily {
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${orders_daily.office_id} = ${offices.office_id} ;;
+  }
+
+  join: total_over_daily {
+    relationship: one_to_one
+    sql_on: ${orders_daily.office_id} = ${total_over_daily.office_id}
+      and ${orders_daily.report_date} = ${total_over_daily.report_date} ;;
+  }
+
+  join: refunds_daily {
+    relationship: one_to_one
+    sql_on: ${total_over_daily.office_id} = ${refunds_daily.office_id}
+      and ${total_over_daily.report_date} = ${refunds_daily.report_date} ;;
+  }
+}
+
+
 explore: product_quantity_and_offices {
   join: offices {
     type: inner
@@ -64,6 +64,29 @@ explore: products {
     type: left_outer
     relationship: one_to_one
     sql_on:  ${products.id} = ${quantities_by_product.product_id} ;;
+  }
+
+  join: product_office_quantity {
+    type: inner
+    relationship: one_to_many
+    sql_on:  ${products.id}  = ${product_office_quantity.product_id} ;;
+  }
+
+  join: order_items {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${order_items.product_id} ;;
+  }
+
+  join: orders {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${order_items.order_id} = ${orders.id} ;;
+  }
+
+  join: quantity_by_product {
+    type: inner
+    relationship: one_to_many
+    sql_on:  ${products.id}  = ${quantity_by_product.product_id} ;;
   }
 
   join: total_cost_by_product {
