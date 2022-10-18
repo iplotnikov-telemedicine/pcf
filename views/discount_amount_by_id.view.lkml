@@ -1,6 +1,7 @@
 view: discount_amount_by_id {
   derived_table: {
     explore_source: order_items {
+      timezone: query_timezone
       bind_all_filters: yes
       column: id { field: discounts.id }
       column: sum_total_discounts { field: orders.sum_total_discounts }
@@ -31,10 +32,9 @@ view: discount_amount_by_id {
   }
   dimension: discount_amount_in_usd {
     type: number
-    sql: IF(${discount_apply_type} = 'cart', ${sum_total_discounts}, ${sum_discount_amount}) ;;
+    sql: IF(${discount_apply_type} = 'cart', ${sum_total_discounts}-${sum_discount_amount}, ${sum_discount_amount}) ;;
     value_format_name: usd
   }
-
   measure: net_sales_by_discount {
     type:  sum
     sql: ${sum_net_sales} ;;

@@ -4,6 +4,7 @@
 view: sales_by_product {
   derived_table: {
     explore_source: products {
+      timezone: query_timezone
       column: id {}
       column: name {}
       column: product_cost {}
@@ -13,11 +14,25 @@ view: sales_by_product {
       column: avg_unit_price { field: order_items.avg_unit_price }
       column: amount_sum { field: order_items.amount_sum }
       column: quantity_sum { field: order_items.quantity_sum }
-      filters: {
-        field: orders.confirmed_at
-        value: "2 days"
+      column: confirmed_date { field: orders.confirmed_date}
+      column: office_id { field: orders.office_id }
+      bind_filters: {
+        from_field: sales_by_product.date_filter
+        to_field: orders.confirmed_date
       }
     }
+  }
+  filter: date_filter {
+    type: date
+    sql: ${TABLE}.confirmed_date between date_add({% date_start date_filter %}, interval -1 day) and {% date_end date_filter %} ;;
+  }
+  dimension: office_id {
+    type: number
+    sql: ${TABLE}.office_id;;
+  }
+  dimension: confirmed_date {
+    type: date
+    sql: ${TABLE}.confirmed_date;;
   }
   dimension: id {
     description: ""

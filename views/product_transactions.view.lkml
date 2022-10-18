@@ -21,7 +21,7 @@ view: product_transactions {
 
   dimension: date_within_range {
     type: yesno
-    sql: ${date_date} between {% date_start date_filter %} and {% date_end date_filter %} ;;
+    sql: ${date_date} between date_add({% date_start date_filter %}, interval -1 day) and {% date_end date_filter %} ;;
   }
 
   # dimension: dataset {

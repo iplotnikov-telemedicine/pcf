@@ -10,12 +10,29 @@ explore: sales_by_product {
     relationship: one_to_one
     sql_on: ${sales_by_product.id} = ${products.id};;
   }
-
   join: quantity_by_product {
     relationship: one_to_one
     type: left_outer
     sql_on: ${sales_by_product.id} = ${quantity_by_product.product_id};;
   }
+  join: offices {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${sales_by_product.office_id} = ${offices.office_id} ;;
+  }
+  join: brands {
+    relationship: many_to_one
+    sql_on: ${products.brand_id} = ${brands.id} ;;
+  }
+  join: product_vendors {
+    relationship: many_to_one
+    sql_on: ${products.vendor_id} = ${product_vendors.id} ;;
+  }
+  join: product_categories_by_level {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+  }
+
 }
 
 explore: orders_with_details {
@@ -567,6 +584,16 @@ explore: product_transactions {
     join: brands {
       relationship: many_to_one
       sql_on: ${products.brand_id} = ${brands.id} ;;
+    }
+
+    join: product_categories_by_level {
+      relationship: many_to_one
+      sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+    }
+
+    join: offices {
+      relationship: many_to_one
+      sql_on: ${product_transactions.office_id} = ${offices.office_id} ;;
     }
 
     join: product_categories {

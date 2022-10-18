@@ -11,6 +11,7 @@ view: net_sales_by_office {
     }
   }
   dimension: office_id {
+    primary_key: yes
     type: number
     description: ""
   }
