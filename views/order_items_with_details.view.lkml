@@ -9,4 +9,24 @@ view: order_items_with_details {
     value_format_name: usd
   }
 
+  dimension: refund_sdp_excise_tax {
+    type: number
+    sql: COALESCE(IF(${products.is_excise} = 1, (${tax_payment.excise_tax} * ${returned_amount}) / ${paid_amount}, 0 ), 0) ;;
+  }
+
+  measure: refund_sdp_excise_tax_sum {
+    type: sum
+    sql: ${refund_sdp_excise_tax} ;;
+  }
+
+  dimension: refund_nsdp_excise_tax {
+    type: number
+    sql: COALESCE(IF(${products.is_excise} = 1, 0, (${tax_payment.excise_tax} * ${returned_amount}) / ${paid_amount}), 0) ;;
+  }
+
+  measure: refund_nsdp_excise_tax_sum {
+    type: sum
+    sql: ${refund_nsdp_excise_tax} ;;
+  }
+
 }

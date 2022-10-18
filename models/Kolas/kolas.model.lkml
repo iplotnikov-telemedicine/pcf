@@ -55,7 +55,7 @@ explore: product_transactions {
 
   join: order_items {
     sql_on: ${product_transactions.order_id} = ${order_items.order_id}
-      AND ${product_transactions.product_id} = ${order_items.product_id} ;;
+      AND ${product_transactions.product_checkin_id} = ${order_items.product_checkin_id};;
     type: inner
     relationship: many_to_one
   }

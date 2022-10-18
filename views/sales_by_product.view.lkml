@@ -3,12 +3,18 @@
 
 view: sales_by_product {
   derived_table: {
-    explore_source: products {
-      timezone: query_timezone
-      column: id {}
-      column: name {}
-      column: product_cost {}
-      column: num_days { field: orders.num_days }
+    explore_source: order_items {
+      column: id { field: order_items.product_id }
+      column: product_cost { field: order_items.product_cost }
+# <<<<<<< HEAD
+#     explore_source: products {
+#       timezone: query_timezone
+#       column: id {}
+#       column: name {}
+#       column: product_cost {}
+#       column: num_days { field: orders.num_days }
+# =======
+# >>>>>>> branch 'master' of ssh://git@bitbucket.unitedsoftware.by:7999/look/pcf.git
       column: sum_order_item_quantity { field: order_items.sum_order_item_quantity }
       column: sum_net_sales { field: order_items.sum_net_sales }
       column: avg_unit_price { field: order_items.avg_unit_price }
@@ -19,6 +25,10 @@ view: sales_by_product {
       bind_filters: {
         from_field: sales_by_product.date_filter
         to_field: orders.confirmed_date
+      }
+      bind_filters: {
+        from_field: orders.confirmed_at
+        to_field: orders.confirmed_at
       }
     }
   }
@@ -38,16 +48,9 @@ view: sales_by_product {
     description: ""
     type: number
   }
-  dimension: name {
-    description: ""
-  }
   dimension: product_cost {
     description: ""
     value_format: "$#,##0.00"
-    type: number
-  }
-  dimension: num_days {
-    description: ""
     type: number
   }
   dimension: sum_order_item_quantity {

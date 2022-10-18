@@ -6,36 +6,59 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "//viz_multiple_value/"
 
 explore: sales_by_product {
-  join: products {
-    relationship: one_to_one
-    sql_on: ${sales_by_product.id} = ${products.id};;
-  }
   join: quantity_by_product {
-    relationship: one_to_one
-    type: left_outer
-    sql_on: ${sales_by_product.id} = ${quantity_by_product.product_id};;
+    type: inner
+    relationship: one_to_many
+    sql_on:  ${sales_by_product.id}  = ${quantity_by_product.product_id} ;;
   }
+
   join: offices {
     relationship: many_to_one
     type: inner
     sql_on: ${sales_by_product.office_id} = ${offices.office_id} ;;
   }
+
   join: brands {
     relationship: many_to_one
     sql_on: ${products.brand_id} = ${brands.id} ;;
   }
+
   join: product_vendors {
     relationship: many_to_one
     sql_on: ${products.vendor_id} = ${product_vendors.id} ;;
   }
+
   join: product_categories_by_level {
     relationship: many_to_one
     sql_on: ${products.id} = ${product_categories_by_level.id} ;;
   }
 
+  join: order_items {
+    from: order_items_with_details
+    relationship: one_to_many
+    type: inner
+    sql_on: ${sales_by_product.id} = ${order_items.product_id} ;;
+  }
+
+  join: tax_payment {
+    relationship: one_to_one
+    sql_on: ${order_items.id} = ${tax_payment.order_item_id} ;;
+  }
+
+  join: orders {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${order_items.order_id} = ${orders.id} ;;
+  }
+
+  join: products {
+    relationship: many_to_one
+    sql_on: ${order_items.product_id} = ${products.id};;
+  }
 }
 
 explore: orders_with_details {
+
   join: latest_patient_orders {
     relationship: many_to_one
     type: inner
@@ -43,42 +66,51 @@ explore: orders_with_details {
       and ${orders_with_details.patient_id} = ${latest_patient_orders.patient_id}
       and ${latest_patient_orders.has_orders_after_date} = 'No' ;;
   }
+
   join: patients {
     relationship: many_to_one
     sql_on: ${orders_with_details.patient_id} = ${patients.id} ;;
   }
+
   join: order_items {
     relationship: one_to_many
     type: inner
     sql_on: ${orders_with_details.id} = ${order_items.order_id} ;;
   }
+
   join: tax_payment_flat {
     relationship: one_to_one
     sql_on: ${orders_with_details.id} = ${tax_payment_flat.order_id} ;;
   }
+
   join: products {
     relationship: many_to_one
     sql_on: ${order_items.product_id} = ${products.id};;
   }
+
   join: brands {
     relationship: many_to_one
     sql_on: ${products.brand_id} = ${brands.id} ;;
   }
+
   join: product_categories_by_level {
     relationship: many_to_one
     sql_on: ${order_items.product_id} = ${product_categories_by_level.id} ;;
   }
+
   join: offices {
     relationship: many_to_one
     type: inner
     sql_on: ${orders_with_details.office_id} = ${offices.office_id} ;;
     fields: [office_name, office_is_active]
   }
+
   join: net_sales_by_office {
     relationship: many_to_one
     type: inner
     sql_on: ${orders_with_details.office_id} = ${net_sales_by_office.office_id} ;;
   }
+
 }
 
 explore: product_quantity_and_offices {
@@ -241,6 +273,12 @@ explore: service_history {
 explore: order_items {
   from: order_items_with_details
 
+  join: sales_by_product {
+    relationship: many_to_one
+    type: inner
+    sql_on: ${order_items.product_id} = ${sales_by_product.id};;
+  }
+
   join: products {
     relationship: many_to_one
     sql_on: ${products.id} = ${order_items.product_id};;
@@ -291,7 +329,7 @@ explore: order_items {
   }
 
   join: order_item_refunds {
-    from: order_items
+    from: order_items_with_details
     relationship: one_to_one
     sql_on: ${order_item_refunds.id} = ${order_items.id} AND ${order_item_refunds.is_returned} = 1;;
   }
