@@ -467,11 +467,23 @@ explore: order_items {
     sql_on: ${users.id} = ${orders.cashier_id} ;;
   }
 
-  # join: self_brand_product {
-  #   from: product
-  #   relationship: many_to_one
-  #   sql_on: ${self_brand_product.id} = ${orderItem.product_id} ;;
-  # }
+  join: discounts {
+
+    relationship: many_to_one
+    sql_on: CASE
+      WHEN ${discounts.discount_apply_type} = "cart"
+      THEN ${orders.discount_id} = ${discounts.id}
+      ELSE ${order_items.discount_id} = ${discounts.id}
+      END ;;
+    # sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
+    sql_where: ${discounts.id} is not null;;
+  }
+
+
+  join: discount_amount_by_id {
+    relationship: one_to_one
+    sql_on: ${discounts.id} = ${discount_amount_by_id.id} ;;
+  }
 }
 
 explore: product_categories {
