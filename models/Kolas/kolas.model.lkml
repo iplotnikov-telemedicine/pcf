@@ -66,6 +66,28 @@ explore: product_transactions {
     relationship: many_to_one
   }
 
+  join: discounts_by_order {
+    sql_on: ${orders.id} = ${discounts_by_order.id} ;;
+    type: left_outer
+    relationship: one_to_one
+  }
+
+  # join: cart_discounts {
+  #   from: discounts
+  #   type: left_outer
+  #   relationship: many_to_one
+  #   sql_on: ${orders.discount_id} = ${cart_discounts.id}
+  #     and ${cart_discounts.discount_apply_type} = 'cart';;
+  # }
+
+  # join: item_discounts {
+  #   from: discounts
+  #   type: left_outer
+  #   relationship: many_to_one
+  #   sql_on: ${order_items.discount_id} = ${item_discounts.id}
+  #     and ${item_discounts.discount_apply_type} = 'item';;
+  # }
+
   join: patients {
     relationship: many_to_one
     sql_on: ${product_transactions.patient_id} = ${patients.id} ;;
