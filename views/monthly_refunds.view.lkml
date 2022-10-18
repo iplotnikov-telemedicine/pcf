@@ -7,7 +7,6 @@ view: monthly_refunds {
       timezone: query_timezone
       column: returned_month { field: order_item_refunds.returned_month }
       column: sum_refund_wo_tax { field: order_item_refunds.sum_refund_wo_tax }
-      column: sum_refund_wo_tax { field: order_item_refunds.sum_refund_wo_tax }
       column: refund_sdp_excise_tax_sum { field: order_item_refunds.refund_sdp_excise_tax_sum }
       column: refund_nsdp_excise_tax_sum { field: order_item_refunds.refund_nsdp_excise_tax_sum }
       bind_filters: {
