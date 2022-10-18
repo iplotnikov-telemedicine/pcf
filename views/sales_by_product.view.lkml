@@ -4,24 +4,19 @@
 view: sales_by_product {
   derived_table: {
     explore_source: order_items {
+      timezone: query_timezone
       column: id { field: order_items.product_id }
+      column: order_item_id { field: order_items.id}
       column: product_cost { field: order_items.product_cost }
-# <<<<<<< HEAD
-#     explore_source: products {
-#       timezone: query_timezone
-#       column: id {}
-#       column: name {}
-#       column: product_cost {}
-#       column: num_days { field: orders.num_days }
-# =======
-# >>>>>>> branch 'master' of ssh://git@bitbucket.unitedsoftware.by:7999/look/pcf.git
+      column: office_id { field: orders.office_id }
+      column: confirmed_date { field: orders.confirmed_date}
+      column: num_days { field: orders.num_days }
       column: sum_order_item_quantity { field: order_items.sum_order_item_quantity }
       column: sum_net_sales { field: order_items.sum_net_sales }
       column: avg_unit_price { field: order_items.avg_unit_price }
       column: amount_sum { field: order_items.amount_sum }
       column: quantity_sum { field: order_items.quantity_sum }
-      column: confirmed_date { field: orders.confirmed_date}
-      column: office_id { field: orders.office_id }
+
       bind_filters: {
         from_field: sales_by_product.date_filter
         to_field: orders.confirmed_date
@@ -36,6 +31,14 @@ view: sales_by_product {
     type: date
     sql: ${TABLE}.confirmed_date between date_add({% date_start date_filter %}, interval -1 day) and {% date_end date_filter %} ;;
   }
+  dimension: primary_key {
+    primary_key: yes
+    sql: ${TABLE}.order_item_id ;;
+  }
+  dimension: id {
+    description: ""
+    type: number
+  }
   dimension: office_id {
     type: number
     sql: ${TABLE}.office_id;;
@@ -43,10 +46,6 @@ view: sales_by_product {
   dimension: confirmed_date {
     type: date
     sql: ${TABLE}.confirmed_date;;
-  }
-  dimension: id {
-    description: ""
-    type: number
   }
   dimension: product_cost {
     description: ""
