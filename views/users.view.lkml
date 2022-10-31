@@ -76,6 +76,11 @@ view: users {
     sql: ${TABLE}.email_address ;;
   }
 
+  dimension: lowered_email {
+    type: string
+    sql: LOWER(${email_address}) ;;
+  }
+
   dimension: first_name {
     type: string
     sql: ${TABLE}.first_name ;;

@@ -89,10 +89,24 @@ explore: product_transactions {
   # }
 
   join: patients {
+    from: patients
     relationship: many_to_one
     sql_on: ${product_transactions.patient_id} = ${patients.id} ;;
     type: left_outer
   }
+
+  join: patient_group_ref {
+    relationship: one_to_one
+    sql_on: ${patients.id} = ${patient_group_ref.patient_id} ;;
+    type: left_outer
+  }
+
+  join: patient_group {
+    relationship: one_to_one
+    sql_on: ${patient_group_ref.group_id} = ${patient_group.id} ;;
+    type: left_outer
+  }
+
 }
 
 explore: product_office_quantity {

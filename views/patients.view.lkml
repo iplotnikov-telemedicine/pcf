@@ -263,6 +263,11 @@ view: patients {
     sql: ${TABLE}.pat_email ;;
   }
 
+  dimension: lowered_email {
+    type: string
+    sql: LOWER(${email}) ;;
+  }
+
   dimension: ethnicity {
     type: string
     sql: ${TABLE}.pat_ethnicity ;;
