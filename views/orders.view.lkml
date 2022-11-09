@@ -3,6 +3,12 @@ view: orders {
   label: "Orders"
   drill_fields: [id]
 
+  filter: date_time_filter {
+    type: date_time
+    datatype: datetime
+    sql: ${TABLE}.confirmed_at between {% date_start date_time_filter %} and {% date_end date_time_filter %} ;;
+  }
+
   dimension: id {
     primary_key: yes
     type: number
@@ -77,6 +83,7 @@ view: orders {
 
   dimension_group: confirmed {
     type: time
+    convert_tz: yes
     timeframes: [
       raw,
       time,
