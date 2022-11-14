@@ -8,6 +8,50 @@ explore: barcode {}
 
 explore: tax_payment_flat {}
 
+explore: refunds_daily {}
+
+explore: monthly_sales {
+
+  join: monthly_patients {
+    relationship: one_to_one
+    sql_on: ${monthly_sales.confirmed_month} = ${monthly_patients.created_month} ;;
+  }
+
+  join: monthly_refunds {
+    relationship: one_to_one
+    sql_on: ${monthly_sales.confirmed_month} = ${monthly_refunds.returned_month} ;;
+  }
+
+}
+
+explore: service_history {
+
+  join: users {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${service_history.user_id} = ${users.id} ;;
+  }
+
+  join: services {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${service_history.service_id} = ${services.id} ;;
+  }
+
+  join: service_company_ref {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${services.id} = ${service_company_ref.service_id} ;;
+  }
+
+  join: orders {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${service_history.order_id} = ${orders.id} ;;
+  }
+
+}
+
 explore: product_categories {
   join: products {
     type: inner
@@ -356,13 +400,14 @@ explore: orders_daily {
 
   join: refunds_daily {
     relationship: one_to_one
-    sql_on: ${total_over_daily.office_id} = ${refunds_daily.office_id}
-      and ${total_over_daily.report_date} = ${refunds_daily.report_date} ;;
+    sql_on: ${orders_daily.office_id} = ${refunds_daily.office_id}
+      and ${orders_daily.report_date} = ${refunds_daily.report_date} ;;
   }
 }
 
+
 explore: order_items {
-  view_name: order_items
+  from: order_items_with_details
 
   sql_always_where: ${offices.office_comp_id} = 9928;;
 
@@ -379,6 +424,12 @@ explore: order_items {
   join: orders {
     relationship: many_to_one
     sql_on: ${orders.id} = ${order_items.order_id} ;;
+  }
+
+  join: order_item_refunds {
+    from: order_items_with_details
+    relationship: one_to_one
+    sql_on: ${order_item_refunds.id} = ${order_items.id} AND ${order_item_refunds.is_returned} = 1;;
   }
 
   # join: total_over_daily {
@@ -485,12 +536,6 @@ explore: order_items {
   #   relationship: one_to_many
   #   sql_on: ${order_items.id} = ${tax_payment_flat.order_item_id} ;;
   # }
-
-  join: order_item_refunds {
-    from: order_items
-    relationship: one_to_one
-    sql_on: ${order_item_refunds.id} = ${order_items.id} AND ${order_item_refunds.is_returned} = 1;;
-  }
 
   join: staff {
     from: users
