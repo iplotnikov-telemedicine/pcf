@@ -20,6 +20,10 @@ view: orders_daily {
       column: delivery_orders_count { field: orders.delivery_orders_count }
       column: office_id { field: offices.office_id }
       column: office_name { field: offices.office_name }
+      bind_filters: {
+        from_field: orders_daily.report_date
+        to_field: orders.confirmed_date
+      }
       # bind_all_filters: yes
     }
   }

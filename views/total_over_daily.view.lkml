@@ -7,6 +7,10 @@ view: total_over_daily {
       column: report_date {field: register_log.created_date}
       column: office_id {field: register.office_id}
       # bind_all_filters: yes
+      bind_filters: {
+        from_field: total_over_daily.report_date
+        to_field: register_log.created_date
+      }
       filters: {
         field: register.office_id
         value: "NOT NULL"

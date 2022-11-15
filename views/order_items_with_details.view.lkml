@@ -29,4 +29,9 @@ view: order_items_with_details {
     sql: ${refund_nsdp_excise_tax} ;;
   }
 
+  measure: total_tax_refunded {
+    type: number
+    sql: ${total_returned_amount} - ${sum_refund_wo_tax} ;;
+  }
+
 }
