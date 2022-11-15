@@ -29,7 +29,7 @@ view: sales_by_product {
   }
   filter: date_filter {
     type: date
-    sql: ${TABLE}.confirmed_date between date_add({% date_start date_filter %}, interval -1 day) and {% date_end date_filter %} ;;
+    sql: ${TABLE}.confirmed_date between {% date_start date_filter %} and {% date_end date_filter %} ;;
   }
   dimension: primary_key {
     primary_key: yes
