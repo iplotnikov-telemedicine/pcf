@@ -763,7 +763,7 @@ view: orders {
     type: date_time
     sql: ${confirmed_raw} ;;
     html: {{ rendered_value | date: "%D %r" }} ;;
-    convert_tz: no
+    # convert_tz: no
   }
 
   dimension: num_days {
