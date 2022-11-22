@@ -26,9 +26,11 @@ view: discount_amount_by_id {
   }
   dimension: discount_apply_type {
     description: "Discount apply type"
+    type: string
   }
   dimension: sum_net_sales {
     description: "Discount apply type"
+    type: number
   }
   dimension: discount_amount_in_usd {
     type: number
