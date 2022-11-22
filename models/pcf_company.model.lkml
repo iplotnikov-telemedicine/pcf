@@ -489,6 +489,7 @@ explore: inventory_log {
 
 
 explore: order_items {
+  from: order_items_with_details
 
   always_filter: {
     filters: [companies.company: "pcf"]
@@ -547,6 +548,44 @@ explore: order_items {
   #   relationship: many_to_one
   #   sql_on: ${self_brand_product.id} = ${orderItem.product_id} ;;
   # }
+
+  join: discounts {
+    relationship: many_to_one
+    sql_on: CASE WHEN ${discounts.discount_apply_type} = 'cart'
+      THEN ${orders.discount_id} = ${discounts.id}
+      ELSE ${order_items.discount_id} = ${discounts.id}
+      END ;;
+    # sql_on: ${orders.discount_id} = ${discounts.id} or ${order_items.discount_id} = ${discounts.id};;
+    sql_where: ${discounts.id} is not null;;
+  }
+
+  join: discount_amount_by_id {
+    relationship: one_to_one
+    sql_on: ${discounts.id} = ${discount_amount_by_id.id} ;;
+  }
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${orders.office_id} = ${offices.office_id} ;;
+  }
+
+  join: staff {
+    from: users
+    relationship: many_to_one
+    sql_on: ${staff.id} = ${orders.cashier_id} ;;
+  }
+
+  join: sf_guard_user_group {
+    relationship: many_to_many
+    sql_on: ${staff.id} = ${sf_guard_user_group.user_id} ;;
+  }
+
+  join: staff_category {
+    from: sf_guard_group
+    relationship: many_to_one
+    type: inner
+    sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
+  }
 }
 
 explore: product_categories {

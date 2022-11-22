@@ -399,7 +399,9 @@ view: order_items {
 
   dimension: refund_wo_tax {
     type: number
-    sql: IF(${paid_amount}, ${returned_amount} - (${returned_amount} * ${tax} / ${paid_amount}), 0 ) ;;
+    sql: CASE WHEN ${paid_amount} > 0
+      THEN ${returned_amount} - (${returned_amount} * ${tax} / ${paid_amount})
+      ELSE 0 END ;;
   }
 
   dimension: net_sale_alt {

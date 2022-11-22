@@ -32,7 +32,9 @@ view: discount_amount_by_id {
   }
   dimension: discount_amount_in_usd {
     type: number
-    sql: IF(${discount_apply_type} = 'cart', ${sum_total_discounts}-${sum_discount_amount}, ${sum_discount_amount}) ;;
+    sql: CASE WHEN ${discount_apply_type} = 'cart'
+      THEN ${sum_total_discounts}-${sum_discount_amount}
+      ELSE ${sum_discount_amount} END ;;
     value_format_name: usd
   }
   measure: net_sales_by_discount {
