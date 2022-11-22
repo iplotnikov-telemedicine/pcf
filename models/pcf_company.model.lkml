@@ -7,9 +7,8 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 explore: product_quantity_and_offices {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
-  # "{{_user_attributes['default_domain_prefix']}}"
 
   join: companies {
     relationship: one_to_many
@@ -23,11 +22,44 @@ explore: product_quantity_and_offices {
   }
 }
 
+explore: register_log {
+
+  always_filter: {
+    filters: [companies.company: "pcf"]
+  }
+
+  join: companies {
+    relationship: one_to_many
+    sql_on: 1<>1 ;;
+  }
+
+  join: register {
+    relationship: many_to_one
+    sql_on: ${register.id} = ${register_log.register_id} ;;
+    sql_where: ${register.office_id} IS NOT NULL ;;
+  }
+
+  join: service_history {
+    relationship: many_to_one
+    sql_on: ${register_log.service_history_id} = ${service_history.id} ;;
+  }
+
+  join: orders {
+    relationship: many_to_one
+    sql_on: ${orders.id} = ${service_history.order_id} ;;
+  }
+
+  join: offices {
+    relationship: many_to_one
+    sql_on: ${register.office_id} = ${offices.office_id} ;;
+  }
+}
+
 explore: products {
   sql_always_where: ${products.deleted_raw} IS NULL ;;
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -121,7 +153,7 @@ explore: products {
 explore: product_with_tax {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -199,7 +231,7 @@ explore: package_quantity_for_metrc {
   from: package_quantity
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -222,7 +254,7 @@ explore: package_quantity_for_metrc {
 explore: product_office_quantity {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -235,7 +267,7 @@ explore: product_office_quantity {
 explore: product_checkins {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -249,7 +281,7 @@ explore: product_checkins {
 explore: patients_with_orders {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -267,7 +299,7 @@ explore: patients_with_orders {
 explore: checkins_by_package {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -281,7 +313,7 @@ explore: checkins_by_package {
 explore: package_quantity_ext {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -299,7 +331,7 @@ explore: package_quantity_ext {
 explore: product_transactions {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -367,7 +399,7 @@ explore: product_transactions {
 explore: inventory_log {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -459,7 +491,7 @@ explore: inventory_log {
 explore: order_items {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -520,7 +552,7 @@ explore: order_items {
 explore: product_categories {
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
@@ -586,7 +618,7 @@ explore: users {
 explore: patients { view_name: patients
 
   always_filter: {
-    filters: [companies.company: "NULL"]
+    filters: [companies.company: "pcf"]
   }
   # "{{_user_attributes['default_domain_prefix']}}"
 
