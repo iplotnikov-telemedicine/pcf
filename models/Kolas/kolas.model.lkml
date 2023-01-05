@@ -381,6 +381,10 @@ explore: patients_with_details {
     sql_on: ${patients_with_details.office_id} = ${offices.office_id} ;;
     fields: [office_name]
   }
+  join: patient_point {
+    relationship: one_to_many
+    sql_on: ${patients_with_details.id} = ${patient_point.patient_id};;
+  }
 }
 
 explore: orders_daily {
@@ -551,7 +555,7 @@ explore: order_items {
   join: staff_category {
     from: sf_guard_group
     relationship: many_to_one
-    type: inner
+    type: left_outer
     sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
   }
 
