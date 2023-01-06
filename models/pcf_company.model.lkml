@@ -56,7 +56,7 @@ explore: register_log {
 }
 
 explore: products {
-  sql_always_where: ${products.deleted_raw} IS NULL ;;
+  # sql_always_where: ${products.deleted_raw} IS NULL ;;
 
   always_filter: {
     filters: [companies.company: "pcf"]
@@ -146,6 +146,18 @@ explore: products {
   join: product_office_quantities_by_product {
     relationship: one_to_one
     sql_on: ${products.id} = ${product_office_quantities_by_product.product_id} ;;
+  }
+
+  join: total_tax_by_product {
+    type: left_outer
+    relationship: one_to_one
+    sql_on:  ${products.id} = ${total_tax_by_product.product_id} ;;
+  }
+
+  join: price_presets {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${products.price_preset_id} = ${price_presets.id} ;;
   }
 
 }
