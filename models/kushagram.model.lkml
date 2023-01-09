@@ -5,6 +5,8 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 # include: "//viz_multiple_value/"
 
+explore: product_office_quantity {}
+
 explore: sales_by_product {
   join: quantity_by_product {
     type: inner
@@ -121,6 +123,13 @@ explore: product_quantity_and_offices {
   }
 }
 
+explore: package_quantity_ext {
+  join: product_checkins {
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${package_quantity_ext.package_id} ;;
+  }
+}
+
 explore: products {
   from: products
 
@@ -134,6 +143,12 @@ explore: products {
     type: inner
     relationship: one_to_many
     sql_on:  ${products.id}  = ${product_office_quantity.product_id} ;;
+  }
+
+  join: offices {
+    type: inner
+    relationship: many_to_one
+    sql_on: ${product_office_quantity.office_id} = ${offices.office_id} ;;
   }
 
   join: runrates {
@@ -193,7 +208,92 @@ explore: products {
     sql_on: ${products.id} = ${product_categories_by_level.id} ;;
   }
 
+
+
+  sql_always_where: ${products.deleted_raw} IS NULL ;;
+
+  join: quantities_by_product {
+    type: left_outer
+    relationship: one_to_one
+    sql_on:  ${products.id} = ${quantities_by_product.product_id} ;;
+  }
+
+  join: total_cost_by_product {
+    type: left_outer
+    relationship: one_to_one
+    sql_on:  ${quantities_by_product.product_id} = ${total_cost_by_product.product_id} ;;
+  }
+
+  join: product_types {
+    type: left_outer
+    relationship: many_to_one
+    sql_on:  ${product_types.id} = ${products.product_type_id} ;;
+  }
+
+  # join: brands {
+  #   relationship: many_to_one
+  #   sql_on: ${products.brand_id} = ${brands.id} ;;
+  # }
+
+  # join: product_categories_by_level {
+  #   relationship: many_to_one
+  #   sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+  # }
+
+  join: product_price_group {
+    relationship: many_to_one
+    sql_on: ${products.id} = ${product_price_group.product_id};;
+  }
+
+  join: product_prices {
+    relationship: many_to_one
+    sql_on: ${product_price_group.id} = ${product_prices.price_group_id}
+      and (${product_prices.weight_type} is NULL
+        or ${product_prices.weight_type} = 'gram')
+      and (${product_prices.range_from} is NULL
+        or ${product_prices.range_from} = 1);;
+  }
+
+  join: product_tag_ref {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_tag_ref.product_id};;
+  }
+
+  join: product_tag {
+    relationship: many_to_many
+    sql_on: ${product_tag_ref.tag_id} = ${product_tag.id};;
+  }
+
+  join: product_checkins {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${products.id} = ${product_checkins.product_id} ;;
+  }
+
+  join: adjustments_by_checkin {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${adjustments_by_checkin.product_checkin_id} ;;
+  }
+
+  join: order_items_by_checkin {
+    relationship: one_to_one
+    sql_on: ${product_checkins.id} = ${order_items_by_checkin.product_checkin_id};;
+    # and ${product_checkins.date_raw} <= ${order_items.created_raw};;
+  }
+
+  # join: product_categories {
+  #   relationship: many_to_one
+  #   sql_on: ${products.category_id} = ${product_categories.id} ;;
+  # }
+
+  join: product_office_quantities_by_product {
+    relationship: one_to_one
+    sql_on: ${products.id} = ${product_office_quantities_by_product.product_id} ;;
+  }
+
 }
+
 
 explore: product_categories {
   join: products {
