@@ -68,16 +68,16 @@ explore: products {
     sql_on: 1<>1 ;;
   }
 
-  join: quantities_by_product {
+  join: pcf_comp_quantities_by_product {
     type: left_outer
     relationship: one_to_one
-    sql_on:  ${products.id} = ${quantities_by_product.product_id} ;;
+    sql_on:  ${products.id} = ${pcf_comp_quantities_by_product.product_id} ;;
   }
 
-  join: total_cost_by_product {
+  join: pcf_comp_total_cost_by_product {
     type: left_outer
     relationship: one_to_one
-    sql_on:  ${quantities_by_product.product_id} = ${total_cost_by_product.product_id} ;;
+    sql_on:  ${pcf_comp_quantities_by_product.product_id} = ${pcf_comp_total_cost_by_product.product_id} ;;
   }
 
   join: product_types {
@@ -91,9 +91,9 @@ explore: products {
     sql_on: ${products.brand_id} = ${brands.id} ;;
   }
 
-  join: product_categories_by_level {
+  join: pcf_comp_product_categories_by_level {
     relationship: many_to_one
-    sql_on: ${products.id} = ${product_categories_by_level.id} ;;
+    sql_on: ${products.id} = ${pcf_comp_product_categories_by_level.id} ;;
   }
 
   join: product_price_group {
@@ -148,10 +148,10 @@ explore: products {
     sql_on: ${products.id} = ${product_office_quantities_by_product.product_id} ;;
   }
 
-  join: total_tax_by_product {
+  join: pcf_comp_total_tax_by_product {
     type: left_outer
     relationship: one_to_one
-    sql_on:  ${products.id} = ${total_tax_by_product.product_id} ;;
+    sql_on:  ${products.id} = ${pcf_comp_total_tax_by_product.product_id} ;;
   }
 
   join: price_presets {
@@ -371,10 +371,10 @@ explore: product_transactions {
     sql_on:  ${product_transactions.product_id} = ${products.id} ;;
   }
 
-  join: total_tax_by_product {
+  join: pcf_comp_total_tax_by_product {
     type: left_outer
     relationship: one_to_one
-    sql_on:  ${products.id} = ${total_tax_by_product.product_id} ;;
+    sql_on:  ${products.id} = ${pcf_comp_total_tax_by_product.product_id} ;;
   }
 
   join: brands {
