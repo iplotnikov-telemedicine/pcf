@@ -56,7 +56,7 @@ explore: register_log {
 }
 
 explore: products {
-  # sql_always_where: ${products.deleted_raw} IS NULL ;;
+  sql_always_where: ${products.deleted_raw} IS NULL ;;
 
   always_filter: {
     filters: [companies.company: "pcf"]
