@@ -555,7 +555,7 @@ explore: order_items {
   join: staff_category {
     from: sf_guard_group
     relationship: many_to_one
-    type: left_outer
+    type: inner
     sql_on: ${sf_guard_user_group.group_id} = ${staff_category.id} ;;
   }
 
