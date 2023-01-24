@@ -389,6 +389,14 @@ view: order_items {
   dimension: gross_sale {
     type: number
     sql: ${paid_amount} - ${tax} ;;
+    value_format_name: usd
+  }
+
+  measure: sum_paid_amount {
+    label: "Gross Receipts"
+    type: sum
+    sql: ${paid_amount};;
+    value_format_name: usd
   }
 
   measure: sum_gross_sale {
