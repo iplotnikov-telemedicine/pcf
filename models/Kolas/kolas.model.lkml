@@ -592,6 +592,7 @@ explore: orders {
   #   filters: [orders.confirmed_time: "2 days", patients.phone: "-EMPTY"]
   # }
 
+  from: orders_ext
   sql_always_where: ${offices.office_comp_id} = 9928;;
 
   join: patients {
@@ -618,6 +619,17 @@ explore: orders {
     relationship: many_to_one
     sql_on: ${register.id} = ${register_log.register_id} ;;
   }
+
+  join: order_items {
+    relationship: one_to_many
+    sql_on: ${orders.id} = ${order_items.order_id} ;;
+  }
+
+  join: products {
+    relationship: one_to_many
+    sql_on: ${products.id} = ${order_items.product_id};;
+  }
+
 }
 
 explore: register_log {

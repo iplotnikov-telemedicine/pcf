@@ -323,6 +323,18 @@ view: orders {
     value_format_name: usd
   }
 
+  dimension: all_methods_sales {
+    type: number
+    sql:  ${TABLE}.method1_amount +
+          ${TABLE}.method2_amount +
+          ${TABLE}.method3_amount +
+          ${TABLE}.method4_amount +
+          ${TABLE}.method5_amount +
+          ${TABLE}.method6_amount +
+          ${TABLE}.method7_amount ;;
+    value_format_name: usd
+  }
+
   dimension: metrc_delivery_status {
     type: string
     sql: ${TABLE}.metrc_delivery_status ;;
@@ -602,6 +614,11 @@ view: orders {
     sql: IF(${method2_amount} > 0, 1, 0) ;;
   }
 
+  dimension: cc_terminal_sale {
+    type: number
+    sql: IF(${method4_amount} > 0, 1, 0) ;;
+  }
+
   dimension: cash_sale {
     type: number
     sql: IF(${method1_amount} > 0, 1, 0) ;;
@@ -624,6 +641,11 @@ view: orders {
   measure: number_of_credit_card_transactions {
     type: sum
     sql: ${credit_card_sale} ;;
+  }
+
+  measure: number_of_cc_terminal_transactions {
+    type: sum
+    sql: ${cc_terminal_sale} ;;
   }
 
   measure: number_of_cash_transactions {
@@ -753,9 +775,39 @@ view: orders {
     value_format_name: usd
   }
 
+  measure: total_check_sales {
+    type: sum
+    sql: ${method3_amount} ;;
+    value_format_name: usd
+  }
+
+  measure: total_cc_terminal_sales {
+    type: sum
+    sql: ${method4_amount} ;;
+    value_format_name: usd
+  }
+
+  measure: total_bonus_sales {
+    type: sum
+    sql: ${method5_amount} ;;
+    value_format_name: usd
+  }
+
   measure: sum_applied_sweede_credits {
     type: sum
     sql: ${method6_amount} ;;
+    value_format_name: usd
+  }
+
+  measure: total_dc_terminal_sales {
+    type: sum
+    sql: ${method7_amount} ;;
+    value_format_name: usd
+  }
+
+  measure: sum_all_methods_sales {
+    type: sum
+    sql: ${all_methods_sales} ;;
     value_format_name: usd
   }
 
