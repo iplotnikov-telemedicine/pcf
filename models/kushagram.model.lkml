@@ -8,6 +8,7 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 explore: product_office_quantity {}
 
 explore: sales_by_product {
+
   join: quantity_by_product {
     type: inner
     relationship: one_to_many
@@ -57,6 +58,7 @@ explore: sales_by_product {
     relationship: many_to_one
     sql_on: ${order_items.product_id} = ${products.id};;
   }
+
 }
 
 explore: orders_with_details {
@@ -116,18 +118,22 @@ explore: orders_with_details {
 }
 
 explore: product_quantity_and_offices {
+
   join: offices {
     type: inner
     relationship: many_to_one
     sql_on: ${product_quantity_and_offices.office_id} = ${offices.office_id};;
   }
+
 }
 
 explore: package_quantity_ext {
+
   join: product_checkins {
     relationship: one_to_one
     sql_on: ${product_checkins.id} = ${package_quantity_ext.package_id} ;;
   }
+
 }
 
 explore: products {
@@ -296,6 +302,7 @@ explore: products {
 
 
 explore: product_categories {
+
   join: products {
     type: inner
     relationship: many_to_one
@@ -372,6 +379,11 @@ explore: service_history {
 
 explore: order_items {
   from: order_items_with_details
+
+  access_filter: {
+    field: orders.office_id
+    user_attribute: allowed_offices
+  }
 
   join: sales_by_product {
     relationship: many_to_one
@@ -621,6 +633,7 @@ explore: product_with_tax {
   always_filter: {
     filters: [companies.company: "NULL"]
   }
+
   # "{{_user_attributes['default_domain_prefix']}}"
 
   join: companies {
