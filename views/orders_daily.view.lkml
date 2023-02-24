@@ -163,7 +163,7 @@ view: orders_daily {
   measure:  sum_net_cash_sales {
     label: "Total Cash Net Sales"
     type: number
-    sql:  ${sum_cash_sales} / ${total_sum_all_methods_sales} * ${total_sum_net_sales};;
+    sql:  ${sum_cash_sales} / ${total_sum_gross_sale} * ${total_sum_net_sales};;
     value_format_name: usd
   }
   measure:  sum_credit_card_sales {
@@ -175,7 +175,7 @@ view: orders_daily {
   measure:  sum_net_credit_card_sales {
     label: "Total Credit Card Net Sales"
     type: number
-    sql:  ${sum_credit_card_sales} / ${total_sum_all_methods_sales} * ${total_sum_net_sales};;
+    sql:  ${sum_credit_card_sales} / ${total_sum_gross_sale} * ${total_sum_net_sales};;
     value_format_name: usd
   }
   measure:  sum_check_sales {
@@ -187,7 +187,7 @@ view: orders_daily {
   measure:  sum_net_check_sales {
     label: "Total Check Net Sales"
     type: number
-    sql:  ${total_check_sales} / ${total_sum_all_methods_sales} * ${total_sum_net_sales};;
+    sql:  ${total_check_sales} / ${total_sum_gross_sale} * ${total_sum_net_sales};;
     value_format_name: usd
   }
   measure:  sum_cc_terminal_sales {
@@ -199,7 +199,7 @@ view: orders_daily {
   measure:  sum_net_cc_terminal_sales {
     label: "Total CC Terminal Net Sales"
     type: number
-    sql:  ${sum_cc_terminal_sales} / ${total_sum_all_methods_sales} * ${total_sum_net_sales};;
+    sql:  ${sum_cc_terminal_sales} / ${total_sum_gross_sale} * ${total_sum_net_sales};;
     value_format_name: usd
   }
   measure:  sum_bonus_sales {
@@ -211,7 +211,7 @@ view: orders_daily {
   measure:  sum_net_bonus_sales {
     label: "Total Bonus Net Sales"
     type: number
-    sql:  ${sum_bonus_sales} / ${total_sum_all_methods_sales} * ${total_sum_net_sales};;
+    sql:  ${sum_bonus_sales} / ${total_sum_gross_sale} * ${total_sum_net_sales};;
     value_format_name: usd
   }
   measure:  sum_sweede_credits_sales {
@@ -223,7 +223,7 @@ view: orders_daily {
   measure:  sum_net_sweede_credits_sales {
     label: "Total Sweede Credits Net Sales"
     type: number
-    sql:  ${sum_sweede_credits_sales} / ${total_sum_all_methods_sales} * ${total_sum_net_sales};;
+    sql:  ${sum_sweede_credits_sales} / ${total_sum_gross_sale} * ${total_sum_net_sales};;
     value_format_name: usd
   }
   measure:  sum_dc_terminal_sales {
@@ -235,7 +235,7 @@ view: orders_daily {
   measure:  sum_net_dc_terminal_sales {
     label: "Total DC Terminal Net Sales"
     type: number
-    sql:  ${sum_dc_terminal_sales} / ${total_sum_all_methods_sales} * ${total_sum_net_sales};;
+    sql:  ${sum_dc_terminal_sales} / ${total_sum_gross_sale} * ${total_sum_net_sales};;
     value_format_name: usd
   }
   measure:  total_sum_refunds_wo_tax {
