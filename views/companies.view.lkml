@@ -3,7 +3,7 @@ view: companies {
   derived_table: {
     sql:
       SELECT *
-      FROM ext_indica_backend.prod_companies
+      FROM ext_indica_backend.companies
       WHERE comp_id in
       {% if _user_attributes['companies'] != null and _user_attributes['companies'] != "" %}
         ({{_user_attributes['companies']}})

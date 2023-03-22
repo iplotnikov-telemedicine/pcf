@@ -116,6 +116,18 @@ explore: product_transactions {
     relationship: one_to_one
   }
 
+  join: product_checkins {
+    relationship: many_to_one
+    type: left_outer
+    sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id}
+      AND ${product_checkins.uid} IS NOT NULL AND ${product_checkins.uid} <> '' ;;
+  }
+
+  join: package_quantity {
+    relationship: one_to_many
+    sql_on: ${product_checkins.id} = ${package_quantity.package_id};;
+  }
+
   # join: cart_discounts {
   #   from: discounts
   #   type: left_outer
