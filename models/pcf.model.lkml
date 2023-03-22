@@ -204,24 +204,33 @@ explore: package_quantity_ext {
 
 explore: product_transactions_new {
   from: product_transactions
+
+  join: product_checkins {
+    relationship: many_to_one
+    type: left_outer
+    sql_on: ${product_transactions_new.product_checkin_id} = ${product_checkins.id}
+      AND ${product_checkins.uid} IS NOT NULL AND ${product_checkins.uid} <> '' ;;
+  }
+
+  join: package_quantity {
+    relationship: one_to_many
+    sql_on: ${product_checkins.id} = ${package_quantity.package_id};;
+  }
 }
 
 
 explore: product_transactions {
 
-  sql_always_where: ${product_checkins.uid} IS NOT NULL
-    AND ${product_checkins.uid} <> ''
-    AND {% if product_transactions.date_filter._in_query %}
-    ${product_checkins.date_raw} <= {% date_start product_transactions.date_filter %}
-    {% else %}
-    1 = 1
-    {% endif %} ;;
-
   join: product_checkins {
     relationship: many_to_one
-    type: inner
-    sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id} ;;
-    # AND ${product_transactions.date_raw} >= ${product_checkins.date_raw};;
+    type: left_outer
+    sql_on: ${product_transactions.product_checkin_id} = ${product_checkins.id}
+      AND ${product_checkins.uid} IS NOT NULL AND ${product_checkins.uid} <> '' ;;
+  }
+
+  join: package_quantity {
+    relationship: one_to_many
+    sql_on: ${product_checkins.id} = ${package_quantity.package_id};;
   }
 
   join: products {
@@ -244,11 +253,6 @@ explore: product_transactions {
   join: product_categories {
     relationship: many_to_one
     sql_on: ${products.prod_category_id} = ${product_categories.id};;
-  }
-
-  join: package_quantity {
-    relationship: one_to_many
-    sql_on: ${product_checkins.id} = ${package_quantity.package_id};;
   }
 
   join: product_price_group {

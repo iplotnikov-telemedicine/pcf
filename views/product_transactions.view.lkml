@@ -21,7 +21,8 @@ view: product_transactions {
 
   dimension: date_within_range {
     type: yesno
-    sql: ${date_date} between date_add({% date_start date_filter %}, interval -1 day) and {% date_end date_filter %} ;;
+    sql: ${date_date} between date_add(coalesce({% date_start date_filter %}, '1970-01-01'::date), interval -1 day)
+      and coalesce({% date_end date_filter %}, getdate()) ;;
   }
 
   # dimension: dataset {
@@ -34,9 +35,9 @@ view: product_transactions {
     primary_key: yes
     type: number
     sql:${TABLE}.id;;
-      # CASE ${dataset}
-      #   WHEN 'main' THEN ${TABLE}.id
-      #   ELSE -${TABLE}.id END;;
+    # CASE ${dataset}
+    #   WHEN 'main' THEN ${TABLE}.id
+    #   ELSE -${TABLE}.id END;;
   }
 
   dimension: base_weight {
@@ -122,12 +123,13 @@ view: product_transactions {
     hidden: yes
     type: yesno
     sql: {% if date_filter._in_query and date_within_range._in_query %}
-    ${date_time} between ${date_for_dynamics_start} and ${date_for_dynamics_end}
-    {% elsif date_filter._in_query %}
-    ${date_raw} between {% date_start date_filter %} and {% date_end date_filter %}
-    {% else %}
-    1=1
-    {% endif %} ;;
+          ${date_time} between ${date_for_dynamics_start} and ${date_for_dynamics_end}
+          {% elsif date_filter._in_query %}
+          ${date_raw} between coalesce({% date_start date_filter %}, '1970-01-01'::date)
+            and coalesce({% date_end date_filter %}, getdate())
+          {% else %}
+          1=1
+          {% endif %} ;;
   }
 
   dimension: is_earlier_than_filtered {
@@ -136,7 +138,19 @@ view: product_transactions {
     sql: {% if date_filter._in_query and date_within_range._in_query %}
           ${date_time} < ${date_for_dynamics_start}
           {% elsif date_filter._in_query %}
-          ${date_raw} < {% date_start date_filter %}
+          ${date_raw} < coalesce({% date_start date_filter %}, '1970-01-01'::date)
+          {% else %}
+          1=1
+          {% endif %} ;;
+  }
+
+  dimension: is_later_than_filtered {
+    hidden: yes
+    type: yesno
+    sql: {% if date_filter._in_query and date_within_range._in_query %}
+          ${date_time} > ${date_for_dynamics_end}
+          {% elsif date_filter._in_query %}
+          ${date_raw} > coalesce({% date_end date_filter %}, getdate())
           {% else %}
           1=1
           {% endif %} ;;
@@ -150,7 +164,7 @@ view: product_transactions {
   measure: quantity_checked_in {
     type: sum
     sql:  ${item_qty} ;;
-    filters: [is_checked_in: "yes"]
+    filters: [is_checked_in: "yes", is_filtered_with_dates: "yes"]
   }
 
   dimension: is_adjustment_increase {
@@ -285,176 +299,176 @@ view: product_transactions {
   #   filters: [is_transferred_to: "yes", is_earlier_than_filtered: "yes"]
   # }
 
+  measure: total_qty_later_than_filtered {
+    type: sum
+    sql:  ${item_qty} ;;
+    filters: [is_later_than_filtered: "Yes"]
+  }
+
   measure: quantity_at_the_beginning {
     description: "Quantity available at the beginning of filtered range"
     type: number
-    sql:  ${quantity_checked_in}
-          - ${quantity_decreased_by_earlier}
-          + ${quantity_increased_by_earlier}
-          - ${quantity_sold_earlier}
-          + ${quantity_returned_earlier}
-          - ${quantity_unlinked_earlier}
+    sql:  ${quantity_at_the_end}
+          - ${quantity_checked_in}
+          + ${quantity_decreased_by}
+          - ${quantity_increased_by}
+          + ${quantity_sold}
+          - ${quantity_returned}
+          + ${quantity_unlinked}
           ;;
           # + ${quantity_transferred_to_earlier}
           # - ${quantity_transferred_from_earlier}
-  }
+    }
 
-  measure: quantity_at_the_end {
-    description: "Quantity available at the end of filtered range"
-    type: number
-    sql: ${quantity_at_the_beginning}
-          - ${quantity_decreased_by}
-          + ${quantity_increased_by}
-          - ${quantity_sold}
-          + ${quantity_returned}
-          - ${quantity_unlinked}
-          ;;
-          # + ${quantity_transferred_to}
-          # - ${quantity_transferred_from}
-  }
+    measure: quantity_at_the_end {
+      description: "Quantity available at the end of filtered range"
+      type: number
+      sql: ${package_quantity.total_quantity_available} +
+            ${total_qty_later_than_filtered} ;;
+      }
 
-  measure: running_quantity_at_the_end {
-    description: ""
-    type: running_total
-    value_format: "0"
-    sql: ${quantity_at_the_end} ;;
-  }
+      measure: running_quantity_at_the_end {
+        description: ""
+        type: running_total
+        value_format: "0"
+        sql: ${quantity_at_the_end} ;;
+      }
 
-  # measure: quantity_hold {
-  #   type: sum
-  #   sql:  -${qty} ;;
-  #   #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
-  #   # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
-  #   filters: [is_hold: "yes"]
-  # }
+      # measure: quantity_hold {
+      #   type: sum
+      #   sql:  -${qty} ;;
+      #   #   sql: CASE WHEN ${date_raw} between {% date_start order_items.date_filter %}
+      #   # and {% date_end order_items.date_filter %} THEN ${qty} END ;;
+      #   filters: [is_hold: "yes"]
+      # }
 
-  dimension: note {
-    type: string
-    sql: ${TABLE}.note ;;
-  }
+      dimension: note {
+        type: string
+        sql: ${TABLE}.note ;;
+      }
 
-  dimension: office_id {
-    type: number
-    sql:${TABLE}.office_id;;
-      # CASE ${dataset}
-      #   WHEN 'main' THEN ${TABLE}.office_id
-      #   ELSE ${TABLE}.office_to_id END;;
-  }
+      dimension: office_id {
+        type: number
+        sql:${TABLE}.office_id;;
+        # CASE ${dataset}
+        #   WHEN 'main' THEN ${TABLE}.office_id
+        #   ELSE ${TABLE}.office_to_id END;;
+      }
 
-  dimension: office_to_id {
-    type: number
-    sql:${TABLE}.office_to_id;;
-      # CASE ${dataset}
-      #   WHEN 'main' THEN ${TABLE}.office_to_id
-      #   ELSE NULL END;;
-  }
+      dimension: office_to_id {
+        type: number
+        sql:${TABLE}.office_to_id;;
+        # CASE ${dataset}
+        #   WHEN 'main' THEN ${TABLE}.office_to_id
+        #   ELSE NULL END;;
+      }
 
-  dimension: order_id {
-    type: number
-    sql: ${TABLE}.order_id ;;
-  }
+      dimension: order_id {
+        type: number
+        sql: ${TABLE}.order_id ;;
+      }
 
-  dimension: patient_id {
-    type: number
-    sql: ${TABLE}.patient_id ;;
-  }
+      dimension: patient_id {
+        type: number
+        sql: ${TABLE}.patient_id ;;
+      }
 
-  dimension: price {
-    type: number
-    sql: ${TABLE}.price ;;
-    value_format_name: usd
-  }
+      dimension: price {
+        type: number
+        sql: ${TABLE}.price ;;
+        value_format_name: usd
+      }
 
-  dimension: price_per_unit {
-    type: number
-    sql: ${price} / ${item_qty} ;;
-    value_format_name: usd
-  }
+      dimension: price_per_unit {
+        type: number
+        sql: ${price} / ${item_qty} ;;
+        value_format_name: usd
+      }
 
-  dimension: price_per {
-    type: string
-    sql: ${TABLE}.price_per ;;
-  }
+      dimension: price_per {
+        type: string
+        sql: ${TABLE}.price_per ;;
+      }
 
-  dimension: product_checkin_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.product_checkin_id ;;
-  }
+      dimension: product_checkin_id {
+        type: number
+        # hidden: yes
+        sql: ${TABLE}.product_checkin_id ;;
+      }
 
-  dimension: product_checkin_to_id {
-    type: number
-    sql: ${TABLE}.product_checkin_to_id ;;
-  }
+      dimension: product_checkin_to_id {
+        type: number
+        sql: ${TABLE}.product_checkin_to_id ;;
+      }
 
-  dimension: product_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.product_id ;;
-  }
+      dimension: product_id {
+        type: number
+        # hidden: yes
+        sql: ${TABLE}.product_id ;;
+      }
 
-  dimension: product_name {
-    type: string
-    sql: ${TABLE}.product_name ;;
-  }
+      dimension: product_name {
+        type: string
+        sql: ${TABLE}.product_name ;;
+      }
 
-  dimension: product_to_id {
-    type: number
-    sql: ${TABLE}.product_to_id ;;
-  }
+      dimension: product_to_id {
+        type: number
+        sql: ${TABLE}.product_to_id ;;
+      }
 
-  dimension: product_to_name {
-    type: string
-    sql: ${TABLE}.product_to_name ;;
-  }
+      dimension: product_to_name {
+        type: string
+        sql: ${TABLE}.product_to_name ;;
+      }
 
-  dimension: total_price {
-    type: number
-    sql: ${TABLE}.total_price ;;
-    value_format_name: usd
-  }
+      dimension: total_price {
+        type: number
+        sql: ${TABLE}.total_price ;;
+        value_format_name: usd
+      }
 
-  dimension: transfer_direction {
-    type: string
-    sql: ${TABLE}.transfer_direction ;;
-  }
+      dimension: transfer_direction {
+        type: string
+        sql: ${TABLE}.transfer_direction ;;
+      }
 
-  dimension: transaction_type {
-    type: number
-    sql: ${TABLE}.type ;;
-  }
+      dimension: transaction_type {
+        type: number
+        sql: ${TABLE}.type ;;
+      }
 
-  dimension: transaction_type_name {
-    type: string
-    sql: CASE ${transaction_type}
-      WHEN 3 THEN 'Sale'
-      WHEN 9 THEN 'Return'
-      END ;;
-  }
+      dimension: transaction_type_name {
+        type: string
+        sql: CASE ${transaction_type}
+                WHEN 3 THEN 'Sale'
+                WHEN 9 THEN 'Return'
+                END ;;
+      }
 
-  dimension: user_id {
-    type: number
-    sql: ${TABLE}.user_id ;;
-  }
+      dimension: user_id {
+        type: number
+        sql: ${TABLE}.user_id ;;
+      }
 
-  measure: number_of_product_transaction {
-    type: count
-    drill_fields: [detail*]
-  }
+      measure: number_of_product_transaction {
+        type: count
+        drill_fields: [detail*]
+      }
 
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      id,
-      product_name,
-      product_to_name,
-      products.prod_name,
-      products.wm_product_id,
-      products.brand_product_strain_name,
-      product_checkins.id,
-      product_checkins.vendor_name,
-      account_transaction.count,
-      adjustment.count
-    ]
-  }
-}
+      # ----- Sets of fields for drilling ------
+      set: detail {
+        fields: [
+          id,
+          product_name,
+          product_to_name,
+          products.prod_name,
+          products.wm_product_id,
+          products.brand_product_strain_name,
+          product_checkins.id,
+          product_checkins.vendor_name,
+          account_transaction.count,
+          adjustment.count
+        ]
+      }
+    }
